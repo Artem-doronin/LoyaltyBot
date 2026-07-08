@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Карточка клиента</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #f5f7fa;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .card-header h1 {
+            margin: 0;
+            color: #333;
+            font-size: 24px;
+        }
+        .back-link {
+            color: #2196F3;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px 30px;
+        }
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+        .info-item .label {
+            font-size: 12px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 2px;
+        }
+        .info-item .value {
+            font-size: 16px;
+            color: #333;
+            font-weight: 500;
+        }
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .badge-gold {
+            background: #FFD700;
+            color: #333;
+        }
+        .badge-silver {
+            background: #C0C0C0;
+            color: #333;
+        }
+        .badge-bronze {
+            background: #CD7F32;
+            color: white;
+        }
+        .badge-platinum {
+            background: #E5E4E2;
+            color: #333;
+            border: 1px solid #ccc;
+        }
+        .badge-active {
+            background: #4CAF50;
+            color: white;
+        }
+        .badge-inactive {
+            background: #f44336;
+            color: white;
+        }
+        .bonus-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+        }
+        .bonus-box .stat {
+            display: flex;
+            flex-direction: column;
+        }
+        .bonus-box .stat .number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .bonus-box .stat .label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 25px 0 15px 0;
+        }
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        .history-table th {
+            background: #f8f9fa;
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid #ddd;
+        }
+        .history-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+        }
+        .history-table tr:hover {
+            background: #f8f9fa;
+        }
+        .amount-positive {
+            color: #4CAF50;
+            font-weight: 600;
+        }
+        .amount-negative {
+            color: #f44336;
+            font-weight: 600;
+        }
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+        }
+        .btn-success:hover {
+            background: #45a049;
+        }
+        .btn-danger {
+            background: #f44336;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #d32f2f;
+        }
+        .btn-warning {
+            background: #FF9800;
+            color: white;
+        }
+        .btn-warning:hover {
+            background: #e68900;
+        }
+        .form-inline {
+            display: inline;
+        }
+        .empty {
+            text-align: center;
+            color: #888;
+            padding: 20px;
+        }
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+            .bonus-box {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="card" th:if="${client != null}">
+    <!-- Заголовок -->
+    <div class="card-header">
+        <h1>👤 Карточка клиента</h1>
+        <a href="/clients" class="back-link">← Назад к списку</a>
+    </div>
+
+    <!-- Основная информация -->
+    <div class="info-grid">
+        <div class="info-item">
+            <span class="label">ID</span>
+            <span class="value" th:text="${client.id}"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">Chat ID</span>
+            <span class="value" th:text="${client.chatId}"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">Имя</span>
+            <span class="value" th:text="${client.firstName}"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">Фамилия</span>
+            <span class="value" th:text="${client.lastName}"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">Telegram Username</span>
+            <span class="value" th:text="${client.telegramUsername}"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">Телефон</span>
+            <span class="value" th:text="${client.phone} ?: '—'"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">День рождения</span>
+            <span class="value" th:text="${client.birthday} ?: '—'"></span>
+        </div>
+        <div class="info-item">
+            <span class="label">Уровень лояльности</span>
+            <span class="value">
+                <span class="badge"
+                      th:classappend="${client.getLoyaltyLevel() == 'GOLD' ? 'badge-gold' :
+                                      (client.getLoyaltyLevel() == 'SILVER' ? 'badge-silver' :
+                                      (client.getLoyaltyLevel() == 'PLATINUM' ? 'badge-platinum' : 'badge-bronze'))}"
+                      th:text="${client.getLoyaltyLevel()}">
+                </span>
+            </span>
+        </div>
+        <div class="info-item">
+            <span class="label">Статус</span>
+            <span class="value">
+                <span class="badge"
+                      th:classappend="${client.active} ? 'badge-active' : 'badge-inactive'"
+                      th:text="${client.active} ? 'Активен' : 'Неактивен'">
+                </span>
+            </span>
+        </div>
+    </div>
+
+    <!-- Бонусы -->
+    <div class="bonus-box">
+        <div class="stat">
+            <span class="number" th:text="${client.bonusBalance}">0</span>
+            <span class="label">Бонусы</span>
+        </div>
+        <div class="stat">
+            <span class="number" th:text="${client.totalSpent}">0</span>
+            <span class="label">Потрачено (руб)</span>
+        </div>
+        <div class="stat">
+            <span class="number" th:text="${client.getLoyaltyLevel()}">BRONZE</span>
+            <span class="label">Уровень</span>
+        </div>
+    </div>
+
+    <!-- Действия -->
+    <div class="actions">
+        <a th:href="@{/clients/{id}/edit(id=${client.id})}" class="btn btn-primary">✏️ Редактировать</a>
+        <a th:href="@{/clients/{id}/bonus/add(id=${client.id})}" class="btn btn-success">➕ Начислить бонусы</a>
+        <a th:href="@{/clients/{id}/bonus/spend(id=${client.id})}" class="btn btn-warning">➖ Списать бонусы</a>
+        <form th:action="@{/clients/{id}(id=${client.id})}" method="post" class="form-inline">
+            <input type="hidden" name="_method" value="DELETE"/>
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Удалить клиента?')">
+                🗑️ Удалить
+            </button>
+        </form>
+    </div>
+</div>
+
+<!-- Транзакции -->
+<div class="card">
+    <h2 class="section-title">📜 История операций</h2>
+
+    <table class="history-table" th:if="${transactions != null and !transactions.isEmpty()}">
+        <thead>
+        <tr>
+            <th>Дата</th>
+            <th>Тип</th>
+            <th>Сумма</th>
+            <th>Описание</th>
+            <th>Источник</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="tx : ${transactions}">
+            <td th:text="${tx.createdAt}"></td>
+            <td th:text="${tx.type}"></td>
+            <td th:classappend="${tx.amount > 0 ? 'amount-positive' : 'amount-negative'}"
+                th:text="${tx.amount}"></td>
+            <td th:text="${tx.description}"></td>
+            <td th:text="${tx.source}"></td>
+        </tr>
+        </tbody>
+    </table>
+    <p th:if="${transactions == null or transactions.isEmpty()}" class="empty">
+        Нет операций
+    </p>
+</div>
+
+<div class="card" th:if="${client == null}">
+    <p class="empty">Клиент не найден</p>
+    <a href="/clients" class="btn btn-primary">← Назад к списку</a>
+</div>
+
+</body>
+</html>
