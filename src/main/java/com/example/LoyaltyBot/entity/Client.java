@@ -1,6 +1,12 @@
 package com.example.LoyaltyBot.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -8,6 +14,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "clients")
 public class Client {
@@ -37,6 +48,7 @@ public class Client {
     private Integer bonusBalance = 0;
 
     @Column(nullable = false)
+
     private Integer totalSpent = 0;
 
     @Column(nullable = false)
@@ -47,31 +59,13 @@ public class Client {
     private LocalDateTime lastActiveAt;
 
     @Column(nullable = false)
+    @Builder.Default
     private Boolean active = true;
-
-    @Column(nullable = false)
-    private String role = "CLIENT";
 
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
 
-    public Client() {
-    }
 
-    public Client(Long chatId, String firstName, String lastName, String telegramUsername) {
-        this.chatId = chatId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.telegramUsername = telegramUsername;
-        this.registeredAt = LocalDateTime.now();
-        this.lastActiveAt = LocalDateTime.now();
-        this.bonusBalance = 0;
-        this.totalSpent = 0;
-        this.active = true;
-        this.role = "CLIENT";
-    }
-
-    // Вычисляемые поля
     @Transient
     public String getLoyaltyLevel() {
         if (bonusBalance >= 1000) return "GOLD";

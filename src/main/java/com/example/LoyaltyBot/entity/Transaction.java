@@ -3,6 +3,7 @@ package com.example.LoyaltyBot.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class Transaction {
     private TransactionSource source;
 
     @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
 }

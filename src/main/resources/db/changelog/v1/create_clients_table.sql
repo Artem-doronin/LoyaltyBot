@@ -11,6 +11,5 @@ CREATE TABLE IF NOT EXISTS clients
     total_spent       INTEGER     NOT NULL DEFAULT 0,
     registered_at     TIMESTAMP   NOT NULL,
     last_active_at    TIMESTAMP,
-    active            BOOLEAN     NOT NULL DEFAULT TRUE,
-    role              VARCHAR(20) NOT NULL DEFAULT 'CLIENT'
+    active            BOOLEAN     NOT NULL DEFAULT TRUE
 );

@@ -11,3 +11,17 @@ spring:
 
   liquibase:
     change-log: db/changelog/changelog-master.yaml
+
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
+    check-template-existence: true
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
