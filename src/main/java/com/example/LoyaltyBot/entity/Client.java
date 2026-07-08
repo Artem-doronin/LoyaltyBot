@@ -1,6 +1,9 @@
 package com.example.LoyaltyBot.entity;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +40,10 @@ public class Client {
     private Integer totalSpent = 0;
 
     @Column(nullable = false)
+    @CreationTimestamp
     private LocalDateTime registeredAt;
 
+    @UpdateTimestamp
     private LocalDateTime lastActiveAt;
 
     @Column(nullable = false)
@@ -50,7 +55,8 @@ public class Client {
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Transaction> transactions = new ArrayList<>();
 
-    public Client() {}
+    public Client() {
+    }
 
     public Client(Long chatId, String firstName, String lastName, String telegramUsername) {
         this.chatId = chatId;
