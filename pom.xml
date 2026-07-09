@@ -60,6 +60,17 @@
             <version>1.6.3</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-longpolling</artifactId>
+            <version>7.4.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.telegram</groupId>
+            <artifactId>telegrambots-client</artifactId>
+            <version>7.4.2</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.mapstruct</groupId>
