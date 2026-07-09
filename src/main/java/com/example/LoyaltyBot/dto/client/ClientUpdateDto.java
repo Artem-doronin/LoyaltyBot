@@ -5,7 +5,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 @Getter
 public class ClientUpdateDto extends ClientBaseDto {
-    private String comment; // Например, комментарий менеджера
+    private String comment;
     private Boolean isActive;
 
     public ClientUpdateDto() {

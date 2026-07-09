@@ -168,7 +168,7 @@ public class Client {
         return isActive;
     }
 
-    public void setISActive(Boolean active) {
+    public void setIsActive(Boolean active) {
         this.isActive = active;
     }
 }

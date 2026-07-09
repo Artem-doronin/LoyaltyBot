@@ -7,11 +7,10 @@ import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.exception.ClientNotFoundException;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-@Slf4j
+
 @Service
 public class ClientService {
     private final ClientRepository clientRepository;
@@ -33,11 +32,7 @@ public class ClientService {
     public ClientResponseDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
                 () -> new ClientNotFoundException(id));
-        log.info("client after mapping: id={}, isActive={}", client.getId(), client.getIsActive());
         ClientResponseDto dto = clientMapper.toClientResponseDto(client);
-
-        // ✅ Логируем значение после маппинга
-        log.info("DTO after mapping: id={}, isActive={}", dto.getId(), dto.getIsActive());
         return clientMapper.toClientResponseDto(client);
 
     }
@@ -47,7 +42,7 @@ public class ClientService {
                 .map(clientMapper::toClientResponseDto)
                 .toList();
         clientResponseDtos.stream().forEach(System.out::println);
-    return clientResponseDtos;
+        return clientResponseDtos;
     }
 
     public void deleteById(Long id) {
