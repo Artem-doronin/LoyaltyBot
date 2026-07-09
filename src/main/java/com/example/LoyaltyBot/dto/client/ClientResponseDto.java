@@ -61,7 +61,7 @@ public class ClientResponseDto extends ClientBaseDto {
     }
 
     public void setIsActive(Boolean active) {
-        isActive = active;
+        this.isActive = active;
     }
 
     public Integer getTotalSpent() {
