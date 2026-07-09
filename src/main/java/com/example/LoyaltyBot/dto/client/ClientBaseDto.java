@@ -1,13 +1,6 @@
 package com.example.LoyaltyBot.dto.client;
 
-import com.example.LoyaltyBot.entity.Client;
-import lombok.Getter;
-import lombok.Setter;
-
 import java.time.LocalDate;
-
-@Getter
-@Setter
 
 
 public abstract class ClientBaseDto {
@@ -29,6 +22,54 @@ public abstract class ClientBaseDto {
     }
 
     public ClientBaseDto() {
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getTelegramUsername() {
+        return telegramUsername;
+    }
+
+    public void setTelegramUsername(String telegramUsername) {
+        this.telegramUsername = telegramUsername;
     }
 }
 
