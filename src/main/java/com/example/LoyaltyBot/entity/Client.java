@@ -1,18 +1,21 @@
 package com.example.LoyaltyBot.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
@@ -42,7 +45,7 @@ public class Client {
     @Column(length = 20)
     private String phone;
 
-    private LocalDateTime birthday;
+    private LocalDate birthday;
 
     @Column(nullable = false)
     private Integer bonusBalance = 0;
@@ -56,26 +59,8 @@ public class Client {
     private LocalDateTime registeredAt;
 
     @UpdateTimestamp
-    private LocalDateTime lastActiveAt;
+    private LocalDateTime updatedAt;
 
     @Column(nullable = false)
-    @Builder.Default
-    private Boolean active = true;
-
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Transaction> transactions = new ArrayList<>();
-
-
-    @Transient
-    public String getLoyaltyLevel() {
-        if (bonusBalance >= 1000) return "GOLD";
-        if (bonusBalance >= 500) return "SILVER";
-        return "BRONZE";
-    }
-
-    @Transient
-    public String getFullName() {
-        return (firstName != null ? firstName : "") +
-                (lastName != null ? " " + lastName : "");
-    }
+    private Boolean isActive = true;
 }

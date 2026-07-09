@@ -1,10 +1,10 @@
 version: '3.2'
 
 volumes:
-  pg_project:
+  loyalty_db_vol:
 
 services:
-  pg_db:
+  loyalty_db:
     image: postgres:15-alpine
     restart: always
     environment:
@@ -12,6 +12,6 @@ services:
       - POSTGRES_PASSWORD=pass
       - POSTGRES_DB=bot_db
     volumes:
-      - pg_project:/var/lib/postgresql/data
+      - loyalty_db_vol:/var/lib/postgresql/data
     ports:
       - "5432:5432"

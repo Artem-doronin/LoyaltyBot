@@ -2,6 +2,7 @@ package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.ClientDto;
 import com.example.LoyaltyBot.entity.Client;
+import com.example.LoyaltyBot.exception.ClientNotFoundException;
 import com.example.LoyaltyBot.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +22,13 @@ public class ClientService {
 
     public ClientDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Client not found"));
+                () -> new ClientNotFoundException(id));
         return ClientDto.toDto(client);
 
     }
 
     public List<ClientDto> findAll() {
-        List<Client> clients = clientRepository.findAll();
-        return clients.stream()
+        return clientRepository.findAll().stream()
                 .map(ClientDto::toDto)
                 .toList();
     }
@@ -39,14 +39,15 @@ public class ClientService {
 
     public void updateClient(ClientDto clientDto, Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Client not found"));
-        client.setId(clientDto.id());
+                () -> new ClientNotFoundException(id));
+
+        if (!clientDto.id().equals(id)) {
+            throw new IllegalArgumentException("ID в DTO не совпадает с ID пути");
+        }
         client.setFirstName(clientDto.firstName());
         client.setLastName(clientDto.lastName());
         client.setBirthday(clientDto.birthday());
-        client.setChatId(clientDto.chatId());
         client.setPhone(clientDto.phone());
-        client.setBonusBalance(clientDto.bonusBalance());
         clientRepository.save(client);
     }
 }

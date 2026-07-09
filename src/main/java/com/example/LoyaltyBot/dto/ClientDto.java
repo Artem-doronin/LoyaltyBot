@@ -3,7 +3,7 @@ package com.example.LoyaltyBot.dto;
 import com.example.LoyaltyBot.entity.Client;
 import lombok.Builder;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 @Builder
 public record ClientDto(
         Long id,
@@ -12,10 +12,9 @@ public record ClientDto(
         String firstName,
         String lastName,
         String phone,
-        LocalDateTime birthday,
+        LocalDate birthday,
         Integer bonusBalance,
         Integer totalSpent) {
-
 
     public static ClientDto toDto(Client client){
         return  ClientDto.builder()
@@ -42,11 +41,6 @@ public record ClientDto(
                 .bonusBalance(bonusBalance)
                 .totalSpent(totalSpent)
                 .build();
-    }
-    public String getLoyaltyLevel() {
-        if (bonusBalance >= 1000) return "GOLD";
-        if (bonusBalance >= 500) return "SILVER";
-        return "BRONZE";
     }
 }
 
