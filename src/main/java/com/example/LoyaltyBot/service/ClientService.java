@@ -1,8 +1,11 @@
 package com.example.LoyaltyBot.service;
 
-import com.example.LoyaltyBot.dto.ClientDto;
+import com.example.LoyaltyBot.dto.client.ClientCreateDto;
+import com.example.LoyaltyBot.dto.client.ClientResponseDto;
+import com.example.LoyaltyBot.dto.client.ClientUpdateDto;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.exception.ClientNotFoundException;
+import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
 import org.springframework.stereotype.Service;
 
@@ -11,43 +14,48 @@ import java.util.List;
 @Service
 public class ClientService {
     private final ClientRepository clientRepository;
+    private final ClientMapper clientMapper;
 
-    public ClientService(ClientRepository clientRepository) {
+    public ClientService(ClientRepository clientRepository,
+                         ClientMapper clientMapper) {
         this.clientRepository = clientRepository;
+        this.clientMapper = clientMapper;
     }
 
-    public void createClient(Client client) {
+    public void createClient(ClientCreateDto clientCreateDto) {
+        Client client = clientMapper.toClient(clientCreateDto);
+
+        // дописать логику после телеги
         clientRepository.save(client);
     }
 
-    public ClientDto findById(Long id) {
+    public ClientResponseDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
                 () -> new ClientNotFoundException(id));
-        return ClientDto.toDto(client);
+        return clientMapper.toClientResponseDto(client);
 
     }
 
-    public List<ClientDto> findAll() {
-        return clientRepository.findAll().stream()
-                .map(ClientDto::toDto)
+    public List<ClientResponseDto> findAll() {
+        List<ClientResponseDto> clientResponseDtos = clientRepository.findAll().stream()
+                .map(clientMapper::toClientResponseDto)
                 .toList();
+        clientResponseDtos.stream().forEach(System.out::println);
+    return clientResponseDtos;
     }
 
     public void deleteById(Long id) {
         clientRepository.deleteById(id);
     }
 
-    public void updateClient(ClientDto clientDto, Long id) {
+    public void updateClient(ClientUpdateDto updateDto, Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
                 () -> new ClientNotFoundException(id));
 
-        if (!clientDto.id().equals(id)) {
-            throw new IllegalArgumentException("ID в DTO не совпадает с ID пути");
-        }
-        client.setFirstName(clientDto.firstName());
-        client.setLastName(clientDto.lastName());
-        client.setBirthday(clientDto.birthday());
-        client.setPhone(clientDto.phone());
+        client.setFirstName(updateDto.getFirstName());
+        client.setLastName(updateDto.getLastName());
+        client.setBirthday(updateDto.getBirthday());
+        client.setPhone(updateDto.getPhone());
         clientRepository.save(client);
     }
 }

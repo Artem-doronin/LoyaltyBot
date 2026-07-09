@@ -9,9 +9,9 @@ CREATE TABLE IF NOT EXISTS clients
     birthday          DATE,
     bonus_balance     INTEGER   NOT NULL DEFAULT 0,
     total_spent       INTEGER   NOT NULL DEFAULT 0,
-    registered_at     TIMESTAMP NOT NULL,
-    updated_at         TIMESTAMP,
-    is_active          BOOLEAN   NOT NULL DEFAULT TRUE
+    created_at        TIMESTAMP NOT NULL,
+    updated_at        TIMESTAMP,
+    is_active         BOOLEAN   NOT NULL DEFAULT TRUE
 );
 
 CREATE INDEX IF NOT EXISTS idx_chat_id ON clients (chat_id);

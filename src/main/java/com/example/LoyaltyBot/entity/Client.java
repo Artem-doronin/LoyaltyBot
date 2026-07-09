@@ -48,19 +48,18 @@ public class Client {
     private LocalDate birthday;
 
     @Column(nullable = false)
-    private Integer bonusBalance = 0;
+    private Integer bonusBalance;
 
     @Column(nullable = false)
-
-    private Integer totalSpent = 0;
+    private Integer totalSpent;
 
     @Column(nullable = false)
     @CreationTimestamp
-    private LocalDateTime registeredAt;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean isActive ;
 }
