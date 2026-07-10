@@ -2,6 +2,8 @@ package com.example.LoyaltyBot.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -56,12 +58,15 @@ public class Client {
     @Column(nullable = false)
     private Boolean isActive ;
 
+    @Enumerated(EnumType.STRING)
+    private RegistrationState registrationState;
+
     public Client() {
     }
 
     public Client(Long id, Long chatId, String telegramUsername, String firstName, String lastName, String phone,
                   LocalDate birthday, Integer bonusBalance, Integer totalSpent, LocalDateTime createdAt,
-                  LocalDateTime updatedAt, Boolean isActive) {
+                  LocalDateTime updatedAt, Boolean isActive,RegistrationState registrationState) {
         this.id = id;
         this.chatId = chatId;
         this.telegramUsername = telegramUsername;
@@ -74,6 +79,7 @@ public class Client {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isActive = isActive;
+        this.registrationState = registrationState;
     }
 
     public Long getId() {
@@ -170,5 +176,13 @@ public class Client {
 
     public void setIsActive(Boolean active) {
         this.isActive = active;
+    }
+
+    public RegistrationState getRegistrationState() {
+        return registrationState;
+    }
+
+    public void setRegistrationState(RegistrationState registrationState) {
+        this.registrationState = registrationState;
     }
 }

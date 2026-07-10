@@ -1,5 +1,7 @@
 package com.example.LoyaltyBot.dto.client;
 
+import com.example.LoyaltyBot.entity.RegistrationState;
+
 import java.time.LocalDate;
 
 public class ClientResponseDto extends ClientBaseDto {
@@ -9,10 +11,12 @@ public class ClientResponseDto extends ClientBaseDto {
     private Boolean isActive;
     private Integer totalSpent;
     private Integer bonusBalance;
+    private RegistrationState registrationState;
+
 
     public ClientResponseDto(String firstName, String lastName, LocalDate birthday, String chatId, String phone,
                              String telegramUsername, Long id, LocalDate createdAt, LocalDate updatedAt,
-                             Boolean isActive, Integer totalSpent, Integer bonusBalance) {
+                             Boolean isActive, Integer totalSpent, Integer bonusBalance, RegistrationState registrationState ) {
         super(firstName, lastName, birthday, chatId, phone, telegramUsername);
         this.id = id;
         this.createdAt = createdAt;
@@ -20,6 +24,7 @@ public class ClientResponseDto extends ClientBaseDto {
         this.isActive = isActive;
         this.totalSpent = totalSpent;
         this.bonusBalance = bonusBalance;
+        this.registrationState = registrationState;
     }
 
     public ClientResponseDto(String firstName, String lastName,
@@ -78,5 +83,12 @@ public class ClientResponseDto extends ClientBaseDto {
 
     public void setBonusBalance(Integer bonusBalance) {
         this.bonusBalance = bonusBalance;
+    }
+    public RegistrationState getRegistrationState() {
+        return registrationState;
+    }
+
+    public void setRegistrationState(RegistrationState registrationState) {
+        this.registrationState = registrationState;
     }
 }

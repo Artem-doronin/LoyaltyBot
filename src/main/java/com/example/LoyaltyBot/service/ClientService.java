@@ -7,9 +7,12 @@ import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.exception.ClientNotFoundException;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ClientService {
@@ -32,9 +35,12 @@ public class ClientService {
     public ClientResponseDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
                 () -> new ClientNotFoundException(id));
-        ClientResponseDto dto = clientMapper.toClientResponseDto(client);
         return clientMapper.toClientResponseDto(client);
 
+    }
+
+    public Optional<Client> findByChatId(Long id) {
+        return clientRepository.findByChatId(id);
     }
 
     public List<ClientResponseDto> findAll() {
