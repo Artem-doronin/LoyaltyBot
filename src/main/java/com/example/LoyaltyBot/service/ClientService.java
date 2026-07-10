@@ -25,10 +25,7 @@ public class ClientService {
         this.clientMapper = clientMapper;
     }
 
-    public void createClient(ClientCreateDto clientCreateDto) {
-        Client client = clientMapper.toClient(clientCreateDto);
-
-        // дописать логику после телеги
+    public void createClient(Client client) {
         clientRepository.save(client);
     }
 
