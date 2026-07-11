@@ -31,7 +31,7 @@ public class MessageHandler {
         Optional<Client> clientOptional = clientService.findByChatId(chatId);
 
         if (isClientRegistered(clientOptional)) {
-            return updateMessageHandler.handle(text, chatId);
+            return updateMessageHandler.handle(text, chatId,clientOptional);
         }else {
             return  clientRegistrationHandler.register(text, chatId, clientOptional);
         }
