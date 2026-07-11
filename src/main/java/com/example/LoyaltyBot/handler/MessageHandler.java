@@ -14,10 +14,14 @@ import java.util.Optional;
 public class MessageHandler {
     private final ClientService clientService;
     private final ClientRegistrationHandler clientRegistrationHandler;
+    private final UpdateMessageHandler updateMessageHandler;
 
-    public MessageHandler(ClientService clientService, ClientRegistrationHandler clientRegistrationHandler) {
+    public MessageHandler(ClientService clientService,
+                          ClientRegistrationHandler clientRegistrationHandler,
+                          UpdateMessageHandler updateMessageHandler) {
         this.clientService = clientService;
         this.clientRegistrationHandler = clientRegistrationHandler;
+        this.updateMessageHandler = updateMessageHandler;
     }
 
     public SendMessage handle(Update update) {
@@ -27,7 +31,7 @@ public class MessageHandler {
         Optional<Client> clientOptional = clientService.findByChatId(chatId);
 
         if (isClientRegistered(clientOptional)) {
-            return null;//updateMessageHandler.handle(text, chatId);
+            return updateMessageHandler.handle(text, chatId);
         }else {
             return  clientRegistrationHandler.register(text, chatId, clientOptional);
         }

@@ -42,20 +42,16 @@ public class Client {
 
     private LocalDate birthday;
 
-    @Column(nullable = false)
     private Integer bonusBalance;
 
-    @Column(nullable = false)
     private Integer totalSpent;
-
-    @Column(nullable = false)
+    
     @CreationTimestamp
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false)
     private Boolean isActive ;
 
     @Enumerated(EnumType.STRING)

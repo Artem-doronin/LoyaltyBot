@@ -23,7 +23,7 @@ public class AskNameRegistrationHandler implements RegistrationHandler {
         clientService.createClient(client);
 
         String messageResponse = String
-                .format( "Хорошо %s, теперь введите дату рождения в в формате ГГГГ-ММ-ДД",message);
+                .format( "Хорошо %s, теперь введите дату рождения в в формате dd.MM.yyyy",message);
 
         return SendMessage
                 .builder()

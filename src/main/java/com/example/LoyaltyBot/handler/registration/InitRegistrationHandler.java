@@ -21,9 +21,12 @@ public class InitRegistrationHandler implements RegistrationHandler {
         Client clientInit = new Client();
         clientInit.setChatId(chatId);
         clientInit.setRegistrationState(RegistrationState.ASK_NAME);
+        clientInit.setIsActive(true);
+        clientInit.setBonusBalance(0);
+        clientInit.setTotalSpent(0);
         clientService.createClient(clientInit);
 
-        String messageResponse = "Введите ваше имя";
+        String messageResponse = " Введите ваше имя";
 
         return SendMessage
                 .builder()
