@@ -1,10 +1,13 @@
 package com.example.LoyaltyBot.dto.client;
 
-public class ClientCreateDto extends ClientBaseDto {
+import java.time.LocalDate;
 
-    public ClientCreateDto() {
-            super();
-    }
-
+public class ClientCreateDto  {
+    protected String firstName;
+    protected String lastName;
+    protected LocalDate birthday;
+    protected String chatId;
+    protected String phone;
+    protected String telegramUsername;
 }
 

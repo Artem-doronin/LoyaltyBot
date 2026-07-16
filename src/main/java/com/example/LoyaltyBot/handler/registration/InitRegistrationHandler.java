@@ -18,13 +18,12 @@ public class InitRegistrationHandler implements RegistrationHandler {
     @Override
     public SendMessage handle(String message, Long chatId, Client client) {
 
-        Client clientInit = new Client();
-        clientInit.setChatId(chatId);
-        clientInit.setRegistrationState(RegistrationState.ASK_NAME);
-        clientInit.setIsActive(true);
-        clientInit.setBonusBalance(0);
-        clientInit.setTotalSpent(0);
-        clientService.createClient(clientInit);
+        client.setChatId(chatId);
+        client.setRegistrationState(RegistrationState.ASK_NAME);
+        client.setIsActive(true);
+        client.setBonusBalance(0);
+        client.setTotalSpent(0);
+        clientService.createClient(client);
 
         String messageResponse = " Введите ваше имя";
 

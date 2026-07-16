@@ -1,7 +1,6 @@
 package com.example.LoyaltyBot.handler;
 
 import com.example.LoyaltyBot.entity.Client;
-import org.hibernate.sql.Update;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 

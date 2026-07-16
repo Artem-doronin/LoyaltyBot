@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ClientRepository extends JpaRepository<Client, Long> {
-    Optional<Client> findByChatId(Long id);
+    Optional<Client> findByChatId(Long chatId);
 }

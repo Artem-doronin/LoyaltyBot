@@ -1,11 +1,16 @@
 package com.example.LoyaltyBot.dto.client;
 
 import com.example.LoyaltyBot.entity.RegistrationState;
-
 import java.time.LocalDate;
 
-public class ClientResponseDto extends ClientBaseDto {
+public class ClientResponseDto {
     private Long id;
+    protected String firstName;
+    protected String lastName;
+    protected LocalDate birthday;
+    protected String chatId;
+    protected String phone;
+    protected String telegramUsername;
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private Boolean isActive;
@@ -13,28 +18,7 @@ public class ClientResponseDto extends ClientBaseDto {
     private Integer bonusBalance;
     private RegistrationState registrationState;
 
-
-    public ClientResponseDto(String firstName, String lastName, LocalDate birthday, String chatId, String phone,
-                             String telegramUsername, Long id, LocalDate createdAt, LocalDate updatedAt,
-                             Boolean isActive, Integer totalSpent, Integer bonusBalance, RegistrationState registrationState ) {
-        super(firstName, lastName, birthday, chatId, phone, telegramUsername);
-        this.id = id;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isActive = isActive;
-        this.totalSpent = totalSpent;
-        this.bonusBalance = bonusBalance;
-        this.registrationState = registrationState;
-    }
-
-    public ClientResponseDto(String firstName, String lastName,
-                             LocalDate birthday, String chatId, String phone, String telegramUsername) {
-        super(firstName, lastName, birthday, chatId, phone,
-                telegramUsername);
-    }
-
     public ClientResponseDto() {
-        super();
     }
 
     public Long getId() {
@@ -43,6 +27,54 @@ public class ClientResponseDto extends ClientBaseDto {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getTelegramUsername() {
+        return telegramUsername;
+    }
+
+    public void setTelegramUsername(String telegramUsername) {
+        this.telegramUsername = telegramUsername;
     }
 
     public LocalDate getCreatedAt() {
@@ -66,7 +98,7 @@ public class ClientResponseDto extends ClientBaseDto {
     }
 
     public void setIsActive(Boolean active) {
-        this.isActive = active;
+        isActive = active;
     }
 
     public Integer getTotalSpent() {
@@ -84,11 +116,31 @@ public class ClientResponseDto extends ClientBaseDto {
     public void setBonusBalance(Integer bonusBalance) {
         this.bonusBalance = bonusBalance;
     }
+
     public RegistrationState getRegistrationState() {
         return registrationState;
     }
 
     public void setRegistrationState(RegistrationState registrationState) {
         this.registrationState = registrationState;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientResponseDto{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthday=" + birthday +
+                ", chatId='" + chatId + '\'' +
+                ", phone='" + phone + '\'' +
+                ", telegramUsername='" + telegramUsername + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", isActive=" + isActive +
+                ", totalSpent=" + totalSpent +
+                ", bonusBalance=" + bonusBalance +
+                ", registrationState=" + registrationState +
+                '}';
     }
 }

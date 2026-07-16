@@ -1,23 +1,47 @@
 package com.example.LoyaltyBot.dto.client;
 
-import lombok.Getter;
-
 import java.time.LocalDate;
-@Getter
-public class ClientUpdateDto extends ClientBaseDto {
+
+public class ClientUpdateDto {
+    protected String firstName;
+    protected String lastName;
+    protected LocalDate birthday;
+    protected String chatId;
+    protected String phone;
+    protected String telegramUsername;
     private String comment;
     private Boolean isActive;
 
-    public ClientUpdateDto() {
-        super();
+    public String getFirstName() {
+        return firstName;
     }
 
-    public ClientUpdateDto(String firstName, String lastName, LocalDate birthday, String chatId, String phone,
-                           String telegramUsername, String comment, Boolean isActive) {
-        super(firstName, lastName, birthday, chatId, phone, telegramUsername);
-        this.comment = comment;
-        this.isActive = isActive;
+    public String getLastName() {
+        return lastName;
     }
 
+    public LocalDate getBirthday() {
+        return birthday;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public String getTelegramUsername() {
+        return telegramUsername;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
 }
 

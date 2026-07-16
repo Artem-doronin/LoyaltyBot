@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - Не найдено</title>
+</head>
+<body>
+<div class="container">
+    <h1>404</h1>
+    <h2>😕 Ресурс не найден</h2>
+    <p th:text="${message} ?: 'Запрашиваемый ресурс не существует'"></p>
+
+</div>
+</body>
+</html>

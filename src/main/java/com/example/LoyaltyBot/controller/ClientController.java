@@ -1,6 +1,5 @@
 package com.example.LoyaltyBot.controller;
 
-import com.example.LoyaltyBot.exception.ClientNotFoundException;
 import com.example.LoyaltyBot.service.ClientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,13 +24,8 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public String getClient(@PathVariable Long id, Model model) {
-        try {
             model.addAttribute("client", clientService.findById(id));
             return "clients/client-detail";
-        } catch (ClientNotFoundException e) {
-            model.addAttribute("id", id);
-            return "clients/client-not-found";
-        }
     }
 
     @GetMapping("/delete/{id}")

@@ -9,16 +9,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
-import lombok.Builder;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Builder
 @Entity
 @Table(name = "clients")
+
 public class Client {
 
     @Id
@@ -42,10 +42,10 @@ public class Client {
 
     private LocalDate birthday;
 
-    private Integer bonusBalance;
+    private Integer bonusBalance ;
 
-    private Integer totalSpent;
-    
+    private Integer totalSpent ;
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 
@@ -60,9 +60,10 @@ public class Client {
     public Client() {
     }
 
-    public Client(Long id, Long chatId, String telegramUsername, String firstName, String lastName, String phone,
-                  LocalDate birthday, Integer bonusBalance, Integer totalSpent, LocalDateTime createdAt,
-                  LocalDateTime updatedAt, Boolean isActive,RegistrationState registrationState) {
+    public Client(Long id, Long chatId, String telegramUsername, String firstName,
+                  String lastName, String phone, LocalDate birthday, Integer bonusBalance,
+                  Integer totalSpent, LocalDateTime createdAt, LocalDateTime updatedAt,
+                  Boolean isActive, RegistrationState registrationState) {
         this.id = id;
         this.chatId = chatId;
         this.telegramUsername = telegramUsername;
@@ -180,5 +181,24 @@ public class Client {
 
     public void setRegistrationState(RegistrationState registrationState) {
         this.registrationState = registrationState;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", chatId=" + chatId +
+                ", telegramUsername='" + telegramUsername + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", birthday=" + birthday +
+                ", bonusBalance=" + bonusBalance +
+                ", totalSpent=" + totalSpent +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", isActive=" + isActive +
+                ", registrationState=" + registrationState +
+                '}';
     }
 }

@@ -1,17 +1,15 @@
 package com.example.LoyaltyBot.service;
 
-import com.example.LoyaltyBot.dto.client.ClientCreateDto;
 import com.example.LoyaltyBot.dto.client.ClientResponseDto;
 import com.example.LoyaltyBot.dto.client.ClientUpdateDto;
 import com.example.LoyaltyBot.entity.Client;
-import com.example.LoyaltyBot.exception.ClientNotFoundException;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
-import org.checkerframework.checker.units.qual.C;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -29,10 +27,19 @@ public class ClientService {
         clientRepository.save(client);
     }
 
+    public void updateClient(Client client) {
+        Objects.requireNonNull(client);
+        clientRepository.save(client);
+    }
+//todo буду тестить
     public ClientResponseDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
-                () -> new ClientNotFoundException(id));
-        return clientMapper.toClientResponseDto(client);
+                () -> new EntityNotFoundException("Клиент с id " + id + " не найден"));
+
+        System.out.println(client);
+        ClientResponseDto clientResponseDto = clientMapper.toClientResponseDto(client);
+        System.out.println(clientResponseDto);
+        return clientResponseDto;
 
     }
 
@@ -41,20 +48,18 @@ public class ClientService {
     }
 
     public List<ClientResponseDto> findAll() {
-        List<ClientResponseDto> clientResponseDtos = clientRepository.findAll().stream()
+        return clientRepository.findAll().stream()
                 .map(clientMapper::toClientResponseDto)
                 .toList();
-        clientResponseDtos.stream().forEach(System.out::println);
-        return clientResponseDtos;
     }
 
     public void deleteById(Long id) {
         clientRepository.deleteById(id);
     }
 
-    public void updateClient(ClientUpdateDto updateDto, Long id) {
+    public void updateById(ClientUpdateDto updateDto, Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
-                () -> new ClientNotFoundException(id));
+                () -> new EntityNotFoundException("Клиент с id " + id + " не найден"));
 
         client.setFirstName(updateDto.getFirstName());
         client.setLastName(updateDto.getLastName());

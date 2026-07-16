@@ -23,13 +23,13 @@ public class AskBirthDateRegistrationHandler implements RegistrationHandler {
     @Override
     public SendMessage handle(String message, Long chatId, Client client) {
         String messageResponse;
-        Optional<LocalDate> birthDate = isValidDate(message);
+        Optional<LocalDate> birthDate = parseBirthDate(message);
 
         if (birthDate.isPresent()) {
             client.setBirthday(birthDate.get());
             client.setRegistrationState(RegistrationState.ASK_PHONE);
 
-            clientService.createClient(client);
+            clientService.updateClient(client);
             messageResponse = String
                     .format("Хорошо %s, теперь введите номер телефона 11 чисел в формате 89********* ", client.getFirstName());
         } else {
@@ -42,7 +42,7 @@ public class AskBirthDateRegistrationHandler implements RegistrationHandler {
                 .build();
     }
 
-    private Optional<LocalDate> isValidDate(String date) {
+    private Optional<LocalDate> parseBirthDate(String date) {
         if (date == null || date.trim().isEmpty()) return Optional.empty();
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
