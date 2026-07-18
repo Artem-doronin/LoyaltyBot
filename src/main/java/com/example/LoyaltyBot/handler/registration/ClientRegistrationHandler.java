@@ -4,6 +4,7 @@ import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class ClientRegistrationHandler {
         registrationHandlerMap.put(RegistrationState.ASK_PHONE, askPhoneRegistrationHandler);
     }
 
-    public SendMessage register(String message, Long chatId, Optional<Client> optionalClient) {
+    public SendMessage register(Message message, Optional<Client> optionalClient) {
         RegistrationState registrationState = optionalClient
                 .map(Client::getRegistrationState)
                 .orElse(RegistrationState.INIT);
@@ -32,7 +33,7 @@ public class ClientRegistrationHandler {
         Client client = optionalClient.orElse(new Client());
 
         RegistrationHandler registrationHandler = registrationHandlerMap.get(registrationState);
-        return registrationHandler.handle(message,chatId,client);
+        return registrationHandler.handle(message,client);
     }
 
 }

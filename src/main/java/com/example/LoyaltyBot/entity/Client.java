@@ -28,6 +28,9 @@ public class Client {
     @Column(unique = true, nullable = false)
     private Long chatId;
 
+    @Column(unique = true, nullable = false)
+    private Long telegramUserId;
+
     @Column(length = 50)
     private String telegramUsername;
 
@@ -60,12 +63,13 @@ public class Client {
     public Client() {
     }
 
-    public Client(Long id, Long chatId, String telegramUsername, String firstName,
+    public Client(Long id, Long chatId,Long telegramUserId, String telegramUsername, String firstName,
                   String lastName, String phone, LocalDate birthday, Integer bonusBalance,
                   Integer totalSpent, LocalDateTime createdAt, LocalDateTime updatedAt,
                   Boolean isActive, RegistrationState registrationState) {
         this.id = id;
         this.chatId = chatId;
+        this.telegramUserId = telegramUserId;
         this.telegramUsername = telegramUsername;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -93,6 +97,13 @@ public class Client {
 
     public void setChatId(Long chatId) {
         this.chatId = chatId;
+    }
+
+    public Long getTelegramUserId() {
+        return telegramUserId;
+    }
+    public void setTelegramUserId(Long telegramUserId) {
+        this.telegramUserId = telegramUserId;
     }
 
     public String getTelegramUsername() {
@@ -188,6 +199,7 @@ public class Client {
         return "Client{" +
                 "id=" + id +
                 ", chatId=" + chatId +
+                ", telegramUserId=" + telegramUserId +
                 ", telegramUsername='" + telegramUsername + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +

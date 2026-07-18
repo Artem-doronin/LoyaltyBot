@@ -5,6 +5,8 @@ import com.example.LoyaltyBot.entity.RegistrationState;
 import com.example.LoyaltyBot.service.ClientService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
+
 @Component
 public class InitRegistrationHandler implements RegistrationHandler {
     private final ClientService clientService;
@@ -12,13 +14,13 @@ public class InitRegistrationHandler implements RegistrationHandler {
     public InitRegistrationHandler(ClientService clientService) {
         this.clientService = clientService;
     }
-//todo я беру клиента я могу изменять клиента и сохранять его в базу из параметров либо как здесь
-    // todo например client не null и его взяли из базы нужно поле 1 поменять что его
-    // todo пересетить на нового и залить в бд  ?
-    @Override
-    public SendMessage handle(String message, Long chatId, Client client) {
 
-        client.setChatId(chatId);
+    @Override
+    public SendMessage handle(Message message, Client client) {
+
+        client.setChatId(message.getChatId());
+        client.setTelegramUserId(message.getFrom().getId());
+        client.setTelegramUsername(message.getFrom().getUserName());
         client.setRegistrationState(RegistrationState.ASK_NAME);
         client.setIsActive(true);
         client.setBonusBalance(0);
@@ -30,7 +32,7 @@ public class InitRegistrationHandler implements RegistrationHandler {
         return SendMessage
                 .builder()
                 .text(messageResponse)
-                .chatId(chatId)
+                .chatId(message.getChatId())
                 .build();
     }
 }

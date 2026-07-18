@@ -5,12 +5,13 @@ import java.time.LocalDate;
 
 public class ClientResponseDto {
     private Long id;
-    protected String firstName;
-    protected String lastName;
-    protected LocalDate birthday;
-    protected String chatId;
-    protected String phone;
-    protected String telegramUsername;
+    private String firstName;
+    private String lastName;
+    private LocalDate birthday;
+    private Long chatId;
+    private Long telegramUserId;
+    private String phone;
+    private String telegramUsername;
     private LocalDate createdAt;
     private LocalDate updatedAt;
     private Boolean isActive;
@@ -53,12 +54,20 @@ public class ClientResponseDto {
         this.birthday = birthday;
     }
 
-    public String getChatId() {
+    public Long getChatId() {
         return chatId;
     }
 
-    public void setChatId(String chatId) {
+    public void setChatId(Long chatId) {
         this.chatId = chatId;
+    }
+
+    public Long getTelegramUserId() {
+        return telegramUserId;
+    }
+
+    public void setTelegramUserId(Long telegramUserId) {
+        this.telegramUserId = telegramUserId;
     }
 
     public String getPhone() {
@@ -133,6 +142,7 @@ public class ClientResponseDto {
                 ", lastName='" + lastName + '\'' +
                 ", birthday=" + birthday +
                 ", chatId='" + chatId + '\'' +
+                ", telegramUserId='" + telegramUserId + '\'' +
                 ", phone='" + phone + '\'' +
                 ", telegramUsername='" + telegramUsername + '\'' +
                 ", createdAt=" + createdAt +

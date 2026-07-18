@@ -3,43 +3,37 @@ package com.example.LoyaltyBot.handler.registration;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
 import com.example.LoyaltyBot.service.ClientService;
-import com.example.LoyaltyBot.validator.PhoneValidator;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-
-import java.util.Optional;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 @Component
 public class AskPhoneRegistrationHandler implements RegistrationHandler {
 
     private final ClientService clientService;
-    private final PhoneValidator phoneValidator;
 
-    public AskPhoneRegistrationHandler(ClientService clientService, PhoneValidator phoneValidator) {
+    public AskPhoneRegistrationHandler(ClientService clientService) {
         this.clientService = clientService;
-        this.phoneValidator = phoneValidator;
     }
 
     @Override
-    public SendMessage handle(String message, Long chatId, Client client) {
+    public SendMessage handle(Message message, Client client) {
 
-        String sendMes;
-        Optional<String> optional = phoneValidator.validate(message);
 
-        if (optional.isPresent()) {
-            client.setPhone(optional.get());
+        if (message.hasContact()) {
+
+            client.setPhone(message.getContact().getPhoneNumber());
             client.setRegistrationState(RegistrationState.REGISTERED);
-            clientService.createClient(client);
-            sendMes = "Спасибо за регистрацию";
-        } else {
-            sendMes = "Номер не валиден попробуйте еще";
+            clientService.updateClient(client);
+            return sendMessage(message.getChatId(), "Спасибо за регистрацию");
         }
-        return SendMessage
-                .builder()
-                .chatId(chatId)
-                .text(sendMes)
-                .build();
+        return sendMessage(message.getChatId(), "Не удалось получить номер ");
     }
 
-
+    private SendMessage sendMessage(Long chatId, String text) {
+        return SendMessage.builder()
+                .chatId(chatId)
+                .text(text)
+                .build();
+    }
 }

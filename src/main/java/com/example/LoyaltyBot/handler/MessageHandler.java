@@ -7,6 +7,7 @@ import com.example.LoyaltyBot.service.ClientService;
 import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.message.Message;
 
 import java.util.Optional;
 
@@ -25,15 +26,17 @@ public class MessageHandler {
     }
 
     public SendMessage handle(Update update) {
+        Message message = update.getMessage();
+        Long telegramUserId = message.getFrom().getId();
+        Optional<Client> clientOptional = clientService.findByTelegramUserId(telegramUserId);
 
-        Long chatId = update.getMessage().getChatId();
-        String text = update.getMessage().getText();
-        Optional<Client> clientOptional = clientService.findByChatId(chatId);
+
+
 
         if (isClientRegistered(clientOptional)) {
-            return updateMessageHandler.handle(text, chatId,clientOptional);
+            return updateMessageHandler.handle(message,clientOptional);
         }else {
-            return  clientRegistrationHandler.register(text, chatId, clientOptional);
+            return  clientRegistrationHandler.register(message, clientOptional);
         }
 
     }

@@ -31,20 +31,16 @@ public class ClientService {
         Objects.requireNonNull(client);
         clientRepository.save(client);
     }
-//todo буду тестить
+
     public ClientResponseDto findById(Long id) {
         Client client = clientRepository.findById(id).orElseThrow(
                 () -> new EntityNotFoundException("Клиент с id " + id + " не найден"));
 
-        System.out.println(client);
-        ClientResponseDto clientResponseDto = clientMapper.toClientResponseDto(client);
-        System.out.println(clientResponseDto);
-        return clientResponseDto;
-
+        return clientMapper.toClientResponseDto(client);
     }
 
-    public Optional<Client> findByChatId(Long id) {
-        return clientRepository.findByChatId(id);
+    public Optional<Client> findByTelegramUserId(Long telegramUserId) {
+        return clientRepository.findByTelegramUserId(telegramUserId);
     }
 
     public List<ClientResponseDto> findAll() {
@@ -57,14 +53,4 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-    public void updateById(ClientUpdateDto updateDto, Long id) {
-        Client client = clientRepository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException("Клиент с id " + id + " не найден"));
-
-        client.setFirstName(updateDto.getFirstName());
-        client.setLastName(updateDto.getLastName());
-        client.setBirthday(updateDto.getBirthday());
-        client.setPhone(updateDto.getPhone());
-        clientRepository.save(client);
-    }
 }
