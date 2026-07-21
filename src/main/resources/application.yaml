@@ -1,3 +1,32 @@
 spring:
   application:
     name: LoyaltyBot
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/bot_db
+    password: pass
+    username: user
+
+
+  liquibase:
+    change-log: db/changelog/changelog-master.yaml
+
+  thymeleaf:
+    mode: HTML
+    encoding: UTF-8
+    prefix: classpath:/templates/
+    suffix: .html
+    cache: false
+    check-template-location: true
+    check-template-existence: true
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+
+  telegram:
+    bot:
+      name: new_loyalty_bot
+      token: 8892317211:AAEOJHA7a5lEUP-zA0K_ib5aJ_RwFjIcVLE
