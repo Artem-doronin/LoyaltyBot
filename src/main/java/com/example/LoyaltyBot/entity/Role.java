@@ -5,8 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+
+import java.util.List;
+
 
 @Data
 @Entity
@@ -18,4 +22,7 @@ public class Role {
     @Column(nullable = false,unique = true)
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "role")
+    private List<User> users;
 }
