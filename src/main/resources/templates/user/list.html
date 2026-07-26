@@ -46,7 +46,7 @@
             </form>
 
             <form th:action="@{/users/delete/{id}(id=${user.id})}"
-                  method="post"
+                  method="get"
                   style="display: inline;"
                   onsubmit="return confirm('Удалить пользователя?');">
                 <button type="submit">🗑️</button>

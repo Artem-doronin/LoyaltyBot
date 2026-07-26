@@ -20,20 +20,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(UserService userService) {
+    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userService);
-        authenticationProvider.setPasswordEncoder(passwordEncoder());
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
         return authenticationProvider;
     }
 
@@ -41,15 +39,15 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/auth/login")
+                        .requestMatchers("/users/login")
                         .permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .formLogin((form) -> form.loginPage("/auth/login")
+                .formLogin((form) -> form.loginPage("/users/login")
                         .loginProcessingUrl("/perform-login")
-                        .defaultSuccessUrl("/", true)
-                        .failureUrl("/login?error")
+                        .defaultSuccessUrl("/users", true)
+                        .failureUrl("/users/error")
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .permitAll())
