@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Все пользователи</title>
+</head>
+<body>
+<h1>👥 Все пользователи</h1>
+
+<div>
+    <a href="/users/create">➕ Добавить пользователя</a>
+    <a href="/logout">🚪 Выйти</a>
+</div>
+
+<table border="1" cellpadding="5" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Роль</th>
+        <th>Статус</th>
+        <th>Функции</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}" th:if="${users != null and !users.isEmpty()}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td th:text="${user.role_name}"></td>
+        <td>
+            <span th:if="${user.enabled}">✅ Активен</span>
+            <span th:unless="${user.enabled}">❌ Заблокирован</span>
+        </td>
+        <td>
+            <a th:href="@{/users/edit/{id}(id=${user.id})}">✏️</a>
+
+            <form th:action="@{/users/toggle/{id}(id=${user.id})}"
+                  method="post"
+                  style="display: inline;">
+                <button type="submit">
+                    <span th:if="${user.enabled}">🔒</span>
+                    <span th:unless="${user.enabled}">🔓</span>
+                </button>
+            </form>
+
+            <form th:action="@{/users/delete/{id}(id=${user.id})}"
+                  method="post"
+                  style="display: inline;"
+                  onsubmit="return confirm('Удалить пользователя?');">
+                <button type="submit">🗑️</button>
+            </form>
+        </td>
+    </tr>
+    <tr th:if="${users == null or users.isEmpty()}">
+        <td colspan="6">📭 Нет пользователей</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

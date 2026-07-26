@@ -41,12 +41,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/login")
+                        .requestMatchers("/auth/login")
                         .permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-                .formLogin((form) -> form.loginPage("/login")
+                .formLogin((form) -> form.loginPage("/auth/login")
                         .loginProcessingUrl("/perform-login")
                         .defaultSuccessUrl("/", true)
                         .failureUrl("/login?error")
