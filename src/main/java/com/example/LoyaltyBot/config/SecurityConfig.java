@@ -1,7 +1,6 @@
 package com.example.LoyaltyBot.config;
 
 import com.example.LoyaltyBot.service.UserService;
-import org.hibernate.boot.internal.Abstract;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -10,7 +9,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
@@ -22,9 +20,13 @@ public class SecurityConfig {
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
 
-    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder) {
+    private final CustomAuthenticationSuccessHandler customSuccessHandler;
+
+    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder,
+                          CustomAuthenticationSuccessHandler customSuccessHandler) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.customSuccessHandler = customSuccessHandler;
     }
 
 
@@ -46,7 +48,7 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .formLogin((form) -> form.loginPage("/users/login")
                         .loginProcessingUrl("/perform-login")
-                        .defaultSuccessUrl("/users", true)
+                        .successHandler(customSuccessHandler)
                         .failureUrl("/users/error")
                         .usernameParameter("username")
                         .passwordParameter("password")

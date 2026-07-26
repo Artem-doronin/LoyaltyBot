@@ -1,8 +1,6 @@
 package com.example.LoyaltyBot.controller;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
-import com.example.LoyaltyBot.dto.user.UserDto;
-import com.example.LoyaltyBot.entity.User;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -15,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
@@ -31,20 +28,23 @@ public class UserController {
 
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public String getAllUsers(Model model) {
         model.addAttribute("users", userService.findAll());
         return "user/list";
     }
 
     @GetMapping("delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteById(id);
         return "redirect:/users";
     }
 
     @GetMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public String formCreateUser(Model model) {
-        model.addAttribute("user",CreateUserDto.builder().build());
+        model.addAttribute("user", CreateUserDto.builder().build());
         model.addAttribute("roles", roleService.findAll());
         return "user/form";
     }

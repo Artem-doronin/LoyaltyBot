@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Все пользователи</title>
@@ -9,7 +9,11 @@
 
 <div>
     <a href="/users/create">➕ Добавить пользователя</a>
-    <a href="/logout">🚪 Выйти</a>
+    <div sec:authorize="isAuthenticated()">
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-danger" href="/logout">🚪 Выйти</a>
+        </li>
+    </div>
 </div>
 
 <table border="1" cellpadding="5" cellspacing="0">
