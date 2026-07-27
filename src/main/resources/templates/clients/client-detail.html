@@ -30,7 +30,7 @@
 <p><strong>Дата создания:</strong> <span th:text="${client.createdAt} ?: '—'"></span></p>
 <p><strong>Дата обновления:</strong> <span th:text="${client.updatedAt} ?: '—'"></span></p>
 <p><strong>Активен:</strong>
-    <span th:text="${client.getIsActive()} ? 'Да' : 'Нет'"></span>
+    <span th:text="${client.isActive()} ? 'Да' : 'Нет'"></span>
 </p>
 
 

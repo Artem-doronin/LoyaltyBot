@@ -13,7 +13,7 @@ public record CreateUserDto(
         Boolean enabled
 ) {
 
-    public User toUser(Role role,String encodedPassword) {
+    public User toUser(Role role, String encodedPassword) {
         return User.builder()
                 .username(username)
                 .password(encodedPassword)
