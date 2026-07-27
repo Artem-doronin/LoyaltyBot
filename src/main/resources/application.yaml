@@ -39,3 +39,6 @@ spring:
       com.example.LoyaltyBot: DEBUG
       org.springframework.security.web.authentication: DEBUG
       org.springframework.security.authentication: DEBUG
+
+  password_generator: 3
+

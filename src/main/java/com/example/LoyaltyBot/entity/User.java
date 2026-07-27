@@ -47,6 +47,8 @@ public class User implements UserDetails {
     private Boolean account_non_expired;
     private Boolean account_non_locked;
     private Boolean credentials_non_expired;
+    @Column(name = "should_change_password", nullable = false)
+    private Boolean shouldChangePassword;
     @CreationTimestamp
     private LocalDateTime created_at;
     @UpdateTimestamp

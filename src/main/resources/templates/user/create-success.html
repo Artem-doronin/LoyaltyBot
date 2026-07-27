@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Пользователь создан</title>
+    <meta charset="UTF-8">
+
+</head>
+<body>
+<h1>✅ Пользователь создан!</h1>
+
+
+<p><strong>Username:</strong> <span th:text="${username}"></span></p>
+
+
+<div class="password-box">
+    🔑 Временный пароль: <strong th:text="${temporaryPassword}"></strong>
+</div>
+
+<div class="warning">
+    ⚠️ Пользователь должен сменить пароль при входе!
+</div>
+
+<a href="/users">👥 Вернуться к списку</a>
+</body>
+</html>

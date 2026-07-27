@@ -1,6 +1,7 @@
 package com.example.LoyaltyBot.controller;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
+import com.example.LoyaltyBot.dto.user.ResponseCreateDto;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/users")
@@ -49,12 +51,23 @@ public class UserController {
         return "user/form";
     }
 
-
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public String createUser(@ModelAttribute("user") CreateUserDto userDto) {
-        userService.createUser(userDto);
-        return "redirect:/users";
+    public String createUser(@ModelAttribute("user") CreateUserDto userDto,
+                             RedirectAttributes redirectAttributes) {
+        ResponseCreateDto dto = userService.createUser(userDto);
+
+        redirectAttributes.addFlashAttribute("successMessage", "✅ Пользователь создан!");
+        redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporary_password());
+        redirectAttributes.addFlashAttribute("username", dto.login());
+
+        return "redirect:/users/create-success";
+    }
+
+    @GetMapping("/create-success")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String createSuccess() {
+        return "user/create-success";
     }
 
     @GetMapping("/logout")

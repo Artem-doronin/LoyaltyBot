@@ -1,10 +1,12 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
+import com.example.LoyaltyBot.dto.user.ResponseCreateDto;
 import com.example.LoyaltyBot.dto.user.UserDto;
 import com.example.LoyaltyBot.entity.User;
 import com.example.LoyaltyBot.repository.RoleRepository;
 import com.example.LoyaltyBot.repository.UserRepository;
+import com.example.LoyaltyBot.util.PasswordGenerator;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,16 +23,21 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
+    private final PasswordGenerator passwordGenerator;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleService roleService, PasswordGenerator passwordGenerator) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.roleService = roleService;
+        this.passwordGenerator = passwordGenerator;
     }
+
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
     public List<UserDto> findAll() {
@@ -48,9 +55,14 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void createUser(CreateUserDto userDto) {
+    public ResponseCreateDto createUser(CreateUserDto userDto) {
+        String password = passwordGenerator.generate();
         userRepository.save(userDto.toUser(roleService.findById(userDto.role_id()),
-                passwordEncoder.encode(userDto.password())));
+                passwordEncoder.encode(password)));
+        return ResponseCreateDto.builder()
+                .login(userDto.username())
+                .temporary_password(password)
+                .build();
     }
 
     @Transactional
@@ -60,4 +72,6 @@ public class UserService implements UserDetailsService {
         user.setEnabled(!user.getEnabled());
         userRepository.save(user);
     }
+
+
 }

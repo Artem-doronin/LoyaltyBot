@@ -1,5 +1,6 @@
 package com.example.LoyaltyBot.config;
 
+import com.example.LoyaltyBot.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -19,6 +20,14 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         boolean isAdmin = authentication.getAuthorities()
                 .stream()
                 .anyMatch(g -> Objects.equals(g.getAuthority(), "ROLE_ADMIN"));
+
+       User user = (User) authentication.getPrincipal();
+        boolean userShouldChangePassword = user.getShouldChangePassword();
+
+        if(userShouldChangePassword) {
+            response.sendRedirect("/смена временного пароля ");
+            //todo нужно запретить доступ к ресурсам если userShouldChangePassword true ,доступ разрешить только к форме смены пароля
+        }
 
         if (isAdmin) {
             response.sendRedirect("/users");

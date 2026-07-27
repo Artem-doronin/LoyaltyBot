@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -19,14 +20,18 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final ChangePasswordFilter changePasswordFilter;
 
     private final CustomAuthenticationSuccessHandler customSuccessHandler;
 
-    public SecurityConfig(UserService userService, PasswordEncoder passwordEncoder,
-                          CustomAuthenticationSuccessHandler customSuccessHandler) {
+    public SecurityConfig(UserService userService,
+                          PasswordEncoder passwordEncoder,
+                          CustomAuthenticationSuccessHandler customSuccessHandler,
+                          ChangePasswordFilter changePasswordFilter) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.customSuccessHandler = customSuccessHandler;
+        this.changePasswordFilter = changePasswordFilter;
     }
 
 
@@ -45,6 +50,7 @@ public class SecurityConfig {
                         .permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN"))
                 .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(changePasswordFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(AbstractHttpConfigurer::disable)
                 .formLogin((form) -> form.loginPage("/users/login")
                         .loginProcessingUrl("/perform-login")
