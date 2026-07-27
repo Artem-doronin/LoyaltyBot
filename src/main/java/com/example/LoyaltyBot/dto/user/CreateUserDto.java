@@ -18,7 +18,7 @@ public record CreateUserDto(
                 .password(encodedPassword)
                 .email(email)
                 .enabled(enabled)
-                .should_change_password(true)
+                .shouldChangePassword(true)
                 .account_non_expired(true)
                 .account_non_locked(true)
                 .credentials_non_expired(true)

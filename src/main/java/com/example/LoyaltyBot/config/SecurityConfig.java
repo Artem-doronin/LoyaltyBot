@@ -45,13 +45,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                .csrf(AbstractHttpConfigurer::disable)
+                .addFilterBefore(changePasswordFilter, UsernamePasswordAuthenticationFilter.class)
+                .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/users/login")
                         .permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN"))
-                .csrf(AbstractHttpConfigurer::disable)
-                .addFilterBefore(changePasswordFilter, UsernamePasswordAuthenticationFilter.class)
-                .cors(AbstractHttpConfigurer::disable)
                 .formLogin((form) -> form.loginPage("/users/login")
                         .loginProcessingUrl("/perform-login")
                         .successHandler(customSuccessHandler)

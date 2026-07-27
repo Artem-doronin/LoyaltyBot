@@ -21,14 +21,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .stream()
                 .anyMatch(g -> Objects.equals(g.getAuthority(), "ROLE_ADMIN"));
 
-       User user = (User) authentication.getPrincipal();
-        boolean userShouldChangePassword = user.getShouldChangePassword();
-
-        if(userShouldChangePassword) {
-            response.sendRedirect("/смена временного пароля ");
-            //todo нужно запретить доступ к ресурсам если userShouldChangePassword true ,доступ разрешить только к форме смены пароля
-        }
-
         if (isAdmin) {
             response.sendRedirect("/users");
         }else {
