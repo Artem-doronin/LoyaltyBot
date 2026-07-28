@@ -1,13 +1,14 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
-import com.example.LoyaltyBot.dto.user.ResponseCreateDto;
+import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.dto.user.UserDto;
 import com.example.LoyaltyBot.entity.User;
-import com.example.LoyaltyBot.repository.RoleRepository;
 import com.example.LoyaltyBot.repository.UserRepository;
 import com.example.LoyaltyBot.util.PasswordGenerator;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,7 +31,6 @@ public class UserService implements UserDetailsService {
         this.roleService = roleService;
         this.passwordGenerator = passwordGenerator;
     }
-
 
 
     @Override
@@ -55,14 +54,14 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public ResponseCreateDto createUser(CreateUserDto userDto) {
+    public TemporaryPasswordResponse createUser(CreateUserDto userDto) {
         String password = passwordGenerator.generate();
         userRepository.save(userDto.toUser(roleService.findById(userDto.role_id()),
                 passwordEncoder.encode(password)));
-        return ResponseCreateDto.builder()
-                .login(userDto.username())
-                .temporary_password(password)
-                .build();
+        return TemporaryPasswordResponse.forCreate(
+                userDto.username(),
+                password
+        );
     }
 
     @Transactional
@@ -73,5 +72,37 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    public void changePassword(String newPassword) {
+       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !auth.isAuthenticated()) {
+            throw new IllegalStateException("Пользователь не авторизован");
+        }
 
+        Object principal = auth.getPrincipal();
+        if (!(principal instanceof User)) {
+            throw new IllegalStateException("Неверный тип пользователя");
+        }
+
+        // ✅ Проверка: пароль не пустой
+        if (newPassword == null || newPassword.isBlank()) {
+            throw new IllegalArgumentException("Пароль не может быть пустым");
+        }
+        User user = (User) principal;
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setShouldChangePassword(false);
+        userRepository.save(user);
+    }
+
+    public TemporaryPasswordResponse resetPassword(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new EntityNotFoundException("not found user"));
+
+        String password = passwordGenerator.generate();
+        user.setPassword(passwordEncoder.encode(password));
+        user.setShouldChangePassword(true);
+        userRepository.save(user);
+
+        return TemporaryPasswordResponse.forReset(user.getUsername(),password);
+    }
 }

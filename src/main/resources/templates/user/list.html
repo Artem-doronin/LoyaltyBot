@@ -55,6 +55,13 @@
                   onsubmit="return confirm('Удалить пользователя?');">
                 <button type="submit">🗑️</button>
             </form>
+
+            <form th:action="@{/users/reset_password/{id}(id=${user.id})}"
+                  method="post"
+                  style="display: inline;"
+                  onsubmit="return confirm('Сбросить пароль?');">
+                <button type="submit">сброс пароля</button>
+            </form>
         </td>
     </tr>
     <tr th:if="${users == null or users.isEmpty()}">

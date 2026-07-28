@@ -1,13 +1,10 @@
 package com.example.LoyaltyBot.controller;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
-import com.example.LoyaltyBot.dto.user.ResponseCreateDto;
+import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,7 +24,6 @@ public class UserController {
         this.userService = userService;
         this.roleService = roleService;
     }
-
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -55,38 +51,33 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public String createUser(@ModelAttribute("user") CreateUserDto userDto,
                              RedirectAttributes redirectAttributes) {
-        ResponseCreateDto dto = userService.createUser(userDto);
+        TemporaryPasswordResponse dto = userService.createUser(userDto);
 
-        redirectAttributes.addFlashAttribute("successMessage", "✅ Пользователь создан!");
-        redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporary_password());
-        redirectAttributes.addFlashAttribute("username", dto.login());
+        redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
+        redirectAttributes.addFlashAttribute("login", dto.login());
+        redirectAttributes.addFlashAttribute("action", dto.action());
 
-        return "redirect:/users/create-success";
+        return "redirect:/users/password-response";
     }
 
-    @GetMapping("/create-success")
+
+
+    @PostMapping("/reset_password/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String createSuccess() {
-        return "user/create-success";
+    public String resetPassword(@PathVariable Long id,RedirectAttributes redirectAttributes) {
+
+        TemporaryPasswordResponse dto = userService.resetPassword(id);
+
+        redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
+        redirectAttributes.addFlashAttribute("login", dto.login());
+        redirectAttributes.addFlashAttribute("action", dto.action());
+
+        return "redirect:/users/password-response";
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            request.getSession().invalidate();
-        }
-        return "redirect:/auth/login";
-    }
-
-    @GetMapping("/login")
-    public String loginPage() {
-        return "/auth/login";
-    }
-
-    @GetMapping("/error")
-    public String error() {
-        return "user/error";
+    @GetMapping("/password-response")
+    public String passwordResponse() {
+        return "user/password-response";
     }
 
     @PostMapping("/toggle/{id}")
@@ -95,6 +86,10 @@ public class UserController {
         userService.toggleEnabled(id);
         return "redirect:/users";
     }
+
+    @PostMapping("")
+
+
 }
 
 

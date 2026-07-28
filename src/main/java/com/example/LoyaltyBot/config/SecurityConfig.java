@@ -49,18 +49,18 @@ public class SecurityConfig {
                 .addFilterBefore(changePasswordFilter, UsernamePasswordAuthenticationFilter.class)
                 .cors(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/users/login")
+                        .requestMatchers("/change-password").authenticated()
+                        .requestMatchers("/auth/login")
                         .permitAll()
                         .anyRequest().hasAnyRole("USER", "ADMIN"))
-                .formLogin((form) -> form.loginPage("/users/login")
+                .formLogin((form) -> form.loginPage("/auth/login")
                         .loginProcessingUrl("/perform-login")
                         .successHandler(customSuccessHandler)
-                        .failureUrl("/users/error")
+                        .failureUrl("/auth/error")
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .permitAll())
-                .logout(logout -> logout.logoutSuccessUrl("/login"));
+                .logout(logout -> logout.logoutSuccessUrl("/auth/login"));
         return http.build();
-
     }
 }
