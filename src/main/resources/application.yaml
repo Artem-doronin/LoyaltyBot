@@ -31,7 +31,8 @@ spring:
       name: new_loyalty_bot
       token: 8892317211:AAEOJHA7a5lEUP-zA0K_ib5aJ_RwFjIcVLE
 
-  password_generator: 3
+  password_generator:
+    3
 
 logging:
   level:

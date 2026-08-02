@@ -21,17 +21,13 @@ public class ChangePasswordInterceptor implements HandlerInterceptor {
         String requestURI = request.getRequestURI();
         log.debug("🔍 Interceptor: {}", requestURI);
 
-        // ✅ ПРОВЕРЯЕМ: нужно ли проверять этот URL
-        // Если это страница логина, ошибки или статика - пропускаем
         if (isAllowedUrl(requestURI)) {
             log.debug("  → Разрешенный URL, пропускаем");
             return true;
         }
 
-        // ✅ ТОЛЬКО ТЕПЕРЬ получаем пользователя
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // ❌ Если не авторизован - пропускаем
         if (authentication == null || !authentication.isAuthenticated() ||
                 "anonymousUser".equals(authentication.getPrincipal())) {
             log.debug("  → Не авторизован, пропускаем");
@@ -46,7 +42,7 @@ public class ChangePasswordInterceptor implements HandlerInterceptor {
 
         User user = (User) principal;
 
-        // ✅ Проверяем, должен ли сменить пароль
+
         if (user.getShouldChangePassword()) {
             log.warn("🔒 Блокировка доступа: {} пытался зайти на {}",
                     user.getUsername(), requestURI);
@@ -58,7 +54,6 @@ public class ChangePasswordInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    // ✅ Вспомогательный метод для проверки разрешенных URL
     private boolean isAllowedUrl(String requestURI) {
         return requestURI.startsWith("/auth/login") ||
                 requestURI.startsWith("/perform-login") ||

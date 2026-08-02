@@ -106,7 +106,7 @@ public class UserService implements UserDetailsService {
 
 
     private User getCurrentUser() {
-        log.info("🔄 getCurrentUser() - получение текущего пользователя");
+        log.info("getCurrentUser() - получение текущего пользователя");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 
@@ -115,11 +115,11 @@ public class UserService implements UserDetailsService {
             throw new IllegalStateException("Пользователь не авторизован");
         }
 
-        log.info("🔍 Authentication: {}", auth.getClass().getSimpleName());
-        log.info("🔍 isAuthenticated: {}", auth.isAuthenticated());
+        log.info("Authentication: {}", auth.getClass().getSimpleName());
+        log.info("isAuthenticated: {}", auth.isAuthenticated());
 
-        log.info("👤 Имя пользователя: {}", auth.getName());
-        log.info("🔑 Authorities: {}", auth.getAuthorities());
+        log.info("Имя пользователя: {}", auth.getName());
+        log.info("Authorities: {}", auth.getAuthorities());
 
         Object principal = auth.getPrincipal();
         if (!(principal instanceof User)) {

@@ -21,7 +21,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         Authentication authentication) throws IOException, ServletException {
 
 
-        log.info("🔐 Аутентификация успешна");
+        log.info(" Аутентификация успешна");
         log.debug("  Session ID: {}", request.getSession().getId());
 
 
@@ -31,7 +31,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
 
         if (user.getShouldChangePassword()) {
-            log.warn("⚠️ Пользователь {} должен сменить пароль → редирект на /users/change_password",
+            log.warn(" Пользователь {} должен сменить пароль → редирект на /users/change_password",
                     user.getUsername());
             response.sendRedirect("/users/change_password");
             return;
@@ -43,13 +43,13 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                 .anyMatch(g -> g.getAuthority().equals("ROLE_ADMIN"));
 
         if (isAdmin) {
-            log.info("✅ Администратор {} → редирект на /users", user.getUsername());
+            log.info(" Администратор {} → редирект на /users", user.getUsername());
             response.sendRedirect("/users");
         } else {
-            log.info("✅ Пользователь {} → редирект на /clients", user.getUsername());
+            log.info(" Пользователь {} → редирект на /clients", user.getUsername());
             response.sendRedirect("/clients");
         }
 
-        log.debug("✅ AuthenticationSuccessHandler завершил работу");
+        log.debug(" AuthenticationSuccessHandler завершил работу");
     }
 }

@@ -26,7 +26,7 @@ public class AuthController {
     public String loginError(Model model) {
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss"));
 
-        log.error("❌ Ошибка входа - неверное имя пользователя или пароль");
+        log.error(" Ошибка входа - неверное имя пользователя или пароль");
 
         model.addAttribute("status", "401");
         model.addAttribute("error", "Неверное имя пользователя или пароль");

@@ -9,6 +9,9 @@ public record TemporaryPasswordResponse(
         String action
 ) {
 
+    //todo ты наверное скажешь дублирование кода ?
+    // можно в метод передать стрингу
+
     public static TemporaryPasswordResponse forCreate(String username, String password) {
         return TemporaryPasswordResponse.builder()
                 .login(username)

@@ -93,7 +93,7 @@ public class UserController {
                                  RedirectAttributes redirectAttributes) {
         try {
             userService.changePassword(dto);
-            redirectAttributes.addFlashAttribute("successMessage", "✅ Пароль успешно изменен!");
+            redirectAttributes.addFlashAttribute("successMessage", " Пароль успешно изменен!");
             return "redirect:/clients";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
