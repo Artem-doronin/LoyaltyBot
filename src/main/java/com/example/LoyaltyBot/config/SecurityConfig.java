@@ -9,10 +9,8 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,18 +19,17 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-    private final ChangePasswordFilter changePasswordFilter;
+
 
     private final CustomAuthenticationSuccessHandler customSuccessHandler;
 
     public SecurityConfig(UserService userService,
                           PasswordEncoder passwordEncoder,
-                          CustomAuthenticationSuccessHandler customSuccessHandler,
-                          ChangePasswordFilter changePasswordFilter) {
+                          CustomAuthenticationSuccessHandler customSuccessHandler
+    ) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.customSuccessHandler = customSuccessHandler;
-        this.changePasswordFilter = changePasswordFilter;
     }
 
 
@@ -48,8 +45,6 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-
-                .addFilterAfter(changePasswordFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/users/change_password").authenticated()
                         .requestMatchers("/auth/login")

@@ -4,6 +4,7 @@ import com.example.LoyaltyBot.entity.User;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 @Component
+@Slf4j  // ← Добавляем логирование
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
@@ -18,34 +20,36 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-        System.out.println("=========================================");
-        System.out.println("🚀🚀🚀 CustomAuthenticationSuccessHandler ВЫЗВАН! 🚀🚀🚀");
-        System.out.println("  Session ID: " + request.getSession().getId());
-        System.out.println("=========================================");
 
-        // ✅ ПОЛУЧАЕМ ПОЛЬЗОВАТЕЛЯ
+        log.info("🔐 Аутентификация успешна");
+        log.debug("  Session ID: {}", request.getSession().getId());
+
+
         User user = (User) authentication.getPrincipal();
-        System.out.println("  User: " + user.getUsername());
-        System.out.println("  shouldChangePassword: " + user.getShouldChangePassword());
+        log.info("👤 Пользователь: {}", user.getUsername());
+        log.info("  shouldChangePassword: {}", user.getShouldChangePassword());
 
-        // ✅ ПРОВЕРКА: должен ли сменить пароль (ПРИОРИТЕТ 1)
+
         if (user.getShouldChangePassword()) {
-            System.out.println("  → Перенаправление на /users/change_password");
+            log.warn("⚠️ Пользователь {} должен сменить пароль → редирект на /users/change_password",
+                    user.getUsername());
             response.sendRedirect("/users/change_password");
-            return;  // ← ВАЖНО! Прерываем выполнение
+            return;
         }
 
-        // ✅ ПРОВЕРКА: администратор или пользователь (ПРИОРИТЕТ 2)
+
         boolean isAdmin = authentication.getAuthorities()
                 .stream()
                 .anyMatch(g -> g.getAuthority().equals("ROLE_ADMIN"));
 
         if (isAdmin) {
-            System.out.println("  → Перенаправление на /users");
+            log.info("✅ Администратор {} → редирект на /users", user.getUsername());
             response.sendRedirect("/users");
         } else {
-            System.out.println("  → Перенаправление на /clients");
+            log.info("✅ Пользователь {} → редирект на /clients", user.getUsername());
             response.sendRedirect("/clients");
         }
+
+        log.debug("✅ AuthenticationSuccessHandler завершил работу");
     }
 }
