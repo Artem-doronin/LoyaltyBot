@@ -1,6 +1,7 @@
 package com.example.LoyaltyBot.controller;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
+import com.example.LoyaltyBot.dto.user.PasswordChangeUserDto;
 import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
@@ -61,10 +62,9 @@ public class UserController {
     }
 
 
-
     @PostMapping("/reset_password/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public String resetPassword(@PathVariable Long id,RedirectAttributes redirectAttributes) {
+    public String resetPassword(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         TemporaryPasswordResponse dto = userService.resetPassword(id);
 
@@ -87,7 +87,26 @@ public class UserController {
         return "redirect:/users";
     }
 
-    @PostMapping("")
+    @PostMapping("/change_password")
+    @PreAuthorize("hasRole('USER')")
+    public String changePassword(@ModelAttribute("user") PasswordChangeUserDto dto,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            userService.changePassword(dto);
+            redirectAttributes.addFlashAttribute("successMessage", "✅ Пароль успешно изменен!");
+            return "redirect:/clients";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/users/change_password";
+        }
+    }
+
+    @GetMapping("/change_password")
+    @PreAuthorize("hasRole('USER')")
+    public String changePasswordForm(Model model) {
+        model.addAttribute("user", PasswordChangeUserDto.builder().build());
+        return "user/change-password";
+    }
 
 
 }
