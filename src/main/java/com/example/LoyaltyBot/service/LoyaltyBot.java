@@ -15,7 +15,6 @@ public class LoyaltyBot implements LongPollingSingleThreadUpdateConsumer {
     private final CallbackHandler callbackHandler;
     private final MessageSender messageSender;
 
-
     public LoyaltyBot(MessageHandler messageHandler, CallbackHandler callbackHandler, MessageSender messageSender) {
         this.messageHandler = messageHandler;
         this.callbackHandler = callbackHandler;
@@ -25,7 +24,7 @@ public class LoyaltyBot implements LongPollingSingleThreadUpdateConsumer {
     @Override
     public void consume(Update update) {
         SendMessage message = null;
-        if (update.hasMessage() ) {
+        if (update.hasMessage()) {
             message = messageHandler.handle(update);
         } else if (update.hasCallbackQuery()) {
             message = callbackHandler.handle(update);

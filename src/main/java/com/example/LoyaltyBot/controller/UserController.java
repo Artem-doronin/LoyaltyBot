@@ -1,7 +1,7 @@
 package com.example.LoyaltyBot.controller;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
-import com.example.LoyaltyBot.dto.user.PasswordChangeUserDto;
+import com.example.LoyaltyBot.dto.user.ChangePasswordRequest;
 import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
@@ -53,34 +53,27 @@ public class UserController {
     public String createUser(@ModelAttribute("user") CreateUserDto userDto,
                              RedirectAttributes redirectAttributes) {
         TemporaryPasswordResponse dto = userService.createUser(userDto);
-
         redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
         redirectAttributes.addFlashAttribute("login", dto.login());
-        redirectAttributes.addFlashAttribute("action", dto.action());
-
-        return "redirect:/users/password-response";
+        return "redirect:/user-create-response";
     }
-
 
     @PostMapping("/reset_password/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String resetPassword(@PathVariable Long id, RedirectAttributes redirectAttributes) {
 
         TemporaryPasswordResponse dto = userService.resetPassword(id);
-
         redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
         redirectAttributes.addFlashAttribute("login", dto.login());
-        redirectAttributes.addFlashAttribute("action", dto.action());
-
-        return "redirect:/users/password-response";
+        return "redirect:/password-reset-response";
     }
 
     @GetMapping("/password-response")
     public String passwordResponse() {
-        return "user/password-response";
+        return "user/password-reset-response";
     }
 
-    @PostMapping("/toggle/{id}")
+    @PostMapping("/toggle-enabled/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String toggleUser(@PathVariable Long id) {
         userService.toggleEnabled(id);
@@ -89,11 +82,11 @@ public class UserController {
 
     @PostMapping("/change_password")
     @PreAuthorize("hasRole('USER')")
-    public String changePassword(@ModelAttribute("user") PasswordChangeUserDto dto,
+    public String changePassword(@ModelAttribute("user") ChangePasswordRequest dto,
                                  RedirectAttributes redirectAttributes) {
         try {
             userService.changePassword(dto);
-            redirectAttributes.addFlashAttribute("successMessage", " Пароль успешно изменен!");
+            redirectAttributes.addFlashAttribute("successMessage", "Пароль успешно изменен!");
             return "redirect:/clients";
         } catch (IllegalArgumentException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
@@ -104,11 +97,9 @@ public class UserController {
     @GetMapping("/change_password")
     @PreAuthorize("hasRole('USER')")
     public String changePasswordForm(Model model) {
-        model.addAttribute("user", PasswordChangeUserDto.builder().build());
+        model.addAttribute("user", ChangePasswordRequest.builder().build());
         return "user/change-password";
     }
-
-
 }
 
 

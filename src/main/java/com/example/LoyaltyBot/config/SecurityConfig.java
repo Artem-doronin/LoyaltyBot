@@ -19,8 +19,6 @@ public class SecurityConfig {
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
-
-
     private final CustomAuthenticationSuccessHandler customSuccessHandler;
 
     public SecurityConfig(UserService userService,
@@ -31,7 +29,6 @@ public class SecurityConfig {
         this.passwordEncoder = passwordEncoder;
         this.customSuccessHandler = customSuccessHandler;
     }
-
 
     @Bean
     public AuthenticationProvider authenticationProvider() {
@@ -53,7 +50,7 @@ public class SecurityConfig {
                 .formLogin((form) -> form.loginPage("/auth/login")
                         .loginProcessingUrl("/perform-login")
                         .successHandler(customSuccessHandler)
-                        .failureUrl("/auth/error")
+                        .failureUrl("/auth/login-error")
                         .usernameParameter("username")
                         .passwordParameter("password")
                         .permitAll())

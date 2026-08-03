@@ -12,7 +12,6 @@ public class WebConfig implements WebMvcConfigurer {
         this.changePasswordInterceptor = changePasswordInterceptor;
     }
 
-
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(changePasswordInterceptor)
@@ -27,7 +26,6 @@ public class WebConfig implements WebMvcConfigurer {
                         "/images/**",
                         "/auth/error"
                 );
-
         WebMvcConfigurer.super.addInterceptors(registry);
     }
 }

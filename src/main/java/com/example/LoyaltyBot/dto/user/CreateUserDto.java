@@ -11,8 +11,6 @@ public record CreateUserDto(
         Long role_id,
         Boolean enabled
 ) {
-    // todo правильно ли здесь заполнять поля ?
-    //  т.к. это дто create то наверное имеет место быть
 
     public User toUser(Role role, String encodedPassword) {
         return User.builder()

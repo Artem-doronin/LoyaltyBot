@@ -33,7 +33,7 @@ public class ClientRegistrationHandler {
         Client client = optionalClient.orElse(new Client());
 
         RegistrationHandler registrationHandler = registrationHandlerMap.get(registrationState);
-        return registrationHandler.handle(message,client);
+        return registrationHandler.handle(message, client);
     }
 
 }

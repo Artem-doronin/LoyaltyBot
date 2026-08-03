@@ -9,7 +9,7 @@ public record UserDto(
         String username,
         String password,
         String email,
-        String role_name,
+        String roleName,
         Boolean enabled
 ) {
 
@@ -19,7 +19,7 @@ public record UserDto(
                 .username(user.getUsername())
                 .password(user.getPassword())
                 .email(user.getEmail())
-                .role_name(user.getRole().getName())
+                .roleName(user.getRole().getName())
                 .enabled(user.getEnabled())
                 .build();
     }

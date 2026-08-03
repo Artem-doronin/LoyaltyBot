@@ -34,9 +34,6 @@ CREATE TABLE IF NOT EXISTS users
     email                   VARCHAR(100)       NOT NULL UNIQUE,
     role_id                 BIGINT             NOT NULL,
     enabled                 BOOLEAN            NOT NULL DEFAULT TRUE,
-    account_non_expired     BOOLEAN            NOT NULL DEFAULT TRUE,
-    account_non_locked      BOOLEAN            NOT NULL DEFAULT TRUE,
-    credentials_non_expired BOOLEAN            NOT NULL DEFAULT TRUE,
     should_change_password  BOOLEAN            NOT NULL DEFAULT TRUE,
     created_at              TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at              TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -44,7 +41,7 @@ CREATE TABLE IF NOT EXISTS users
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE RESTRICT
 );
 
-INSERT INTO roles (name, description)
+INSERT INTO  roles (name, description)
 VALUES ('ROLE_USER', 'Кассир'),
        ('ROLE_ADMIN', 'Администратор');
 

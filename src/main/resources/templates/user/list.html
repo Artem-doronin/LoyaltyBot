@@ -33,7 +33,7 @@
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
-        <td th:text="${user.role_name}"></td>
+        <td th:text="${user.roleName}"></td>
         <td>
             <span th:if="${user.enabled}">✅ Активен</span>
             <span th:unless="${user.enabled}">❌ Заблокирован</span>
@@ -41,7 +41,7 @@
         <td>
             <a th:href="@{/users/edit/{id}(id=${user.id})}">✏️</a>
 
-            <form th:action="@{/users/toggle/{id}(id=${user.id})}"
+            <form th:action="@{/users/toggle-enabled/{id}(id=${user.id})}"
                   method="post"
                   style="display: inline;">
                 <button type="submit">

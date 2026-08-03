@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 @Component
-public class MessageSender  {
+public class MessageSender {
     private final TelegramClient telegramClient;
 
     public MessageSender(TelegramClient telegramClient) {
@@ -17,7 +17,7 @@ public class MessageSender  {
     public void sendMessage(SendMessage message) {
         try {
             telegramClient.execute(message);
-        }catch (TelegramApiException e) {
+        } catch (TelegramApiException e) {
             throw new MessageSenderException("Не удалось отправить сообщение");
         }
     }

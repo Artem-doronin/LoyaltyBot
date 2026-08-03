@@ -1,7 +1,7 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
-import com.example.LoyaltyBot.dto.user.PasswordChangeUserDto;
+import com.example.LoyaltyBot.dto.user.ChangePasswordRequest;
 import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.dto.user.UserDto;
 import com.example.LoyaltyBot.entity.User;
@@ -54,12 +54,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(userDto.toUser());
     }
 
-
     public TemporaryPasswordResponse createUser(CreateUserDto userDto) {
         String password = passwordGenerator.generate();
         userRepository.save(userDto.toUser(roleService.findById(userDto.role_id()),
                 passwordEncoder.encode(password)));
-        return TemporaryPasswordResponse.forCreate(
+        return TemporaryPasswordResponse.toDto(
                 userDto.username(),
                 password
         );
@@ -72,7 +71,7 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public void changePassword(PasswordChangeUserDto dto) {
+    public void changePassword(ChangePasswordRequest dto) {
         User user = getCurrentUser();
 
         if (!passwordEncoder.matches(dto.oldPassword(), user.getPassword())) {
@@ -101,25 +100,22 @@ public class UserService implements UserDetailsService {
         user.setShouldChangePassword(true);
         userRepository.save(user);
 
-        return TemporaryPasswordResponse.forReset(user.getUsername(), password);
+        return TemporaryPasswordResponse.toDto(user.getUsername(), password);
     }
-
 
     private User getCurrentUser() {
         log.info("getCurrentUser() - получение текущего пользователя");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-
-
         if (auth == null || !auth.isAuthenticated()) {
             throw new IllegalStateException("Пользователь не авторизован");
         }
 
-        log.info("Authentication: {}", auth.getClass().getSimpleName());
-        log.info("isAuthenticated: {}", auth.isAuthenticated());
-
-        log.info("Имя пользователя: {}", auth.getName());
-        log.info("Authorities: {}", auth.getAuthorities());
+        log.info("Authentication: {} isAuthenticated: {} Имя пользователя: {} Authorities: {} ",
+                auth.getClass().getSimpleName(),
+                auth.isAuthenticated(),
+                auth.getName(),
+                auth.getAuthorities());
 
         Object principal = auth.getPrincipal();
         if (!(principal instanceof User)) {

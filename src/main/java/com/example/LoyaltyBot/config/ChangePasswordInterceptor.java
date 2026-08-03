@@ -19,10 +19,10 @@ public class ChangePasswordInterceptor implements HandlerInterceptor {
                              Object handler) throws Exception {
 
         String requestURI = request.getRequestURI();
-        log.debug("🔍 Interceptor: {}", requestURI);
+        log.debug("Interceptor: {}", requestURI);
 
         if (isAllowedUrl(requestURI)) {
-            log.debug("  → Разрешенный URL, пропускаем");
+            log.debug("Разрешенный URL, пропускаем");
             return true;
         }
 
@@ -30,27 +30,26 @@ public class ChangePasswordInterceptor implements HandlerInterceptor {
 
         if (authentication == null || !authentication.isAuthenticated() ||
                 "anonymousUser".equals(authentication.getPrincipal())) {
-            log.debug("  → Не авторизован, пропускаем");
+            log.debug("Не авторизован, пропускаем");
             return true;
         }
 
         Object principal = authentication.getPrincipal();
         if (!(principal instanceof User)) {
-            log.debug("  → Не User, пропускаем");
+            log.debug("Не User, пропускаем");
             return true;
         }
 
         User user = (User) principal;
 
-
         if (user.getShouldChangePassword()) {
-            log.warn("🔒 Блокировка доступа: {} пытался зайти на {}",
+            log.warn("Блокировка доступа: {} пытался зайти на {}",
                     user.getUsername(), requestURI);
             response.sendRedirect("/users/change_password");
             return false;
         }
 
-        log.debug("  → Пропускаем: {}", user.getUsername());
+        log.debug("Пропускаем: {}", user.getUsername());
         return true;
     }
 

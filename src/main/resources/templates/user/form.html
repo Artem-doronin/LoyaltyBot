@@ -9,7 +9,6 @@
 
 <form th:action="@{/users/create}" method="post" th:object="${user}">
 
-    <!-- Username -->
     <div>
         <label for="username">Username:</label>
         <input type="text"
@@ -20,7 +19,6 @@
     </div>
     <br/>
 
-    <!-- Email -->
     <div>
         <label for="email">Email:</label>
         <input type="email"
@@ -31,7 +29,6 @@
     </div>
     <br/>
 
-    <!-- Role -->
     <div>
         <label for="roleSelect">Роль:</label>
         <select id="roleSelect" th:field="*{role_id}" required>
@@ -44,7 +41,6 @@
     </div>
     <br/>
 
-    <!-- Enabled (активен) -->
     <div>
         <label>
             <input type="checkbox" th:field="*{enabled}" />
@@ -53,7 +49,6 @@
     </div>
     <br/>
 
-    <!-- Кнопки -->
     <div>
         <button type="submit">💾 Сохранить</button>
         <a href="/users">❌ Отмена</a>

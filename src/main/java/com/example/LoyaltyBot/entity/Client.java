@@ -8,8 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-
-
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -44,9 +42,9 @@ public class Client {
 
     private LocalDate birthday;
 
-    private Integer bonusBalance ;
+    private Integer bonusBalance;
 
-    private Integer totalSpent ;
+    private Integer totalSpent;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -54,7 +52,7 @@ public class Client {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    private Boolean isActive ;
+    private Boolean isActive;
 
     @Enumerated(EnumType.STRING)
     private RegistrationState registrationState;
@@ -62,7 +60,7 @@ public class Client {
     public Client() {
     }
 
-    public Client(Long id, Long chatId,Long telegramUserId, String telegramUsername, String firstName,
+    public Client(Long id, Long chatId, Long telegramUserId, String telegramUsername, String firstName,
                   String lastName, String phone, LocalDate birthday, Integer bonusBalance,
                   Integer totalSpent, LocalDateTime createdAt, LocalDateTime updatedAt,
                   Boolean isActive, RegistrationState registrationState) {
@@ -101,6 +99,7 @@ public class Client {
     public Long getTelegramUserId() {
         return telegramUserId;
     }
+
     public void setTelegramUserId(Long telegramUserId) {
         this.telegramUserId = telegramUserId;
     }

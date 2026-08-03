@@ -2,11 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title th:text="${action == 'CREATE' ? 'Пользователь создан' : 'Пароль сброшен'}"></title>
+    <title>Пользователь создан</title>
 </head>
 <body>
-<h2 th:if="${action == 'CREATE'}">✅ Пользователь создан!</h2>
-<h2 th:if="${action == 'RESET'}">🔄 Пароль сброшен!</h2>
+<h2>✅ Пользователь создан!</h2>
 
 <p><strong>Username:</strong> <span th:text="${login}"></span></p>
 
@@ -16,9 +15,9 @@
 
 <p>
     <a th:href="@{/users}">👥 Вернуться к списку</a>
-    <span th:if="${action == 'CREATE'}">
-            | <a th:href="@{/users/create}">➕ Создать ещё</a>
-        </span>
+
+    <a th:href="@{/users/create}">➕ Создать ещё</a>
+
 </p>
 </body>
 </html>

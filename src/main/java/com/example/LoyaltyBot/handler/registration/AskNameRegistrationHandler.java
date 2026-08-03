@@ -24,7 +24,7 @@ public class AskNameRegistrationHandler implements RegistrationHandler {
         clientService.updateClient(client);
 
         String messageResponse = String
-                .format("Хорошо %s, теперь введите дату рождения в в формате dd.MM.yyyy", client.getFirstName() );
+                .format("Хорошо %s, теперь введите дату рождения в в формате dd.MM.yyyy", client.getFirstName());
 
         return SendMessage
                 .builder()

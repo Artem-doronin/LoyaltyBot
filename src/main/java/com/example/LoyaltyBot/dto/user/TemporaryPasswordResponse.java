@@ -5,27 +5,13 @@ import lombok.Builder;
 @Builder
 public record TemporaryPasswordResponse(
         String login,
-        String temporaryPassword,
-        String action
+        String temporaryPassword
 ) {
 
-    //todo ты наверное скажешь дублирование кода ?
-    // можно в метод передать стрингу
-
-    public static TemporaryPasswordResponse forCreate(String username, String password) {
+    public static TemporaryPasswordResponse toDto(String username, String password) {
         return TemporaryPasswordResponse.builder()
                 .login(username)
                 .temporaryPassword(password)
-                .action("CREATE")
-                .build();
-    }
-
-
-    public static TemporaryPasswordResponse forReset(String username, String password) {
-        return TemporaryPasswordResponse.builder()
-                .login(username)
-                .temporaryPassword(password)
-                .action("RESET")
                 .build();
     }
 }
