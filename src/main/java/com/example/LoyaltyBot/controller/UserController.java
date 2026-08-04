@@ -55,7 +55,7 @@ public class UserController {
         TemporaryPasswordResponse dto = userService.createUser(userDto);
         redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
         redirectAttributes.addFlashAttribute("login", dto.login());
-        return "redirect:/user-create-response";
+        return "redirect:password-create-response";
     }
 
     @PostMapping("/reset_password/{id}")
@@ -65,12 +65,17 @@ public class UserController {
         TemporaryPasswordResponse dto = userService.resetPassword(id);
         redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
         redirectAttributes.addFlashAttribute("login", dto.login());
-        return "redirect:/password-reset-response";
+        return "redirect:password-response";
     }
 
     @GetMapping("/password-response")
     public String passwordResponse() {
         return "user/password-reset-response";
+    }
+
+    @GetMapping("/password-create-response")
+    public String passwordCreateResponse() {
+        return "user/user-create-response";
     }
 
     @PostMapping("/toggle-enabled/{id}")

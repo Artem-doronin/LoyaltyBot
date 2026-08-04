@@ -19,9 +19,6 @@ public record CreateUserDto(
                 .email(email)
                 .enabled(enabled)
                 .shouldChangePassword(true)
-                .account_non_expired(true)
-                .account_non_locked(true)
-                .credentials_non_expired(true)
                 .role(role)
                 .build();
     }
