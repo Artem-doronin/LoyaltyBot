@@ -16,7 +16,16 @@ import java.util.Set;
 public class ForcePasswordChangeFilter extends OncePerRequestFilter {
 
     private static final Set<String> ALLOWED_PATHS = Set.of(
-        "/reset-password", "/logout", "/css", "/js", "/images"
+            "/users/change_password",  // ← ДОБАВЛЕНО!
+            "/auth/login",
+            "/perform-login",
+            "/logout",
+            "/auth/error",
+            "/css",
+            "/js",
+            "/images",
+            "/favicon.ico",
+            "/webjars"
     );
 
     @Override
@@ -31,7 +40,7 @@ public class ForcePasswordChangeFilter extends OncePerRequestFilter {
                 && user.getShouldChangePassword()
                 && ALLOWED_PATHS.stream().noneMatch(p -> request.getRequestURI().startsWith(p))) {
 
-            response.sendRedirect("/users/change-password");
+            response.sendRedirect("/users/change_password");
             return;
         }
         filterChain.doFilter(request, response);

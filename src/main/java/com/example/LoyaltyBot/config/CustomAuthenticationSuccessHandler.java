@@ -25,14 +25,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         log.debug("Session ID: {}", request.getSession().getId());
 
         User user = (User) authentication.getPrincipal();
-        log.info("Пользователь: {} shouldChangePassword: {}", user.getUsername(),user.getShouldChangePassword());
 
-        if (user.getShouldChangePassword()) {
-            log.info("Пользователь {} должен сменить пароль → редирект на /users/change_password",
-                    user.getUsername());
-            response.sendRedirect("/users/change_password");
-            return;
-        }
         boolean isAdmin = authentication.getAuthorities()
                 .stream()
                 .anyMatch(g -> Objects.equals(g.getAuthority(), "ROLE_ADMIN"));

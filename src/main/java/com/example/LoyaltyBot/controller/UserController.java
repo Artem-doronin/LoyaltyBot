@@ -1,7 +1,7 @@
 package com.example.LoyaltyBot.controller;
 
-import com.example.LoyaltyBot.dto.user.CreateUserDto;
 import com.example.LoyaltyBot.dto.user.ChangePasswordRequest;
+import com.example.LoyaltyBot.dto.user.CreateUserDto;
 import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
@@ -55,7 +55,7 @@ public class UserController {
         TemporaryPasswordResponse dto = userService.createUser(userDto);
         redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
         redirectAttributes.addFlashAttribute("login", dto.login());
-        return "redirect:password-create-response";
+        return "redirect:/users/password-create-response";
     }
 
     @PostMapping("/reset_password/{id}")
@@ -65,7 +65,7 @@ public class UserController {
         TemporaryPasswordResponse dto = userService.resetPassword(id);
         redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
         redirectAttributes.addFlashAttribute("login", dto.login());
-        return "redirect:password-response";
+        return "redirect:/users/password-response";
     }
 
     @GetMapping("/password-response")
@@ -73,10 +73,13 @@ public class UserController {
         return "user/password-reset-response";
     }
 
+
+
     @GetMapping("/password-create-response")
     public String passwordCreateResponse() {
-        return "user/user-create-response";
+        return "user/create-response";
     }
+
 
     @PostMapping("/toggle-enabled/{id}")
     @PreAuthorize("hasRole('ADMIN')")

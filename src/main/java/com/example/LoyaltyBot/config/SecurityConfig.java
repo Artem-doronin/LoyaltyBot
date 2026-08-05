@@ -25,7 +25,6 @@ public class SecurityConfig {
     private final CustomAuthenticationSuccessHandler customSuccessHandler;
 
 
-
     public SecurityConfig(UserService userService,
                           PasswordEncoder passwordEncoder,
                           CustomAuthenticationSuccessHandler customSuccessHandler
@@ -49,9 +48,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
-
                 .addFilterAfter(new ForcePasswordChangeFilter(), UsernamePasswordAuthenticationFilter.class)
-
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/users/change_password").authenticated()
                         .requestMatchers("/auth/login")
