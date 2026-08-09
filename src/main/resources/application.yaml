@@ -21,6 +21,7 @@ spring:
     check-template-location: true
     check-template-existence: true
 
+
   mvc:
     hiddenmethod:
       filter:

@@ -1,56 +1,160 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="layout :: main">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Все клиенты</title>
-</head>
-<!-- ✅ СООБЩЕНИЕ ОБ УСПЕХЕ (видно после редиректа) -->
-<div th:if="${successMessage}"
-     style="color: green; border: 1px solid green; padding: 15px; margin-bottom: 20px; background: #e8f5e9; border-radius: 4px;">
-    ✅ <span th:text="${successMessage}"></span>
-</div>
-<body>
-    <h1>👥 Все клиенты</h1>
-    <div sec:authorize="isAuthenticated()">
-        <li class="nav-item">
-            <a class="nav-link btn btn-outline-danger" href="/logout">🚪 Выйти</a>
-        </li>
-    </div>
-<table border="1" cellpadding="5" cellspacing="0">
-    <thead>
-    <tr>
-        <th>Username</th>
-        <th>Имя</th>
-        <th>Телефон</th>
-        <th>День рождения</th>
-        <th>Бонусы</th>
-        <th>Потрачено</th>
-        <th>Статус</th>
-        <th>Функции</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="client : ${clients}" th:if="${clients != null and !clients.isEmpty()}">
-        <td th:text="${client.telegramUsername}"></td>
-        <td th:text="${client.firstName}"></td>
-        <td th:text="${client.phone}"></td>
-        <td th:text="${client.birthday}"></td>
-        <td th:text="${client.bonusBalance}"></td>
-        <td th:text="${client.totalSpent}"></td>
-        <td th:text="${client.registrationState}"></td>
-        <td><form th:action="@{/clients/{id}(id=${client.id})}"
-                  method="get"
-                  style="display: inline;"
-                  onsubmit="return confirm('Посмотреть пользователя');">
-            <button type="submit">Подробнее</button>
-        </form>
-        </td>
-    </tr>
-    <tr th:if="${clients == null or clients.isEmpty()}">
-        <td colspan="11" class="empty">Нет клиентов</td>
-    </tr>
-    </tbody>
-</table>
 
-</body>
+    <!-- ✅ BOOTSTRAP ЧЕРЕЗ CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
+          crossorigin="anonymous">
+</head>
+
+<div th:fragment="content">
+
+    <!-- ХЛЕБНЫЕ КРОШКИ -->
+    <div class="container mt-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item active" aria-current="page">👥 Все клиенты</li>
+            </ol>
+        </nav>
+    </div>
+
+    <!-- КОНТЕНТ -->
+    <div class="container-fluid px-4">
+
+        <!-- КАРТОЧКА С ТАБЛИЦЕЙ -->
+        <div class="card shadow-lg rounded-4 border-0 overflow-hidden">
+
+            <!-- ЗАГОЛОВОК КАРТОЧКИ -->
+            <div class="card-header bg-primary bg-gradient text-white border-0 d-flex justify-content-between align-items-center flex-wrap gap-2 py-3 px-4">
+                <div>
+                    <h4 class="mb-0 fw-bold">👥 Все клиенты</h4>
+                    <small class="opacity-75">
+                        Всего: <span th:text="${clients != null ? #lists.size(clients) : 0}"></span>
+                    </small>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <span class="bg-white bg-opacity-25 rounded-pill px-3 py-1 small">
+                        👤 <span sec:authentication="name"></span>
+                    </span>
+                    <a href="/logout" class="btn btn-outline-light btn-sm rounded-pill px-3">
+                        🚪 Выйти
+                    </a>
+                </div>
+            </div>
+
+            <!-- ТЕЛО КАРТОЧКИ -->
+            <div class="card-body p-0">
+
+                <!-- СООБЩЕНИЕ ОБ УСПЕХЕ -->
+                <div th:if="${successMessage}" class="alert alert-success m-3" role="alert">
+                    ✅ <span th:text="${successMessage}"></span>
+                </div>
+
+                <!-- ТАБЛИЦА -->
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">Username</th>
+                            <th>Имя</th>
+                            <th>Телефон</th>
+                            <th>День рождения</th>
+                            <th class="text-center">Бонусы</th>
+                            <th class="text-center">Потрачено</th>
+                            <th class="text-center">Статус</th>
+                            <th class="text-center pe-4">Действия</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- ЕСТЬ КЛИЕНТЫ -->
+                        <tr th:each="client : ${clients}" th:if="${clients != null and !clients.isEmpty()}">
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bg-primary bg-gradient rounded-circle d-flex align-items-center justify-content-center text-white"
+                                         style="width: 32px; height: 32px; font-size: 14px; font-weight: 600; flex-shrink: 0;">
+                                        <span th:text="${#strings.substring(client.firstName, 0, 1)}"></span>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold small" th:text="${client.firstName}"></div>
+                                        <div class="text-muted small" th:text="${client.telegramUsername}"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td th:text="${client.phone}"></td>
+                            <td th:text="${client.birthday}"></td>
+                            <td class="text-center">
+                                    <span class="badge bg-warning bg-gradient rounded-pill px-3 py-2"
+                                          th:text="${client.bonusBalance}"></span>
+                            </td>
+                            <td class="text-center fw-semibold" th:text="${client.totalSpent}"></td>
+                            <td class="text-center">
+                                    <span class="badge rounded-pill px-3 py-2"
+                                          th:classappend="${client.registrationState == 'ACTIVE' ? 'bg-success' :
+                                                          client.registrationState == 'PENDING' ? 'bg-warning text-dark' :
+                                                          'bg-secondary'}"
+                                          th:text="${client.registrationState}">
+                                    </span>
+                            </td>
+                            <td class="text-center pe-4">
+                                <form th:action="@{/clients/{id}(id=${client.id})}" method="get" class="d-inline">
+                                    <button type="submit" class="btn btn-primary btn-sm rounded-pill px-3">
+                                        👁️ Подробнее
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- НЕТ КЛИЕНТОВ -->
+                        <tr th:if="${clients == null or clients.isEmpty()}">
+                            <td colspan="8" class="text-center py-5">
+                                <div style="font-size: 48px; margin-bottom: 10px;">📭</div>
+                                <h5 class="text-muted">Нет клиентов</h5>
+                                <p class="text-muted small">Клиенты пока не зарегистрированы в системе</p>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- ПОДВАЛ КАРТОЧКИ -->
+            <div class="card-footer bg-light d-flex justify-content-between align-items-center flex-wrap gap-2"
+                 th:if="${clients != null and !clients.isEmpty()}">
+                <div class="d-flex gap-3 flex-wrap">
+                    <span class="small">
+                        <span class="badge bg-success rounded-pill">●</span>
+                        Активных: <strong th:text="${#lists.size(clients.?[registrationState == 'ACTIVE'])}"></strong>
+                    </span>
+                    <span class="small">
+                        <span class="badge bg-warning rounded-pill">●</span>
+                        Ожидают: <strong th:text="${#lists.size(clients.?[registrationState == 'PENDING'])}"></strong>
+                    </span>
+                    <span class="small">
+                        <span class="badge bg-secondary rounded-pill">●</span>
+                        Неактивных: <strong th:text="${#lists.size(clients.?[registrationState == 'INACTIVE'])}"></strong>
+                    </span>
+                </div>
+                <span class="text-muted small">
+                    🔄 <span th:text="${#dates.format(#dates.createNow(), 'dd.MM.yyyy HH:mm')}"></span>
+                </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ✅ BOOTSTRAP JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+            crossorigin="anonymous">
+    </script>
+
+</div>
 </html>
