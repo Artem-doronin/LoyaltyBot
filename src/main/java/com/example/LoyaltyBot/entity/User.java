@@ -12,13 +12,13 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -29,6 +29,10 @@ import java.util.List;
 @Entity
 @Table(name = "users")
 @AllArgsConstructor
+//todo здесь анотация которую мне посоветовал гпт от циклической зависимости с
+// ролью ведь у роли тоде есть юзер  , и при логировании тустринга возникала такая
+// проблема хотелось  обсудить
+@ToString(exclude = {"roles"})
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,17 +44,20 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id",nullable = false)
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
     private Boolean enabled;
-    private Boolean account_non_expired;
-    private Boolean account_non_locked;
-    private Boolean credentials_non_expired;
+    @Column(name = "should_change_password", nullable = false)
+    private Boolean shouldChangePassword;
+
+    @Column(name = "created_at")
     @CreationTimestamp
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
     @UpdateTimestamp
-    private LocalDateTime updated_at;
+    private LocalDateTime updatedAt;
 
     @NotNull
     @Override
@@ -60,17 +67,17 @@ public class User implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return account_non_expired;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return account_non_locked;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return credentials_non_expired;
+        return true;
     }
 
     @Override

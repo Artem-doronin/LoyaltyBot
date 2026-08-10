@@ -30,15 +30,11 @@ public class MessageHandler {
         Long telegramUserId = message.getFrom().getId();
         Optional<Client> clientOptional = clientService.findByTelegramUserId(telegramUserId);
 
-
-
-
         if (isClientRegistered(clientOptional)) {
-            return updateMessageHandler.handle(message,clientOptional);
-        }else {
-            return  clientRegistrationHandler.register(message, clientOptional);
+            return updateMessageHandler.handle(message, clientOptional);
+        } else {
+            return clientRegistrationHandler.register(message, clientOptional);
         }
-
     }
 
     private Boolean isClientRegistered(Optional<Client> clientOptional) {

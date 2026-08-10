@@ -7,7 +7,6 @@ import lombok.Builder;
 @Builder
 public record CreateUserDto(
         String username,
-        String password,
         String email,
         Long role_id,
         Boolean enabled
@@ -19,9 +18,7 @@ public record CreateUserDto(
                 .password(encodedPassword)
                 .email(email)
                 .enabled(enabled)
-                .account_non_expired(true)
-                .account_non_locked(true)
-                .credentials_non_expired(true)
+                .shouldChangePassword(true)
                 .role(role)
                 .build();
     }

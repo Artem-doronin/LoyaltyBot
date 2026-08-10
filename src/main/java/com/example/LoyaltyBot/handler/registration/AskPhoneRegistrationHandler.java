@@ -19,7 +19,6 @@ public class AskPhoneRegistrationHandler implements RegistrationHandler {
     @Override
     public SendMessage handle(Message message, Client client) {
 
-
         if (message.hasContact()) {
 
             client.setPhone(message.getContact().getPhoneNumber());

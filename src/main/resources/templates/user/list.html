@@ -5,6 +5,7 @@
     <title>Все пользователи</title>
 </head>
 <body>
+
 <h1>👥 Все пользователи</h1>
 
 <div>
@@ -32,7 +33,7 @@
         <td th:text="${user.id}"></td>
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
-        <td th:text="${user.role_name}"></td>
+        <td th:text="${user.roleName}"></td>
         <td>
             <span th:if="${user.enabled}">✅ Активен</span>
             <span th:unless="${user.enabled}">❌ Заблокирован</span>
@@ -40,7 +41,7 @@
         <td>
             <a th:href="@{/users/edit/{id}(id=${user.id})}">✏️</a>
 
-            <form th:action="@{/users/toggle/{id}(id=${user.id})}"
+            <form th:action="@{/users/toggle-enabled/{id}(id=${user.id})}"
                   method="post"
                   style="display: inline;">
                 <button type="submit">
@@ -54,6 +55,13 @@
                   style="display: inline;"
                   onsubmit="return confirm('Удалить пользователя?');">
                 <button type="submit">🗑️</button>
+            </form>
+
+            <form th:action="@{/users/reset_password/{id}(id=${user.id})}"
+                  method="post"
+                  style="display: inline;"
+                  onsubmit="return confirm('Сбросить пароль?');">
+                <button type="submit">сброс пароля</button>
             </form>
         </td>
     </tr>

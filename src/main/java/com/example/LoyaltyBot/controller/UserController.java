@@ -1,12 +1,11 @@
 package com.example.LoyaltyBot.controller;
 
+import com.example.LoyaltyBot.dto.user.ChangePasswordRequest;
 import com.example.LoyaltyBot.dto.user.CreateUserDto;
+import com.example.LoyaltyBot.dto.user.TemporaryPasswordResponse;
 import com.example.LoyaltyBot.service.RoleService;
 import com.example.LoyaltyBot.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequestMapping("/users")
@@ -25,7 +25,6 @@ public class UserController {
         this.userService = userService;
         this.roleService = roleService;
     }
-
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -49,38 +48,65 @@ public class UserController {
         return "user/form";
     }
 
-
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
-    public String createUser(@ModelAttribute("user") CreateUserDto userDto) {
-        userService.createUser(userDto);
-        return "redirect:/users";
+    public String createUser(@ModelAttribute("user") CreateUserDto userDto,
+                             RedirectAttributes redirectAttributes) {
+        TemporaryPasswordResponse dto = userService.createUser(userDto);
+        redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
+        redirectAttributes.addFlashAttribute("login", dto.login());
+        return "redirect:/users/password-create-response";
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null) {
-            request.getSession().invalidate();
-        }
-        return "redirect:/auth/login";
+    @PostMapping("/reset_password/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public String resetPassword(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+
+        TemporaryPasswordResponse dto = userService.resetPassword(id);
+        redirectAttributes.addFlashAttribute("temporaryPassword", dto.temporaryPassword());
+        redirectAttributes.addFlashAttribute("login", dto.login());
+        return "redirect:/users/password-response";
     }
 
-    @GetMapping("/login")
-    public String loginPage() {
-        return "/auth/login";
+    @GetMapping("/password-response")
+    public String passwordResponse() {
+        return "user/password-reset-response";
     }
 
-    @GetMapping("/error")
-    public String error() {
-        return "user/error";
+
+
+    @GetMapping("/password-create-response")
+    public String passwordCreateResponse() {
+        return "user/create-response";
     }
 
-    @PostMapping("/toggle/{id}")
+
+    @PostMapping("/toggle-enabled/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public String toggleUser(@PathVariable Long id) {
         userService.toggleEnabled(id);
         return "redirect:/users";
+    }
+
+    @PostMapping("/change_password")
+    @PreAuthorize("hasRole('USER')")
+    public String changePassword(@ModelAttribute("user") ChangePasswordRequest dto,
+                                 RedirectAttributes redirectAttributes) {
+        try {
+            userService.changePassword(dto);
+            redirectAttributes.addFlashAttribute("successMessage", "Пароль успешно изменен!");
+            return "redirect:/clients";
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            return "redirect:/users/change_password";
+        }
+    }
+
+    @GetMapping("/change_password")
+    @PreAuthorize("hasRole('USER')")
+    public String changePasswordForm(Model model) {
+        model.addAttribute("user", ChangePasswordRequest.builder().build());
+        return "user/change-password";
     }
 }
 

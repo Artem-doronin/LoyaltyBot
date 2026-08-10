@@ -24,8 +24,8 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public String getClient(@PathVariable Long id, Model model) {
-            model.addAttribute("client", clientService.findById(id));
-            return "clients/client-detail";
+        model.addAttribute("client", clientService.findById(id));
+        return "clients/client-detail";
     }
 
     @GetMapping("/delete/{id}")

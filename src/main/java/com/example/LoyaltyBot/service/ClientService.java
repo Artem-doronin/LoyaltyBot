@@ -1,7 +1,6 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.client.ClientResponseDto;
-import com.example.LoyaltyBot.dto.client.ClientUpdateDto;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
