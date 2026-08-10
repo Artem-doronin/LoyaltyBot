@@ -14,7 +14,7 @@ public record UserDto(
 ) {
 
     public static UserDto toUserDto(User user) {
-        return  UserDto.builder()
+        return UserDto.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .password(user.getPassword())
