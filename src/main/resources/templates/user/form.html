@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Создание пользователя</title>
@@ -8,7 +8,22 @@
 <body>
 <section>
     <div class="container">
-        <h3 class="h3 mb-3 fw-normal">➕ Создание пользователя</h3>
+
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">Создание пользователя</a>
+                <div class="d-flex gap-2 ms-auto">
+
+                    <a class="btn btn-primary" href="/users" role="button">Назад к списку</a>
+
+                    <div class="d-flex ms-auto" sec:authorize="isAuthenticated()">
+                        <a class="btn btn-danger" href="/logout"> Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <h3 class="h4 mb-3 fw-normal">➕ Создание пользователя</h3>
 
         <form th:action="@{/users/create}" method="post" th:object="${user}">
 
@@ -52,7 +67,7 @@
 
             <div class="mb-3">
                 <button type="submit" class="btn btn-primary">Сохранить</button>
-                <a class="btn btn-danger" href="/users">Отмена</a>
+
             </div>
         </form>
 
