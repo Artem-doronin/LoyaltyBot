@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Карточка клиента</title>
@@ -8,6 +8,11 @@
 
 <h1>👤 Карточка клиента</h1>
 <a href="/clients">← Назад к списку</a>
+<div sec:authorize="isAuthenticated()">
+    <li class="nav-item">
+        <a class="nav-link btn btn-outline-danger" href="/logout">🚪 Выйти</a>
+    </li>
+</div>
 
 <hr/>
 
@@ -25,7 +30,7 @@
 <p><strong>Дата создания:</strong> <span th:text="${client.createdAt} ?: '—'"></span></p>
 <p><strong>Дата обновления:</strong> <span th:text="${client.updatedAt} ?: '—'"></span></p>
 <p><strong>Активен:</strong>
-    <span th:text="${client.getIsActive()} ? 'Да' : 'Нет'"></span>
+    <span th:text="${client.isActive()} ? 'Да' : 'Нет'"></span>
 </p>
 
 

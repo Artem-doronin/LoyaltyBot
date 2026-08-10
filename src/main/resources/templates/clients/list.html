@@ -1,39 +1,44 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Все клиенты</title>
 </head>
 <body>
     <h1>👥 Все клиенты</h1>
-<table>
+    <div sec:authorize="isAuthenticated()">
+        <li class="nav-item">
+            <a class="nav-link btn btn-outline-danger" href="/logout">🚪 Выйти</a>
+        </li>
+    </div>
+<table border="1" cellpadding="5" cellspacing="0">
     <thead>
     <tr>
-        <th>ID</th>
-        <th>Chat ID</th>
         <th>Username</th>
         <th>Имя</th>
-        <th>Фамилия</th>
         <th>Телефон</th>
         <th>День рождения</th>
         <th>Бонусы</th>
         <th>Потрачено</th>
-        <th>Статус регистрации</th>
+        <th>Статус</th>
+        <th>Функции</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="client : ${clients}" th:if="${clients != null and !clients.isEmpty()}">
-        <td th:text="${client.id}"></td>
-        <td th:text="${client.chatId}"></td>
         <td th:text="${client.telegramUsername}"></td>
         <td th:text="${client.firstName}"></td>
-        <td th:text="${client.lastName}"></td>
         <td th:text="${client.phone}"></td>
         <td th:text="${client.birthday}"></td>
         <td th:text="${client.bonusBalance}"></td>
         <td th:text="${client.totalSpent}"></td>
         <td th:text="${client.registrationState}"></td>
-        <td>
+        <td><form th:action="@{/clients/{id}(id=${client.id})}"
+                  method="get"
+                  style="display: inline;"
+                  onsubmit="return confirm('Посмотреть пользователя');">
+            <button type="submit">Подробнее</button>
+        </form>
         </td>
     </tr>
     <tr th:if="${clients == null or clients.isEmpty()}">
