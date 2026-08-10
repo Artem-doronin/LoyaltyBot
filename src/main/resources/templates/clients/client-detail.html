@@ -9,49 +9,55 @@
           crossorigin="anonymous">
 </head>
 <body>
-<div class="container-sm">
-
-<h1>👤 Карточка клиента</h1>
-    <a class="btn btn-primary" href="/clients" role="button">Назад к списку</a>
-<div sec:authorize="isAuthenticated()">
-    <li class="nav-item">
-        <a class="btn btn-primary" href="/logout">🚪 Выйти</a>
-    </li>
+<section>
+    <div class="container">
 
 
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">Карточка клиента</a>
+                <div class="d-flex gap-2 ms-auto">
 
-<hr/>
+                    <a class="btn btn-primary" href="/clients" role="button">Назад к списку</a>
 
-<p><strong>ID:</strong> <span th:text="${client.id}"></span></p>
-<p><strong>Chat ID:</strong> <span th:text="${client.chatId}"></span></p>
-<p><strong>Имя:</strong> <span th:text="${client.firstName}"></span></p>
-<p><strong>Фамилия:</strong> <span th:text="${client.lastName}"></span></p>
-<p><strong>Telegram Username:</strong> <span th:text="${client.telegramUsername}"></span></p>
-<p><strong>Телефон:</strong> <span th:text="${client.phone} ?: '—'"></span></p>
-<p><strong>День рождения:</strong> <span th:text="${client.birthday} ?: '—'"></span></p>
-<p><strong>Бонусы:</strong> <span th:text="${client.bonusBalance}"></span></p>
-<p><strong>Потрачено:</strong> <span th:text="${client.totalSpent}"></span></p>
-<p><strong>Статус регистрации:</strong> <span th:text="${client.registrationState}"></span></p>
+                    <form th:action="@{/clients/delete/{id}(id=${client.id})}" method="get">
+                        <button class="btn btn-primary d-flex gap-2 ms-auto" type="submit"
+                                onclick="return confirm('Удалить клиента?')"> Удалить клиента
+                        </button>
+                    </form>
 
-<p><strong>Дата создания:</strong> <span th:text="${client.createdAt} ?: '—'"></span></p>
-<p><strong>Дата обновления:</strong> <span th:text="${client.updatedAt} ?: '—'"></span></p>
-<p><strong>Активен:</strong>
-    <span th:text="${client.isActive()} ? 'Да' : 'Нет'"></span>
-</p>
+                    <div class="d-flex ms-auto" sec:authorize="isAuthenticated()">
+                        <a class="btn btn-danger" href="/logout"> Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
 
 
-<br/>
+        <hr/>
 
-<form th:action="@{/clients/delete/{id}(id=${client.id})}" method="get">
-    <button type="submit" onclick="return confirm('Удалить клиента?')">🗑️ Удалить</button>
-</form>
+        <p><strong>ID:</strong> <span th:text="${client.id}"></span></p>
+        <p><strong>Chat ID:</strong> <span th:text="${client.chatId}"></span></p>
+        <p><strong>Имя:</strong> <span th:text="${client.firstName}"></span></p>
+        <p><strong>Фамилия:</strong> <span th:text="${client.lastName}"></span></p>
+        <p><strong>Telegram Username:</strong> <span th:text="${client.telegramUsername}"></span></p>
+        <p><strong>Телефон:</strong> <span th:text="${client.phone} ?: '—'"></span></p>
+        <p><strong>День рождения:</strong> <span th:text="${client.birthday} ?: '—'"></span></p>
+        <p><strong>Бонусы:</strong> <span th:text="${client.bonusBalance}"></span></p>
+        <p><strong>Потрачено:</strong> <span th:text="${client.totalSpent}"></span></p>
+        <p><strong>Статус регистрации:</strong> <span th:text="${client.registrationState}"></span></p>
 
-</div>
+        <p><strong>Дата создания:</strong> <span th:text="${client.createdAt} ?: '—'"></span></p>
+        <p><strong>Дата обновления:</strong> <span th:text="${client.updatedAt} ?: '—'"></span></p>
+        <p><strong>Активен:</strong>
+            <span th:text="${client.isActive()} ? 'Да' : 'Нет'"></span>
+        </p>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous">
-</script>
 
+    </div>
+</section>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
 </body>
 </html>
