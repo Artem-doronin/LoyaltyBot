@@ -1,58 +1,78 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Создание пользователя</title>
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/5.3.8/css/bootstrap.min.css}">
 </head>
 <body>
-<h1>➕ Создание пользователя</h1>
+<section>
+    <div class="container">
 
-<form th:action="@{/users/create}" method="post" th:object="${user}">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="/">Создание пользователя</a>
+                <div class="d-flex gap-2 ms-auto">
 
-    <div>
-        <label for="username">Username:</label>
-        <input type="text"
-               id="username"
-               th:field="*{username}"
-               placeholder="Введите username"
-               required />
+                    <a class="btn btn-primary" href="/users" role="button">Назад к списку</a>
+
+                    <div class="d-flex ms-auto" sec:authorize="isAuthenticated()">
+                        <a class="btn btn-danger" href="/logout"> Выйти</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <h3 class="h4 mb-3 fw-normal">➕ Создание пользователя</h3>
+
+        <form th:action="@{/users/create}" method="post" th:object="${user}">
+
+            <div class="mb-3">
+                <label class="form-label" for="username">Username:</label>
+                <input class="form-control" type="text"
+                       id="username"
+                       th:field="*{username}"
+                       placeholder="Введите username"
+                       required />
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="email">Email:</label>
+                <input class="form-control" type="email"
+                       id="email"
+                       th:field="*{email}"
+                       placeholder="Введите email"
+                       required />
+            </div>
+
+
+            <div class="mb-3">
+                <label for="roleSelect">Роль:</label>
+                <select class="form-select"  id="roleSelect" th:field="*{role_id}" required>
+                    <option value="">-- Выберите роль --</option>
+                    <option th:each="role : ${roles}"
+                            th:value="${role.id}"
+                            th:text="${role.name}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="form-check mb-3">
+                    <input class="form-check-input" value="" id="checkDefault" type="checkbox" th:field="*{enabled}" />
+                    <label class="form-check-label" for="checkDefault">
+                    Активен
+                </label>
+            </div>
+
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Сохранить</button>
+
+            </div>
+        </form>
+
     </div>
-    <br/>
-
-    <div>
-        <label for="email">Email:</label>
-        <input type="email"
-               id="email"
-               th:field="*{email}"
-               placeholder="Введите email"
-               required />
-    </div>
-    <br/>
-
-    <div>
-        <label for="roleSelect">Роль:</label>
-        <select id="roleSelect" th:field="*{role_id}" required>
-            <option value="">-- Выберите роль --</option>
-            <option th:each="role : ${roles}"
-                    th:value="${role.id}"
-                    th:text="${role.name}">
-            </option>
-        </select>
-    </div>
-    <br/>
-
-    <div>
-        <label>
-            <input type="checkbox" th:field="*{enabled}" />
-            Активен
-        </label>
-    </div>
-    <br/>
-
-    <div>
-        <button type="submit">💾 Сохранить</button>
-        <a href="/users">❌ Отмена</a>
-    </div>
-</form>
+</section>
+<script th:src="@{/webjars/bootstrap/5.3.8/js/bootstrap.bundle.min.js}"></script>
 </body>
 </html>
