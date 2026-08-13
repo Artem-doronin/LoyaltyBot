@@ -8,8 +8,8 @@ CREATE TABLE IF NOT EXISTS clients
     last_name          VARCHAR(50),
     phone              VARCHAR(20),
     birthday           DATE,
-    bonus_balance      INTEGER   NOT NULL DEFAULT 0,
-    total_spent        INTEGER   NOT NULL DEFAULT 0,
+    bonus_balance      NUMERIC   NOT NULL DEFAULT '0',
+    bonus_rate         NUMERIC   NOT NULL DEFAULT '10',
     created_at         TIMESTAMP NOT NULL,
     updated_at         TIMESTAMP,
     is_active          BOOLEAN   NOT NULL DEFAULT TRUE,
@@ -28,27 +28,44 @@ CREATE TABLE IF NOT EXISTS roles
 
 CREATE TABLE IF NOT EXISTS users
 (
-    id                      BIGSERIAL PRIMARY KEY,
-    username                VARCHAR(50) UNIQUE NOT NULL,
-    password                VARCHAR(255)       NOT NULL,
-    email                   VARCHAR(100)       NOT NULL UNIQUE,
-    role_id                 BIGINT             NOT NULL,
-    enabled                 BOOLEAN            NOT NULL DEFAULT TRUE,
-    should_change_password  BOOLEAN            NOT NULL DEFAULT TRUE,
-    created_at              TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at              TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id                     BIGSERIAL PRIMARY KEY,
+    username               VARCHAR(50) UNIQUE NOT NULL,
+    password               VARCHAR(255)       NOT NULL,
+    email                  VARCHAR(100)       NOT NULL UNIQUE,
+    role_id                BIGINT             NOT NULL,
+    enabled                BOOLEAN            NOT NULL DEFAULT TRUE,
+    should_change_password BOOLEAN            NOT NULL DEFAULT TRUE,
+    created_at             TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at             TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (role_id) REFERENCES roles (id) ON DELETE RESTRICT
 );
 
-INSERT INTO  roles (name, description)
+INSERT INTO roles (name, description)
 VALUES ('ROLE_USER', 'Кассир'),
        ('ROLE_ADMIN', 'Администратор');
 
 
-INSERT INTO users (username, password, email, role_id,should_change_password)
+INSERT INTO users (username, password, email, role_id, should_change_password)
 VALUES ('admin',
         '$2a$12$QpTzxRtGq2kGh6w/btex2eKnTg8Yx4T9k0qNY/I9CppvRN6V3jAcm',
         'admin@mail.ru',
         (SELECT id FROM roles WHERE name = 'ROLE_ADMIN'),
         false);
+
+
+CREATE TABLE IF NOT EXISTS operations
+(
+    id               BIGSERIAL PRIMARY KEY,
+    client_id        BIGINT      NOT NULL,
+    operation_amount NUMERIC     NOT NULL,
+    bonus_amount     NUMERIC     NOT NULL,
+    operation_type   VARCHAR(30) NOT NULL,
+    description      VARCHAR(128),
+    created_at       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
+
+);
+

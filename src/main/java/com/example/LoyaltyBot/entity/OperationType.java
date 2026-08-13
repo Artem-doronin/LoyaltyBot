@@ -1,6 +1,6 @@
 package com.example.LoyaltyBot.entity;
 
-public enum BonusType {
+public enum OperationType {
     EARNED,
     SPENT
 

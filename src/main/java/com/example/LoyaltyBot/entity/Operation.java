@@ -7,13 +7,25 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
+@Table(name = "operations")
 public class Operation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +35,14 @@ public class Operation {
     @Column(nullable = false, name = "operation_amount")
     private BigDecimal operationAmount;
 
-    @Column(name = "debit_amount", precision = 19, scale = 2)
+    @Column(nullable = false, name = "bonus_amount")
     private BigDecimal bonusAmount;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "bonus_type", nullable = false, length = 20)
-    private BonusType bonusType;
+    @Column(name = "operation_type", nullable = false, length = 20)
+    private OperationType operationType;
+
+    private String description;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
