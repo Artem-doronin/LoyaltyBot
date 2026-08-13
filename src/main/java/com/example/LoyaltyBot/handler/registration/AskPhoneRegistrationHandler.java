@@ -3,6 +3,7 @@ package com.example.LoyaltyBot.handler.registration;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
 import com.example.LoyaltyBot.service.ClientService;
+import com.example.LoyaltyBot.service.NotificationService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -11,9 +12,11 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 public class AskPhoneRegistrationHandler implements RegistrationHandler {
 
     private final ClientService clientService;
+    private final NotificationService notificationService;
 
-    public AskPhoneRegistrationHandler(ClientService clientService) {
+    public AskPhoneRegistrationHandler(ClientService clientService, NotificationService notificationService) {
         this.clientService = clientService;
+        this.notificationService = notificationService;
     }
 
     @Override
@@ -24,7 +27,7 @@ public class AskPhoneRegistrationHandler implements RegistrationHandler {
             client.setPhone(message.getContact().getPhoneNumber());
             client.setRegistrationState(RegistrationState.REGISTERED);
             clientService.updateClient(client);
-            return sendMessage(message.getChatId(), "Спасибо за регистрацию");
+            return sendMessage(message.getChatId(), sendWelcomeMessage(client.getFirstName()));
         }
         return sendMessage(message.getChatId(), "Не удалось получить номер ");
     }
@@ -34,5 +37,22 @@ public class AskPhoneRegistrationHandler implements RegistrationHandler {
                 .chatId(chatId)
                 .text(text)
                 .build();
+    }
+
+    public String sendWelcomeMessage( String firstName) {
+        return String.format("""
+                         <b>Добро пожаловать в программу лояльности!</b>
+                        
+                        %s, мы рады приветствовать вас!
+                        
+                        
+                        Как это работает:
+                         1% от каждой покупки возвращается бонусами
+                         Накопительные баллы можно использовать для оплаты
+                         Повышайте уровень и получайте больше!
+                        
+                        Желаем приятных покупок!
+                        """,
+                firstName);
     }
 }
