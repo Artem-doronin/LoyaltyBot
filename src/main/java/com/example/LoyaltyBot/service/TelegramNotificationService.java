@@ -37,7 +37,7 @@ public class TelegramNotificationService implements NotificationService {
     /**
      * Отправка уведомления о начислении бонусов
      */
-    @Override
+
     public void notifyBonusEarned(Long chatId, String clientName,
                                   BigDecimal bonusAmount, BigDecimal totalBalance) {
         String text = String.format("""
@@ -60,7 +60,7 @@ public class TelegramNotificationService implements NotificationService {
     /**
      * Отправка уведомления о списании бонусов
      */
-    @Override
+
     public void notifyBonusSpent(Long chatId, String clientName,
                                  BigDecimal spentAmount, BigDecimal remainingBalance) {
         String text = String.format("""
@@ -83,7 +83,7 @@ public class TelegramNotificationService implements NotificationService {
     /**
      * Отправка уведомления о недостатке бонусов
      */
-    @Override
+
     public void notifyInsufficientBonuses(Long chatId, String clientName,
                                           BigDecimal requested, BigDecimal available) {
         String text = String.format("""
@@ -106,7 +106,6 @@ public class TelegramNotificationService implements NotificationService {
     /**
      * Отправка уведомления об изменении уровня лояльности
      */
-    @Override
     public void notifyLoyaltyUpgrade(Long chatId, String clientName,
                                      String oldTier, String newTier) {
         String text = String.format("""
