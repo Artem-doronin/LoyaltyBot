@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -41,10 +42,11 @@ public class Client {
     private String phone;
 
     private LocalDate birthday;
+    @Column(name = "bonus_balance")
+    private BigDecimal bonusBalance;
 
-    private Integer bonusBalance;
-
-    private Integer totalSpent;
+    @Column(name = "bonus_rate")
+    private BigDecimal bonusRate;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
