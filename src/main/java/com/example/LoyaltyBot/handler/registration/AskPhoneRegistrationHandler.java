@@ -12,11 +12,10 @@ import org.telegram.telegrambots.meta.api.objects.message.Message;
 public class AskPhoneRegistrationHandler implements RegistrationHandler {
 
     private final ClientService clientService;
-    private final NotificationService notificationService;
 
-    public AskPhoneRegistrationHandler(ClientService clientService, NotificationService notificationService) {
+
+    public AskPhoneRegistrationHandler(ClientService clientService) {
         this.clientService = clientService;
-        this.notificationService = notificationService;
     }
 
     @Override
