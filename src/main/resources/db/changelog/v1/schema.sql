@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS clients
     last_name          VARCHAR(50),
     phone              VARCHAR(20),
     birthday           DATE,
-    bonus_balance      NUMERIC   NOT NULL DEFAULT '0',
-    bonus_rate         NUMERIC   NOT NULL DEFAULT '10',
     created_at         TIMESTAMP NOT NULL,
     updated_at         TIMESTAMP,
     is_active          BOOLEAN   NOT NULL DEFAULT TRUE,
@@ -66,6 +64,17 @@ CREATE TABLE IF NOT EXISTS operations
     updated_at       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
-
 );
+
+CREATE TABLE IF NOT EXISTS bonuses
+(
+    id         BIGSERIAL PRIMARY KEY,
+    client_id  BIGINT  NOT NULL,
+    amount     NUMERIC NOT NULL   DEFAULT 0,
+    bonus_rate NUMERIC NOT NULL DEFAULT '10',
+
+     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE
+);
+
+CREATE  INDEX IF NOT EXISTS idx_client_id ON bonuses(client_id);
 

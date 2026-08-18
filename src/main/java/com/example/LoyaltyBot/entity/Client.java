@@ -63,8 +63,8 @@ public class Client {
     }
 
     public Client(Long id, Long chatId, Long telegramUserId, String telegramUsername, String firstName,
-                  String lastName, String phone, LocalDate birthday, Integer bonusBalance,
-                  Integer totalSpent, LocalDateTime createdAt, LocalDateTime updatedAt,
+                  String lastName, String phone, LocalDate birthday,
+                  LocalDateTime createdAt, LocalDateTime updatedAt,
                   Boolean isActive, RegistrationState registrationState) {
         this.id = id;
         this.chatId = chatId;
@@ -74,8 +74,6 @@ public class Client {
         this.lastName = lastName;
         this.phone = phone;
         this.birthday = birthday;
-        this.bonusBalance = bonusBalance;
-        this.totalSpent = totalSpent;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.isActive = isActive;
@@ -146,22 +144,6 @@ public class Client {
         this.birthday = birthday;
     }
 
-    public Integer getBonusBalance() {
-        return bonusBalance;
-    }
-
-    public void setBonusBalance(Integer bonusBalance) {
-        this.bonusBalance = bonusBalance;
-    }
-
-    public Integer getTotalSpent() {
-        return totalSpent;
-    }
-
-    public void setTotalSpent(Integer totalSpent) {
-        this.totalSpent = totalSpent;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
@@ -205,8 +187,6 @@ public class Client {
                 ", lastName='" + lastName + '\'' +
                 ", phone='" + phone + '\'' +
                 ", birthday=" + birthday +
-                ", bonusBalance=" + bonusBalance +
-                ", totalSpent=" + totalSpent +
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", isActive=" + isActive +

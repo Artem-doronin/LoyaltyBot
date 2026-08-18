@@ -6,6 +6,7 @@ import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -15,15 +16,20 @@ import java.util.Optional;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
+    private final BonusService bonusService;
 
     public ClientService(ClientRepository clientRepository,
-                         ClientMapper clientMapper) {
+                         ClientMapper clientMapper,
+                         BonusService bonusService) {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
+        this.bonusService = bonusService;
     }
 
+    @Transactional
     public void createClient(Client client) {
         clientRepository.save(client);
+        bonusService.create(client.getId());
     }
 
     public void updateClient(Client client) {
