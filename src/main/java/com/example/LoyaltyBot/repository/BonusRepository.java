@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.service;
+package com.example.LoyaltyBot.repository;
 
 import com.example.LoyaltyBot.entity.Bonus;
 import jakarta.persistence.LockModeType;

@@ -1,6 +1,7 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.entity.Bonus;
+import com.example.LoyaltyBot.repository.BonusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
