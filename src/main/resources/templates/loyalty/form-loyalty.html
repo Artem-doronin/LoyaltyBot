@@ -168,7 +168,7 @@
         </div>
     </div>
 
-    <!-- ✅ Информация о клиенте (исправлено условие) -->
+    < Информация о клиенте >
     <div th:if="${client != null}" class="fade-in">
         <div class="client-card">
             <div class="row">
@@ -212,14 +212,15 @@
                 <h5 class="mb-0"><i class="bi bi-arrow-left-right"></i> Операция с бонусами</h5>
             </div>
             <div class="card-body">
-                <!-- ✅ Исправлено: action на /loyalty/operation -->
+
                 <form th:action="@{/loyalty/operation}" method="post" th:object="${operation}" id="operationForm">
                     <input type="hidden" th:field="*{phoneNumber}">
+                    <input type="hidden" name="clientId" th:value="${client.id}">
 
                     <div class="row g-3">
                         <div class="col-md-6">
                             <label class="form-label fw-bold">Тип операции</label>
-                            <select class="form-select form-select-lg" th:field="*{operation}" id="operationType">
+                            <select class="form-select form-select-lg" th:field="*{operationType}" id="operationType">
                                 <option value="ACCRUAL">
                                     <i class="bi bi-plus-circle"></i> Начисление
                                 </option>

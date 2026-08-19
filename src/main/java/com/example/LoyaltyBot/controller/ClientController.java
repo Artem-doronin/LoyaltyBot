@@ -2,7 +2,6 @@ package com.example.LoyaltyBot.controller;
 
 import com.example.LoyaltyBot.service.BonusService;
 import com.example.LoyaltyBot.service.ClientService;
-import com.example.LoyaltyBot.service.LoyaltyService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -4,11 +4,13 @@ import com.example.LoyaltyBot.entity.OperationType;
 import lombok.Builder;
 
 import java.math.BigDecimal;
+
 @Builder
 public record BonusOperationDto(
+        Long clientId,
         String phoneNumber,
         BigDecimal amount,
-        OperationType operation,
-        String comment)
-{
+        OperationType operationType,
+        String comment
+) {
 }

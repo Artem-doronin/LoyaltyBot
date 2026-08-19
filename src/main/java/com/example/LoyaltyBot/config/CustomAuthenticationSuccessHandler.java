@@ -1,7 +1,6 @@
 package com.example.LoyaltyBot.config;
 
 import com.example.LoyaltyBot.entity.User;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             response.sendRedirect("/users");
         } else {
             log.info("Пользователь {} → редирект на /clients", user.getUsername());
-            response.sendRedirect("/clients");
+            response.sendRedirect("/loyalty");
         }
         log.debug("AuthenticationSuccessHandler завершил работу");
     }

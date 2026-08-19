@@ -3,10 +3,10 @@ package com.example.LoyaltyBot.controller;
 import com.example.LoyaltyBot.dto.bonus.BonusOperationDto;
 import com.example.LoyaltyBot.dto.client.ClientResponseSearchDto;
 import com.example.LoyaltyBot.entity.Client;
+import com.example.LoyaltyBot.entity.OperationType;
 import com.example.LoyaltyBot.service.BonusService;
 import com.example.LoyaltyBot.service.ClientService;
 import com.example.LoyaltyBot.service.LoyaltyService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
@@ -30,11 +30,6 @@ public class LoyaltyController {
     private final LoyaltyService loyaltyService;
     private final BonusService bonusService;
 
-
-
-    /**
-     * GET /loyalty - Главная страница управления бонусами
-     */
     @GetMapping
     public String showBonusPage(
             @ModelAttribute("operation") BonusOperationDto operation,
@@ -49,9 +44,6 @@ public class LoyaltyController {
         return "loyalty/form-loyalty";
     }
 
-    /**
-     * GET /loyalty/search - AJAX поиск клиентов для автокомплита
-     */
     @GetMapping("/search")
     @ResponseBody
     public List<ClientResponseSearchDto> searchClients(
@@ -68,49 +60,41 @@ public class LoyaltyController {
         return results;
     }
 
-    /**
-     * ✅ POST /loyalty/find - Поиск клиента по номеру телефона
-     */
     @PostMapping("/find")
     public String findClient(
-            @ModelAttribute("operation") BonusOperationDto operation,
-            Model model) {
+            @ModelAttribute("operation") BonusOperationDto operation, Model model) {
 
         log.info("Поиск клиента по номеру: {}", operation.phoneNumber());
-
-        try {
-            if (operation.phoneNumber() == null || operation.phoneNumber().trim().isEmpty()) {
-                model.addAttribute("error", "Введите номер телефона");
-                model.addAttribute("found", false);
-                model.addAttribute("operation", operation);
-                return "loyalty/form-loyalty";
-            }
-
-            String phoneNumber = operation.phoneNumber().trim();
-
-            Client client = clientService.findByPhoneNumber(phoneNumber);
-
-            BigDecimal bonusAmount = bonusService.getAmount(client.getId());
-
-            model.addAttribute("client", client);
-            model.addAttribute("bonusAmount", bonusAmount);
-            model.addAttribute("found", true);
-            model.addAttribute("success", "Клиент найден!");
-
-            log.info("Клиент найден: ID={}, Имя={}, Бонусы={}",
-                    client.getId(), client.getFirstName(), bonusAmount);
-
-        } catch (EntityNotFoundException e) {
-            log.warn("Клиент не найден: {}", operation.phoneNumber());
-            model.addAttribute("error", e.getMessage());
-            model.addAttribute("found", false);
-        } catch (Exception e) {
-            log.error("Ошибка при поиске клиента: {}", e.getMessage(), e);
-            model.addAttribute("error", "Произошла ошибка при поиске клиента");
-            model.addAttribute("found", false);
-        }
+        String phoneNumber = operation.phoneNumber().trim();
+        Client client = clientService.findByPhoneNumber(phoneNumber);
+        BigDecimal bonusAmount = bonusService.getAmount(client.getId());
+        model.addAttribute("client", client);
+        model.addAttribute("bonusAmount", bonusAmount);
+        model.addAttribute("success", "Клиент найден!");
 
         model.addAttribute("operation", operation);
         return "loyalty/form-loyalty";
+    }
+
+    @PostMapping("/operation")
+    public String executeOperation(
+            @ModelAttribute("operation") BonusOperationDto operation,
+            Model model) {
+        loyaltyService.processBonusOperation(operation);
+        model.addAttribute("operation", operation);
+
+        String operationMessage = operation.operationType() == OperationType.ACCRUAL
+                ? " Бонусы успешно начислены!"
+                : " Бонусы успешно списаны!";
+
+        model.addAttribute("success", operationMessage);
+
+        return "loyalty/form-loyalty";
+    }
+
+    @GetMapping("/reset")
+    public String resetForm() {
+        log.info("Сброс формы");
+        return "redirect:/loyalty";
     }
 }
