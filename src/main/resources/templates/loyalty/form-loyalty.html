@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -125,7 +124,8 @@
             <h5 class="mb-0"><i class="bi bi-search"></i> Поиск клиента</h5>
         </div>
         <div class="card-body">
-            <form th:action="@{/loyalty/}" method="post" th:object="${operation}" id="searchForm">
+            <!-- ✅ Исправлено: action на /loyalty/find -->
+            <form th:action="@{/loyalty/find}" method="post" th:object="${operation}" id="searchForm">
                 <div class="position-relative">
                     <div class="input-group">
                         <span class="input-group-text">
@@ -168,8 +168,8 @@
         </div>
     </div>
 
-    <!-- Информация о клиенте -->
-    <div th:if="${found and client != null}" class="fade-in">
+    <!-- ✅ Информация о клиенте (исправлено условие) -->
+    <div th:if="${client != null}" class="fade-in">
         <div class="client-card">
             <div class="row">
                 <div class="col-md-7">
@@ -177,7 +177,7 @@
                         <span class="label">Клиент</span>
                         <div class="value">
                             <i class="bi bi-person-circle"></i>
-                            <span th:text="${client.fullName}"></span>
+                            <span th:text="${client.firstName}"></span>
                         </div>
                     </div>
                     <div class="mb-2">
@@ -212,7 +212,8 @@
                 <h5 class="mb-0"><i class="bi bi-arrow-left-right"></i> Операция с бонусами</h5>
             </div>
             <div class="card-body">
-                <form th:action="@{/bonuses/operation}" method="post" th:object="${operation}" id="operationForm">
+                <!-- ✅ Исправлено: action на /loyalty/operation -->
+                <form th:action="@{/loyalty/operation}" method="post" th:object="${operation}" id="operationForm">
                     <input type="hidden" th:field="*{phoneNumber}">
 
                     <div class="row g-3">
@@ -254,7 +255,8 @@
                     </div>
 
                     <div class="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                        <a th:href="@{/bonuses/reset}" class="btn btn-outline-secondary btn-lg">
+                        <!-- ✅ Исправлено: /loyalty/reset -->
+                        <a th:href="@{/loyalty/reset}" class="btn btn-outline-secondary btn-lg">
                             <i class="bi bi-arrow-counterclockwise"></i> Сбросить
                         </a>
                         <button type="submit" class="btn btn-success btn-lg" id="executeButton">
@@ -267,13 +269,13 @@
     </div>
 
     <!-- Подсказка, если клиент не найден -->
-    <div th:if="${found == false and error != null}" class="alert alert-warning mt-3">
+    <div th:if="${error != null and client == null}" class="alert alert-warning mt-3">
         <i class="bi bi-info-circle"></i>
         <span>Клиент не найден. Проверьте правильность введенного номера телефона.</span>
     </div>
 
     <!-- Пустое состояние -->
-    <div th:if="${found == null or found == false}" class="text-center text-muted mt-5">
+    <div th:if="${client == null and error == null}" class="text-center text-muted mt-5">
         <i class="bi bi-search" style="font-size: 4rem;"></i>
         <h4 class="mt-3">Найдите клиента для выполнения операции</h4>
         <p>Введите номер телефона в поле поиска выше</p>
@@ -386,7 +388,8 @@
 
             // Дебаунс
             timeoutId = setTimeout(() => {
-                fetch(`/bonuses/search?query=${encodeURIComponent(query)}&limit=10`)
+                // ✅ Исправлено: /loyalty/search
+                fetch(`/loyalty/search?query=${encodeURIComponent(query)}&limit=10`)
                     .then(response => {
                         if (!response.ok) {
                             throw new Error('Ошибка загрузки');

@@ -1,5 +1,6 @@
 package com.example.LoyaltyBot.service;
 
+import com.example.LoyaltyBot.dto.bonus.BonusResponseDto;
 import com.example.LoyaltyBot.entity.Bonus;
 import com.example.LoyaltyBot.repository.BonusRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -57,6 +58,12 @@ public class BonusService {
     }
 
     public BigDecimal getAmount(Long clientId) {
-        return bonusRepository.findAmountByClientId(clientId);
+        return bonusRepository.findAmountByClientId(clientId).orElse(BigDecimal.ZERO);
+    }
+
+    public BonusResponseDto getBonusDto(Long clientId) {
+        Bonus bonus = bonusRepository.findByClientId(clientId).orElseThrow(
+                () -> new EntityNotFoundException("Bonus not found"));
+        return BonusResponseDto.fromDto(bonus);
     }
 }

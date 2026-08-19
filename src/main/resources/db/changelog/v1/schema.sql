@@ -44,7 +44,7 @@ VALUES ('ROLE_USER', 'Кассир'),
        ('ROLE_ADMIN', 'Администратор');
 
 
-INSERT INTO users (username, password, email, role_id, should_change_password)
+INSERT INTO  users (username, password, email, role_id, should_change_password)
 VALUES ('admin',
         '$2a$12$QpTzxRtGq2kGh6w/btex2eKnTg8Yx4T9k0qNY/I9CppvRN6V3jAcm',
         'admin@mail.ru',

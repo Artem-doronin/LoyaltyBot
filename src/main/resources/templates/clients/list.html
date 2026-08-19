@@ -34,8 +34,6 @@
                 <th>Имя</th>
                 <th>Телефон</th>
                 <th>День рождения</th>
-                <th>Бонусы</th>
-                <th>Потрачено</th>
                 <th>Статус</th>
                 <th>Функции</th>
             </tr>
@@ -46,8 +44,6 @@
                 <td th:text="${client.firstName}"></td>
                 <td th:text="${client.phone}"></td>
                 <td th:text="${client.birthday}"></td>
-                <td th:text="${client.bonusBalance}"></td>
-                <td th:text="${client.totalSpent}"></td>
                 <td th:text="${client.registrationState}"></td>
                 <td><form th:action="@{/clients/{id}(id=${client.id})}"
                           method="get"

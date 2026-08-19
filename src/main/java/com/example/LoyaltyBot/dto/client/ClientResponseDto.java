@@ -16,8 +16,6 @@ public record ClientResponseDto(
         LocalDate createdAt,
         LocalDate updatedAt,
         Boolean isActive,
-        Integer totalSpent,
-        Integer bonusBalance,
         RegistrationState registrationState
 ) {
 }

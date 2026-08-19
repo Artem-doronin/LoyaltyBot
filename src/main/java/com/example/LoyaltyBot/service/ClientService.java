@@ -80,4 +80,9 @@ public class ClientService {
                 })
                 .collect(Collectors.toList());
     }
+
+    public Client findByPhoneNumber(String phoneNumber) {
+        return clientRepository.findByPhone(phoneNumber).orElseThrow(
+                ()->new EntityNotFoundException("Client not found"));
+    }
 }

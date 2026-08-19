@@ -42,11 +42,6 @@ public class Client {
     private String phone;
 
     private LocalDate birthday;
-    @Column(name = "bonus_balance")
-    private BigDecimal bonusBalance;
-
-    @Column(name = "bonus_rate")
-    private BigDecimal bonusRate;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

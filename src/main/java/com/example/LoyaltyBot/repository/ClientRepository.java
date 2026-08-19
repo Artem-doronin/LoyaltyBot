@@ -16,4 +16,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query("SELECT c FROM Client c WHERE c.phone LIKE %:query%")
     List<Client> searchByPhoneNumber(@Param("query") String query);
+
+    Optional<Client> findByPhone(String phoneNumber);
 }

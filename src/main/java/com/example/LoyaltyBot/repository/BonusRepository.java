@@ -18,5 +18,7 @@ public interface BonusRepository extends JpaRepository<Bonus, Long> {
     @Query("SELECT b FROM Bonus b WHERE b.clientId = :clientId")
     Optional<Bonus> findByClientIdWithLock(@Param("clientId") Long clientId);
 
-    BigDecimal findAmountByClientId(Long clientId);
+    @Query("SELECT b.amount FROM Bonus b WHERE b.clientId = :clientId")
+    Optional<BigDecimal> findAmountByClientId(@Param("clientId") Long clientId);
+    Optional<Bonus> findByClientId(Long clientId);
 }
