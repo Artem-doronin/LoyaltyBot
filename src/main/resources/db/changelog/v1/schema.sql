@@ -56,6 +56,7 @@ CREATE TABLE IF NOT EXISTS operations
 (
     id               BIGSERIAL PRIMARY KEY,
     client_id        BIGINT      NOT NULL,
+    user_id          BIGINT      NOT NULL,
     operation_amount NUMERIC     NOT NULL,
     bonus_amount     NUMERIC     NOT NULL,
     operation_type   VARCHAR(30) NOT NULL,
@@ -70,11 +71,11 @@ CREATE TABLE IF NOT EXISTS bonuses
 (
     id         BIGSERIAL PRIMARY KEY,
     client_id  BIGINT  NOT NULL,
-    amount     NUMERIC NOT NULL   DEFAULT 0,
+    amount     NUMERIC NOT NULL DEFAULT 0,
     bonus_rate NUMERIC NOT NULL DEFAULT '10',
 
-     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE
 );
 
-CREATE  INDEX IF NOT EXISTS idx_client_id ON bonuses(client_id);
+CREATE INDEX IF NOT EXISTS idx_client_id ON bonuses (client_id);
 

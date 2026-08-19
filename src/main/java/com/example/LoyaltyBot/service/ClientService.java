@@ -1,6 +1,7 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.client.ClientResponseDto;
+import com.example.LoyaltyBot.dto.client.ClientResponseSearchDto;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
@@ -8,9 +9,14 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 public class ClientService {
@@ -58,4 +64,20 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
+
+    public List<ClientResponseSearchDto> searchClients(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        String normalizedQuery = query.trim();
+        List<Client> clients = clientRepository.searchByPhoneNumber(normalizedQuery);
+
+        return clients.stream()
+                .map(client -> {
+                    BigDecimal bonusAmount = bonusService.getAmount(client.getId());
+                    return ClientResponseSearchDto.fromDto(client, bonusAmount);
+                })
+                .collect(Collectors.toList());
+    }
 }
