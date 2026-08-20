@@ -62,7 +62,6 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-
     public List<ClientResponseSearchDto> searchClients(String query) {
         if (query == null || query.trim().isEmpty()) {
             return Collections.emptyList();

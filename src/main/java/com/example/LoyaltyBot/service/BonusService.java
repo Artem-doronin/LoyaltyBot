@@ -28,7 +28,7 @@ public class BonusService {
     }
 
     @Transactional
-    public Bonus enrollmentBonuses(Long clientId, BigDecimal amount) {
+    public void enrollmentBonuses(Long clientId, BigDecimal amount) {
         Bonus bonus = bonusRepository.findByClientIdWithLock(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Бонус не найден"));
 
@@ -36,12 +36,11 @@ public class BonusService {
         bonus.setAmount(newAmount);
 
         log.info("Начислено {} бонусов клиенту {}", amount, clientId);
-        return bonus;
     }
 
 
     @Transactional
-    public Bonus writeOffBonuses(Long clientId, BigDecimal amount) {
+    public void writeOffBonuses(Long clientId, BigDecimal amount) {
         Bonus bonus = bonusRepository.findByClientIdWithLock(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Бонус не найден"));
 
@@ -55,7 +54,6 @@ public class BonusService {
         bonus.setAmount(newAmount);
 
         log.info("Списано {} бонусов у клиента {}", amount, clientId);
-        return bonus;
     }
 
     public BigDecimal getAmount(Long clientId) {

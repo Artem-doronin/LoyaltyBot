@@ -9,7 +9,8 @@ import java.math.BigDecimal;
 public record BonusOperationDto(
         Long clientId,
         String phoneNumber,
-        BigDecimal amount,
+        BigDecimal bonusAmount,
+        BigDecimal operationAmount ,
         OperationType operationType,
         String comment
 ) {

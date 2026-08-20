@@ -22,11 +22,11 @@ public class LoyaltyService {
 
         if (dto.operationType() == OperationType.ACCRUAL) {
             bonusService.enrollmentBonuses(dto.clientId(), dto.bonusAmount());
-            log.info("💰 Начислено {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
+            log.info("Начислено {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
 
         } else if (dto.operationType() == OperationType.WRITE_OFF) {
             bonusService.writeOffBonuses(dto.clientId(), dto.bonusAmount());
-            log.info("💰 Списано {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
+            log.info("Списано {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
         }
 
         User user = userService.getCurrentUser();
