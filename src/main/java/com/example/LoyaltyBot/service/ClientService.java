@@ -16,8 +16,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
 @Service
 public class ClientService {
     private final ClientRepository clientRepository;
@@ -81,8 +79,8 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
-    public Client findByPhoneNumber(String phoneNumber) {
-        return clientRepository.findByPhone(phoneNumber).orElseThrow(
-                ()->new EntityNotFoundException("Client not found"));
+    public ClientResponseDto findByPhoneNumber(String phoneNumber) {
+        return clientMapper.toClientResponseDto(clientRepository.findByPhone(phoneNumber)
+                .orElseThrow(() -> new EntityNotFoundException("Клиент с номером " + phoneNumber + " не найден")));
     }
 }

@@ -9,102 +9,99 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
 
     <style>
-        .container-custom {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
+        .container-custom { max-width: 800px; margin: 0 auto; padding: 20px; }
         .header-section {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 15px;
-            margin-bottom: 30px;
-            text-align: center;
+            color: white; padding: 30px; border-radius: 15px;
+            margin-bottom: 30px; text-align: center;
         }
-
         .client-card {
-            background: #f8f9fa;
-            border-left: 4px solid #0d6efd;
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 8px;
+            background: #f8f9fa; border-left: 4px solid #0d6efd;
+            padding: 20px; margin: 20px 0; border-radius: 8px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .client-card .label {
-            color: #6c757d;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .client-card .value {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .bonus-amount-large {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #0d6efd;
-        }
-
-        .bonus-amount-large.negative {
-            color: #dc3545;
-        }
-
-        .search-result {
-            cursor: pointer;
-            padding: 12px 15px;
-            border-bottom: 1px solid #dee2e6;
-            transition: background 0.2s;
-        }
-
-        .search-result:hover {
-            background: #e9ecef;
-        }
-
-        .search-result:last-child {
-            border-bottom: none;
-        }
-
-        .autocomplete-list {
-            position: absolute;
-            z-index: 1000;
-            width: 100%;
-            background: white;
-            border: 1px solid #ced4da;
-            border-radius: 5px;
-            max-height: 250px;
-            overflow-y: auto;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             display: none;
         }
-
-        .spinner-border-sm {
-            width: 1.2rem;
-            height: 1.2rem;
+        .client-card.visible { display: block; }
+        .bonus-amount-large {
+            font-size: 2.5rem; font-weight: bold; color: #0d6efd;
+            transition: all 0.3s ease;
         }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease-in;
+        .bonus-amount-large.updated {
+            animation: pulse 0.5s ease;
         }
-
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); color: #198754; }
+            100% { transform: scale(1); }
+        }
+        .search-result { cursor: pointer; padding: 12px 15px; border-bottom: 1px solid #dee2e6; }
+        .search-result:hover { background: #e9ecef; }
+        .autocomplete-list {
+            position: absolute; z-index: 1000; width: 100%;
+            background: white; border: 1px solid #ced4da;
+            border-radius: 5px; max-height: 250px; overflow-y: auto;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: none;
+        }
+        .loading-spinner { display: none; }
+        .loading-spinner.active { display: inline-block; }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
-        @media (max-width: 768px) {
-            .bonus-amount-large {
-                font-size: 1.8rem;
-            }
-
-            .header-section {
-                padding: 20px;
-            }
+        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 9999; }
+        .bonus-section {
+            background: #f0f8ff;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            border: 1px solid #cce5ff;
+        }
+        .remain-amount {
+            font-size: 1.5rem; font-weight: bold; color: #198754;
+        }
+        .remain-amount.negative { color: #dc3545; }
+        .switch {
+            position: relative; display: inline-block;
+            width: 60px; height: 34px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #ccc; transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 26px; width: 26px;
+            left: 4px; bottom: 4px;
+            background-color: white; transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider { background-color: #2196F3; }
+        input:checked + .slider:before { transform: translateX(26px); }
+        .bonus-calc {
+            background: #e8f5e9; padding: 10px 15px;
+            border-radius: 8px; margin-top: 10px;
+            border-left: 4px solid #4caf50;
+        }
+        .bonus-calc.warning {
+            background: #fff3e0; border-left-color: #ff9800;
+        }
+        .no-bonus-warning {
+            background: #fff3cd; border: 1px solid #ffc107;
+            border-radius: 8px; padding: 10px 15px;
+            margin-top: 10px; display: none;
+        }
+        .no-bonus-warning i { color: #ff9800; }
+        .rate-badge {
+            background: #e3f2fd;
+            color: #0d6efd;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -124,335 +121,742 @@
             <h5 class="mb-0"><i class="bi bi-search"></i> Поиск клиента</h5>
         </div>
         <div class="card-body">
-            <!-- ✅ Исправлено: action на /loyalty/find -->
-            <form th:action="@{/loyalty/find}" method="post" th:object="${operation}" id="searchForm">
-                <div class="position-relative">
-                    <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="bi bi-phone"></i>
-                        </span>
-                        <input type="text"
-                               class="form-control form-control-lg"
-                               th:field="*{phoneNumber}"
-                               placeholder="Введите номер телефона (например: 7771234567)"
-                               id="phoneSearch"
-                               autocomplete="off"
-                               aria-label="Поиск клиента">
-                        <button class="btn btn-primary btn-lg" type="submit" id="searchButton">
-                            <i class="bi bi-search"></i> Найти
-                        </button>
-                    </div>
+            <div class="position-relative">
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-phone"></i></span>
+                    <input type="text"
+                           class="form-control form-control-lg"
+                           placeholder="Введите номер телефона"
+                           id="phoneSearch"
+                           autocomplete="off">
+                    <button class="btn btn-primary btn-lg" id="searchButton">
+                        <span class="spinner-border spinner-border-sm loading-spinner" role="status"></span>
+                        <i class="bi bi-search"></i> Найти
+                    </button>
+                </div>
+                <div id="autocompleteResults" class="autocomplete-list"></div>
+            </div>
+            <div id="searchError" class="alert alert-danger mt-3" style="display: none;">
+                <i class="bi bi-exclamation-triangle"></i>
+                <span id="errorMessage"></span>
+            </div>
+            <div id="searchSuccess" class="alert alert-success mt-3" style="display: none;">
+                <i class="bi bi-check-circle"></i>
+                <span id="successMessage"></span>
+            </div>
+        </div>
+    </div>
 
-                    <!-- Автокомплит -->
-                    <div id="autocompleteResults" class="autocomplete-list">
-                        <div class="text-center p-3 text-muted" id="loadingIndicator">
-                            <span class="spinner-border spinner-border-sm" role="status"></span>
-                            Загрузка...
+    <!-- Информация о клиенте -->
+    <div id="clientInfo" class="client-card fade-in">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="mb-2">
+                    <span class="label">Клиент</span>
+                    <div class="value" id="clientName">-</div>
+                </div>
+                <div class="mb-2">
+                    <span class="label">Телефон</span>
+                    <div class="value" id="clientPhone">-</div>
+                </div>
+                <div>
+                    <span class="label">ID клиента</span>
+                    <div class="value" id="clientId">-</div>
+                </div>
+                <!-- ✅ Добавляем отображение ставки -->
+                <div class="mt-2">
+                    <span class="label">Ставка бонусов</span>
+                    <div class="value">
+                        <span class="rate-badge" id="bonusRateDisplay">10%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-5 text-md-end mt-3 mt-md-0">
+                <span class="label">Доступно бонусов</span>
+                <div class="bonus-amount-large" id="bonusAmount">0 ₽</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Форма операции -->
+    <div id="operationSection" class="card shadow-sm" style="display: none;">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="bi bi-cart"></i> Оформление покупки</h5>
+        </div>
+        <div class="card-body">
+
+            <!-- Сумма покупки -->
+            <div class="mb-3">
+                <label class="form-label fw-bold">Сумма покупки (₽)</label>
+                <input type="number"
+                       class="form-control form-control-lg"
+                       id="purchaseAmount"
+                       step="0.01"
+                       min="0"
+                       placeholder="Введите сумму чека"
+                       oninput="calculateBonus()">
+            </div>
+
+            <!-- Начисление бонусов -->
+            <div class="bonus-section">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold mb-0">
+                            <i class="bi bi-plus-circle text-success"></i> Начислить бонусы
+                        </label>
+                        <div class="text-muted small">
+                            Бонусы начисляются только за оплату деньгами
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <span class="badge bg-success fs-6" id="bonusToEarn">0 ₽</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Списание бонусов -->
+            <div class="bonus-section mt-3">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <label class="form-label fw-bold mb-0">
+                            <i class="bi bi-dash-circle text-danger"></i> Списать бонусы
+                        </label>
+                        <div class="text-muted small">
+                            <span id="availableBonusText">Доступно: 0 ₽</span>
+                        </div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <label class="switch">
+                            <input type="checkbox" id="useBonusToggle" onchange="calculateBonus()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Сумма списания (появляется при включении) -->
+                <div id="writeOffSection" style="display: none;">
+                    <div class="row mt-2">
+                        <div class="col-md-8">
+                            <label class="form-label">Списать бонусов</label>
+                            <input type="number"
+                                   class="form-control"
+                                   id="writeOffAmount"
+                                   step="0.01"
+                                   min="0"
+                                   placeholder="Максимум: 0"
+                                   oninput="calculateBonus()">
+                        </div>
+                        <div class="col-md-4 d-flex align-items-end">
+                            <button class="btn btn-outline-secondary w-100" onclick="setMaxWriteOff()">
+                                <i class="bi bi-arrow-up"></i> Макс
+                            </button>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Сообщения -->
-                <div th:if="${error}" class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-                    <i class="bi bi-exclamation-triangle"></i>
-                    <span th:text="${error}"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            <!-- Предупреждение: бонусы не начисляются -->
+            <div class="no-bonus-warning" id="noBonusWarning">
+                <i class="bi bi-exclamation-triangle"></i>
+                <strong>Внимание!</strong> Покупка полностью оплачена бонусами.
+                <span class="text-danger">Бонусы за эту покупку НЕ начисляются.</span>
+            </div>
+
+            <!-- Итог -->
+            <div class="bonus-calc mt-3" id="calculationResult">
+                <div class="row">
+                    <div class="col-6">
+                        <span class="text-muted">Сумма покупки:</span>
+                        <strong id="calcPurchaseAmount">0 ₽</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                        <span class="text-muted">Списано бонусов:</span>
+                        <strong id="calcBonusUsed" class="text-danger">0 ₽</strong>
+                    </div>
                 </div>
+                <hr>
+                <div class="row">
+                    <div class="col-6">
+                        <span class="text-muted">Начислено бонусов:</span>
+                        <strong id="calcBonusEarned" class="text-success">0 ₽</strong>
+                    </div>
+                    <div class="col-6 text-end">
+                        <span class="text-muted">Итого к оплате:</span>
+                        <strong id="calcRemainAmount" class="remain-amount">0 ₽</strong>
+                    </div>
+                </div>
+                <div class="row mt-2" id="paymentInfo" style="display: none;">
+                    <div class="col-12 text-center text-muted small">
+                        <i class="bi bi-info-circle"></i>
+                        <span id="paymentInfoText"></span>
+                    </div>
+                </div>
+            </div>
 
-                <div th:if="${success}" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+            <!-- Комментарий -->
+            <div class="mt-3">
+                <label class="form-label fw-bold">Комментарий</label>
+                <input type="text"
+                       class="form-control"
+                       id="operationComment"
+                       placeholder="Например: Покупка в магазине">
+            </div>
+
+            <!-- Кнопки -->
+            <div class="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-outline-secondary btn-lg" id="resetButton">
+                    <i class="bi bi-arrow-counterclockwise"></i> Сбросить
+                </button>
+                <button class="btn btn-success btn-lg" id="executeButton">
+                    <span class="spinner-border spinner-border-sm loading-spinner" role="status"></span>
+                    <i class="bi bi-check-circle"></i> Провести покупку
+                </button>
+            </div>
+
+            <div id="operationResult" class="mt-3" style="display: none;">
+                <div id="operationSuccess" class="alert alert-success" style="display: none;">
                     <i class="bi bi-check-circle"></i>
-                    <span th:text="${success}"></span>
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    <span id="operationSuccessMessage"></span>
                 </div>
-            </form>
-        </div>
-    </div>
-
-    < Информация о клиенте >
-    <div th:if="${client != null}" class="fade-in">
-        <div class="client-card">
-            <div class="row">
-                <div class="col-md-7">
-                    <div class="mb-2">
-                        <span class="label">Клиент</span>
-                        <div class="value">
-                            <i class="bi bi-person-circle"></i>
-                            <span th:text="${client.firstName}"></span>
-                        </div>
-                    </div>
-                    <div class="mb-2">
-                        <span class="label">Телефон</span>
-                        <div class="value">
-                            <i class="bi bi-phone"></i>
-                            <span th:text="${client.phone}"></span>
-                        </div>
-                    </div>
-                    <div>
-                        <span class="label">ID клиента</span>
-                        <div class="value">
-                            <i class="bi bi-hash"></i>
-                            <span th:text="${client.id}"></span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-5 text-md-end mt-3 mt-md-0">
-                    <span class="label">Доступно бонусов</span>
-                    <div class="bonus-amount-large"
-                         th:classappend="${bonusAmount != null and bonusAmount < 0} ? 'negative' : ''">
-                        <span th:text="${bonusAmount != null ? bonusAmount : 0}"></span>
-                        <small class="fs-6">₽</small>
-                    </div>
+                <div id="operationError" class="alert alert-danger" style="display: none;">
+                    <i class="bi bi-exclamation-triangle"></i>
+                    <span id="operationErrorMessage"></span>
                 </div>
             </div>
         </div>
-
-        <!-- Форма операции -->
-        <div class="card shadow-sm">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0"><i class="bi bi-arrow-left-right"></i> Операция с бонусами</h5>
-            </div>
-            <div class="card-body">
-
-                <form th:action="@{/loyalty/operation}" method="post" th:object="${operation}" id="operationForm">
-                    <input type="hidden" th:field="*{phoneNumber}">
-                    <input type="hidden" name="clientId" th:value="${client.id}">
-
-                    <div class="row g-3">
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Тип операции</label>
-                            <select class="form-select form-select-lg" th:field="*{operationType}" id="operationType">
-                                <option value="ACCRUAL">
-                                    <i class="bi bi-plus-circle"></i> Начисление
-                                </option>
-                                <option value="WRITE_OFF">
-                                    <i class="bi bi-dash-circle"></i> Списание
-                                </option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label class="form-label fw-bold">Сумма</label>
-                            <div class="input-group">
-                                <span class="input-group-text">₽</span>
-                                <input type="number"
-                                       class="form-control form-control-lg"
-                                       th:field="*{amount}"
-                                       step="0.01"
-                                       min="0.01"
-                                       required
-                                       placeholder="0.00"
-                                       id="amountInput">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="mt-3">
-                        <label class="form-label fw-bold">Комментарий</label>
-                        <input type="text"
-                               class="form-control"
-                               th:field="*{comment}"
-                               placeholder="Например: Покупка товара, Бонус за регистрацию..."
-                               id="commentInput">
-                    </div>
-
-                    <div class="mt-4 d-grid gap-2 d-md-flex justify-content-md-end">
-                        <!-- ✅ Исправлено: /loyalty/reset -->
-                        <a th:href="@{/loyalty/reset}" class="btn btn-outline-secondary btn-lg">
-                            <i class="bi bi-arrow-counterclockwise"></i> Сбросить
-                        </a>
-                        <button type="submit" class="btn btn-success btn-lg" id="executeButton">
-                            <i class="bi bi-check-circle"></i> Выполнить
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <!-- Подсказка, если клиент не найден -->
-    <div th:if="${error != null and client == null}" class="alert alert-warning mt-3">
-        <i class="bi bi-info-circle"></i>
-        <span>Клиент не найден. Проверьте правильность введенного номера телефона.</span>
     </div>
 
     <!-- Пустое состояние -->
-    <div th:if="${client == null and error == null}" class="text-center text-muted mt-5">
+    <div id="emptyState" class="text-center text-muted mt-5">
         <i class="bi bi-search" style="font-size: 4rem;"></i>
         <h4 class="mt-3">Найдите клиента для выполнения операции</h4>
         <p>Введите номер телефона в поле поиска выше</p>
     </div>
 </div>
 
-<!-- Bootstrap JS -->
+<!-- Toast -->
+<div class="toast-container">
+    <div id="toast" class="toast align-items-center border-0" role="alert">
+        <div class="d-flex">
+            <div class="toast-body" id="toastMessage"></div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- JavaScript для автокомплита -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const searchInput = document.getElementById('phoneSearch');
-        const autocompleteList = document.getElementById('autocompleteResults');
-        const searchForm = document.getElementById('searchForm');
-        const searchButton = document.getElementById('searchButton');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        let timeoutId = null;
-        let currentQuery = '';
+    // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
+    let currentClientId = null;
+    let currentBonusAmount = 0;
+    let currentBonusRate = 10; // ✅ Добавляем переменную для ставки
+    let timeoutId = null;
+    let currentQuery = '';
 
-        // Функция для отображения результатов
-        function showResults(data) {
-            if (!data || data.length === 0) {
-                autocompleteList.innerHTML = `
-                    <div class="search-result text-muted text-center py-3">
-                        <i class="bi bi-info-circle"></i> Клиенты не найдены
-                    </div>
-                `;
-            } else {
-                autocompleteList.innerHTML = data.map(client => `
-                    <div class="search-result"
-                         data-phone="${escapeHtml(client.phoneNumber)}"
-                         data-name="${escapeHtml(client.fullName)}"
-                         data-bonus="${client.bonusAmount}">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong>${escapeHtml(client.fullName)}</strong>
-                                <div class="text-muted small">
-                                    <i class="bi bi-phone"></i> ${escapeHtml(client.phoneNumber)}
-                                </div>
-                            </div>
-                            <span class="badge bg-primary">
-                                ${client.bonusAmount} бонусов
-                            </span>
-                        </div>
-                    </div>
-                `).join('');
+    // ========== ЭЛЕМЕНТЫ ==========
+    const searchInput = document.getElementById('phoneSearch');
+    const searchButton = document.getElementById('searchButton');
+    const autocompleteList = document.getElementById('autocompleteResults');
+    const clientInfo = document.getElementById('clientInfo');
+    const operationSection = document.getElementById('operationSection');
+    const emptyState = document.getElementById('emptyState');
+    const clientName = document.getElementById('clientName');
+    const clientPhone = document.getElementById('clientPhone');
+    const clientIdEl = document.getElementById('clientId');
+    const bonusAmount = document.getElementById('bonusAmount');
+    const bonusRateDisplay = document.getElementById('bonusRateDisplay');
+    const purchaseAmount = document.getElementById('purchaseAmount');
+    const useBonusToggle = document.getElementById('useBonusToggle');
+    const writeOffSection = document.getElementById('writeOffSection');
+    const writeOffAmount = document.getElementById('writeOffAmount');
+    const bonusToEarn = document.getElementById('bonusToEarn');
+    const availableBonusText = document.getElementById('availableBonusText');
+    const calcPurchaseAmount = document.getElementById('calcPurchaseAmount');
+    const calcBonusUsed = document.getElementById('calcBonusUsed');
+    const calcBonusEarned = document.getElementById('calcBonusEarned');
+    const calcRemainAmount = document.getElementById('calcRemainAmount');
+    const paymentInfo = document.getElementById('paymentInfo');
+    const paymentInfoText = document.getElementById('paymentInfoText');
+    const noBonusWarning = document.getElementById('noBonusWarning');
+    const executeButton = document.getElementById('executeButton');
+    const resetButton = document.getElementById('resetButton');
+    const operationComment = document.getElementById('operationComment');
+    const toast = document.getElementById('toast');
+    const toastMessage = document.getElementById('toastMessage');
+    const toastInstance = new bootstrap.Toast(toast);
+    const searchError = document.getElementById('searchError');
+    const errorMessage = document.getElementById('errorMessage');
+    const searchSuccess = document.getElementById('searchSuccess');
+    const successMessage = document.getElementById('successMessage');
+    const operationResult = document.getElementById('operationResult');
+    const operationSuccess = document.getElementById('operationSuccess');
+    const operationSuccessMessage = document.getElementById('operationSuccessMessage');
+    const operationError = document.getElementById('operationError');
+    const operationErrorMessage = document.getElementById('operationErrorMessage');
 
-                // Добавляем обработчики для каждого результата
-                document.querySelectorAll('.search-result').forEach(el => {
-                    el.addEventListener('click', function() {
-                        selectClient(this);
-                    });
+    // ========== ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ==========
+    function showToast(message, type = 'success') {
+        toast.className = `toast align-items-center border-0 text-white bg-${type}`;
+        toastMessage.textContent = message;
+        toastInstance.show();
+    }
 
-                    el.addEventListener('keydown', function(e) {
-                        if (e.key === 'Enter') {
-                            e.preventDefault();
-                            selectClient(this);
-                        }
-                    });
+    function showError(message) {
+        errorMessage.textContent = message;
+        searchError.style.display = 'block';
+        searchSuccess.style.display = 'none';
+        setTimeout(() => { searchError.style.display = 'none'; }, 5000);
+    }
 
-                    el.setAttribute('tabindex', '0');
-                    el.setAttribute('role', 'option');
-                });
+    function showSuccess(message) {
+        successMessage.textContent = message;
+        searchSuccess.style.display = 'block';
+        searchError.style.display = 'none';
+        setTimeout(() => { searchSuccess.style.display = 'none'; }, 5000);
+    }
+
+    function showOperationSuccess(message) {
+        operationSuccessMessage.textContent = message;
+        operationSuccess.style.display = 'block';
+        operationError.style.display = 'none';
+        operationResult.style.display = 'block';
+        setTimeout(() => { operationResult.style.display = 'none'; }, 8000);
+    }
+
+    function showOperationError(message) {
+        operationErrorMessage.textContent = message;
+        operationError.style.display = 'block';
+        operationSuccess.style.display = 'none';
+        operationResult.style.display = 'block';
+    }
+
+    // ========== КАЛЬКУЛЯТОР БОНУСОВ ==========
+    function calculateBonus() {
+        const purchase = parseFloat(purchaseAmount.value) || 0;
+        const availableBonus = currentBonusAmount;
+        const useBonus = useBonusToggle.checked;
+
+        // ✅ Всегда пересчитываем writeOff
+        let writeOff = 0;
+        if (useBonus) {
+            writeOff = parseFloat(writeOffAmount.value) || 0;
+            // Если поле пустое - ставим максимальное
+            if (writeOff === 0 && purchase > 0) {
+                writeOff = Math.min(availableBonus, purchase);
+                writeOffAmount.value = writeOff.toFixed(2);
             }
-            autocompleteList.style.display = 'block';
+        } else {
+            // ✅ Если тумблер выключен - сбрасываем поле
+            writeOffAmount.value = 0;
         }
 
-        // Функция выбора клиента
-        function selectClient(element) {
-            const phone = element.dataset.phone;
-
-            // Заполняем поле ввода
-            searchInput.value = phone;
-
-            // Скрываем список
-            autocompleteList.style.display = 'none';
-
-            // Отправляем форму
-            searchForm.submit();
+        // Ограничиваем списание
+        const maxWriteOff = Math.min(availableBonus, purchase);
+        if (writeOff > maxWriteOff) {
+            writeOff = maxWriteOff;
+            writeOffAmount.value = writeOff.toFixed(2);
         }
 
-        // Функция экранирования HTML
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
+        const paidByCash = purchase - writeOff;
+        const bonusRate = currentBonusRate / 100;
+        const bonusEarned = paidByCash > 0.005
+            ? Math.round(paidByCash * bonusRate * 100) / 100
+            : 0;
+
+        // ✅ Обновляем ВСЕ элементы
+        bonusToEarn.textContent = `${bonusEarned.toFixed(2)} ₽ (${currentBonusRate}%)`;
+        calcPurchaseAmount.textContent = `${purchase.toFixed(2)} ₽`;
+        calcBonusUsed.textContent = `${writeOff.toFixed(2)} ₽`;
+        calcBonusEarned.textContent = `${bonusEarned.toFixed(2)} ₽`;
+        calcRemainAmount.textContent = `${paidByCash.toFixed(2)} ₽`;
+        calcRemainAmount.className = 'remain-amount' + (paidByCash < 0 ? ' negative' : '');
+
+        writeOffSection.style.display = useBonus ? 'block' : 'none';
+
+        // Предупреждение
+        if (writeOff > 0 && paidByCash <= 0.005) {
+            noBonusWarning.style.display = 'block';
+            document.querySelector('.bonus-calc').classList.add('warning');
+        } else {
+            noBonusWarning.style.display = 'none';
+            document.querySelector('.bonus-calc').classList.remove('warning');
         }
 
-        // Обработчик ввода
-        searchInput.addEventListener('input', function() {
-            clearTimeout(timeoutId);
-            const query = this.value.trim();
-            currentQuery = query;
+        // Информация о платеже
+        if (writeOff > 0 && paidByCash > 0.005) {
+            paymentInfo.style.display = 'block';
+            paymentInfoText.textContent = `💰 Списано ${writeOff.toFixed(2)} ₽ бонусами. К оплате деньгами: ${paidByCash.toFixed(2)} ₽. Начислено бонусов: ${bonusEarned.toFixed(2)} ₽ (${currentBonusRate}%)`;
+        } else if (writeOff > 0 && paidByCash <= 0.005) {
+            paymentInfo.style.display = 'block';
+            paymentInfoText.innerHTML = `🎉 Покупка полностью оплачена бонусами! <strong>Бонусы за эту покупку НЕ начисляются.</strong> Остаток бонусов: ${(availableBonus - writeOff).toFixed(2)} ₽`;
+        } else {
+            paymentInfo.style.display = 'block';
+            paymentInfoText.textContent = `💳 Оплата деньгами: ${purchase.toFixed(2)} ₽. Начислено бонусов: ${bonusEarned.toFixed(2)} ₽ (${currentBonusRate}%)`;
+        }
+    }
 
-            if (query.length < 2) {
-                autocompleteList.style.display = 'none';
-                return;
-            }
+    // ========== МАКСИМАЛЬНОЕ СПИСАНИЕ ==========
+    function setMaxWriteOff() {
+        const purchase = parseFloat(purchaseAmount.value) || 0;
+        const maxWriteOff = Math.min(currentBonusAmount, purchase);
+        writeOffAmount.value = maxWriteOff.toFixed(2);
+        calculateBonus();
+    }
 
-            // Показываем индикатор загрузки
-            autocompleteList.innerHTML = `
-                <div class="text-center p-3 text-muted">
-                    <span class="spinner-border spinner-border-sm" role="status"></span>
-                    Поиск...
-                </div>
-            `;
-            autocompleteList.style.display = 'block';
+    // ========== ОБНОВЛЕНИЕ КЛИЕНТА ==========
+    function updateClientInfo(data) {
+        if (data) {
+            clientName.textContent = data.fullName || data.firstName || '-';
+            clientPhone.textContent = data.phone || '-';
+            clientIdEl.textContent = data.id || '-';
 
-            // Дебаунс
-            timeoutId = setTimeout(() => {
-                // ✅ Исправлено: /loyalty/search
-                fetch(`/loyalty/search?query=${encodeURIComponent(query)}&limit=10`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Ошибка загрузки');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (currentQuery === query) {
-                            showResults(data);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Ошибка:', error);
-                        autocompleteList.innerHTML = `
-                            <div class="search-result text-danger text-center py-3">
-                                <i class="bi bi-exclamation-triangle"></i>
-                                Ошибка загрузки данных
-                            </div>
-                        `;
-                        autocompleteList.style.display = 'block';
-                    });
-            }, 300);
-        });
+            // ✅ Сохраняем и отображаем ставку
+            currentBonusRate = data.rate || 10;
+            currentBonusAmount = Math.round((data.bonusAmount || 0) * 100) / 100;
 
-        // Скрываем автокомплит при клике вне
-        document.addEventListener('click', function(e) {
-            if (!e.target.closest('.position-relative')) {
-                autocompleteList.style.display = 'none';
-            }
-        });
+            bonusAmount.innerHTML = `${currentBonusAmount.toFixed(2)} ₽`;
+            bonusRateDisplay.textContent = `${currentBonusRate}%`;
+            currentClientId = data.id;
 
-        // Обработка Enter в поле поиска
-        searchInput.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                const results = document.querySelectorAll('.search-result');
-                if (results.length === 1) {
-                    selectClient(results[0]);
+            clientInfo.style.display = 'block';
+            operationSection.style.display = 'block';
+            emptyState.style.display = 'none';
+
+            bonusAmount.classList.remove('updated');
+            setTimeout(() => bonusAmount.classList.add('updated'), 10);
+
+            availableBonusText.textContent = `Доступно: ${currentBonusAmount.toFixed(2)} ₽`;
+            calculateBonus();
+        }
+    }
+
+    // ========== ПОИСК КЛИЕНТА ==========
+    function findClient() {
+        const phone = searchInput.value.trim();
+        if (!phone || phone.length < 2) {
+            showError('Введите номер телефона (минимум 2 цифры)');
+            return;
+        }
+
+        searchButton.disabled = true;
+        document.querySelector('#searchButton .loading-spinner').classList.add('active');
+
+        fetch(`/loyalty/find?phoneNumber=${encodeURIComponent(phone)}`)
+            .then(response => response.json())
+            .then(result => {
+                searchButton.disabled = false;
+                document.querySelector('#searchButton .loading-spinner').classList.remove('active');
+
+                if (result.success) {
+                    updateClientInfo(result.data);
+                    showSuccess(result.message);
                 } else {
-                    searchForm.submit();
+                    clientInfo.style.display = 'none';
+                    operationSection.style.display = 'none';
+                    emptyState.style.display = 'block';
+                    showError(result.error || 'Клиент не найден');
                 }
-            }
+            })
+            .catch(error => {
+                searchButton.disabled = false;
+                document.querySelector('#searchButton .loading-spinner').classList.remove('active');
+                showError('Ошибка при поиске клиента');
+                console.error('Error:', error);
+            });
+    }
 
-            if (e.key === 'Escape') {
-                autocompleteList.style.display = 'none';
-                searchInput.blur();
-            }
-        });
+    // ========== ВЫПОЛНЕНИЕ ОПЕРАЦИИ ==========
+    function executeOperation() {
+        const purchase = parseFloat(purchaseAmount.value) || 0;
+        const useBonus = useBonusToggle.checked;
+        const writeOff = parseFloat(writeOffAmount.value) || 0;
 
-        // Валидация формы операции
-        const operationForm = document.getElementById('operationForm');
-        if (operationForm) {
-            operationForm.addEventListener('submit', function(e) {
-                const amount = document.getElementById('amountInput');
-                if (!amount.value || parseFloat(amount.value) <= 0) {
-                    e.preventDefault();
-                    alert('Пожалуйста, введите сумму больше нуля');
-                    amount.focus();
-                }
+        if (!currentClientId) {
+            showOperationError('Сначала найдите клиента');
+            return;
+        }
+
+        if (purchase <= 0) {
+            showOperationError('Введите сумму покупки');
+            purchaseAmount.focus();
+            return;
+        }
+
+        const roundedPurchase = Math.round(purchase * 100) / 100;
+        const roundedWriteOff = Math.round(writeOff * 100) / 100;
+        const paidByCash = Math.round((roundedPurchase - roundedWriteOff) * 100) / 100;
+
+        if (roundedWriteOff > roundedPurchase) {
+            showOperationError('Сумма списания не может превышать сумму покупки');
+            return;
+        }
+
+        if (useBonus && roundedWriteOff > currentBonusAmount) {
+            showOperationError(`Недостаточно бонусов. Доступно: ${currentBonusAmount.toFixed(2)} ₽`);
+            return;
+        }
+
+        executeButton.disabled = true;
+        document.querySelector('#executeButton .loading-spinner').classList.add('active');
+
+        const operations = [];
+
+        // 1. Списание бонусов
+        if (useBonus && roundedWriteOff > 0) {
+            operations.push({
+                clientId: currentClientId,
+                phoneNumber: clientPhone.textContent,
+                operationAmount: roundedPurchase,
+                bonusAmount: roundedWriteOff,
+                operationType: 'WRITE_OFF',
+                comment: `Списание бонусов за покупку на ${roundedPurchase.toFixed(2)} ₽`
             });
         }
+
+        // 2. Начисление бонусов
+        if (paidByCash > 0.005) {
+            const bonusRate = currentBonusRate / 100;
+            const bonusEarned = Math.round(paidByCash * bonusRate * 100) / 100;
+            if (bonusEarned > 0) {
+                operations.push({
+                    clientId: currentClientId,
+                    phoneNumber: clientPhone.textContent,
+                    operationAmount: roundedPurchase,
+                    bonusAmount: bonusEarned,
+                    operationType: 'ACCRUAL',
+                    comment: `Начисление бонусов за покупку (оплачено деньгами: ${paidByCash.toFixed(2)} ₽, ставка: ${currentBonusRate}%)`
+                });
+            }
+        } else {
+            showToast('⚠️ Покупка оплачена бонусами. Бонусы не начислены.', 'warning');
+        }
+
+        if (operations.length === 0) {
+            showOperationError('Нет операций для выполнения');
+            executeButton.disabled = false;
+            document.querySelector('#executeButton .loading-spinner').classList.remove('active');
+            return;
+        }
+
+        let completed = 0;
+        let messages = [];
+
+        operations.forEach((op) => {
+            fetch('/loyalty/operation', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(op)
+            })
+                .then(response => response.json())
+                .then(result => {
+                    completed++;
+                    if (result.success) {
+                        const opType = op.operationType === 'ACCRUAL' ? '💰 Начислено' : '💸 Списано';
+                        messages.push(`${opType} ${op.bonusAmount.toFixed(2)} бонусов`);
+                    } else {
+                        messages.push(`❌ ${result.error}`);
+                    }
+
+                    if (completed === operations.length) {
+                        executeButton.disabled = false;
+                        document.querySelector('#executeButton .loading-spinner').classList.remove('active');
+
+                        const allSuccess = messages.every(m => !m.includes('❌'));
+
+                        if (allSuccess) {
+                            fetch(`/loyalty/find?phoneNumber=${encodeURIComponent(clientPhone.textContent)}`)
+                                .then(res => res.json())
+                                .then(result => {
+                                    if (result.success) {
+                                        updateClientInfo(result.data);
+                                        showToast('✅ Покупка оформлена!', 'success');
+                                    }
+                                });
+
+                            let successMsg = '✅ Покупка успешно оформлена!\n\n';
+                            if (useBonus && roundedWriteOff > 0) {
+                                successMsg += `💸 Списано бонусов: ${roundedWriteOff.toFixed(2)} ₽\n`;
+                            }
+                            if (paidByCash > 0.005) {
+                                const bonusRate = currentBonusRate / 100;
+                                const bonusEarned = Math.round(paidByCash * bonusRate * 100) / 100;
+                                successMsg += `💰 Начислено бонусов: ${bonusEarned.toFixed(2)} ₽ (${currentBonusRate}%)\n`;
+                                successMsg += `💳 Оплачено деньгами: ${paidByCash.toFixed(2)} ₽\n`;
+                            } else {
+                                successMsg += `⚠️ Покупка оплачена бонусами. Бонусы не начислены.\n`;
+                            }
+                            const totalBonusChange = (paidByCash > 0.005 ? Math.round(paidByCash * currentBonusRate / 100 * 100) / 100 : 0) - roundedWriteOff;
+                            successMsg += `📊 Новый баланс: ${(currentBonusAmount + totalBonusChange).toFixed(2)} ₽`;
+
+                            showOperationSuccess(successMsg);
+
+                            purchaseAmount.value = '';
+                            writeOffAmount.value = '';
+                            useBonusToggle.checked = false;
+                            calculateBonus();
+                            operationComment.value = '';
+                        } else {
+                            showOperationError('❌ Ошибка при оформлении покупки\n' + messages.join('\n'));
+                            showToast('Ошибка при оформлении покупки', 'danger');
+                        }
+                    }
+                })
+                .catch(error => {
+                    completed++;
+                    messages.push(`❌ Ошибка: ${error.message}`);
+                    if (completed === operations.length) {
+                        executeButton.disabled = false;
+                        document.querySelector('#executeButton .loading-spinner').classList.remove('active');
+                        showOperationError('❌ Ошибка при оформлении покупки\n' + messages.join('\n'));
+                        showToast('Ошибка при оформлении покупки', 'danger');
+                    }
+                });
+        });
+    }
+
+    // ========== СБРОС ==========
+    function resetForm() {
+        searchInput.value = '';
+        clientInfo.style.display = 'none';
+        operationSection.style.display = 'none';
+        emptyState.style.display = 'block';
+        currentClientId = null;
+        currentBonusAmount = 0;
+        currentBonusRate = 10;
+        purchaseAmount.value = '';
+        writeOffAmount.value = '';
+        useBonusToggle.checked = false;
+        operationComment.value = '';
+        bonusAmount.innerHTML = '0 ₽';
+        bonusRateDisplay.textContent = '10%';
+        autocompleteList.style.display = 'none';
+        operationResult.style.display = 'none';
+        searchError.style.display = 'none';
+        searchSuccess.style.display = 'none';
+        writeOffSection.style.display = 'none';
+        noBonusWarning.style.display = 'none';
+        document.querySelector('.bonus-calc').classList.remove('warning');
+        calculateBonus();
+    }
+
+    // ========== АВТОКОМПЛИТ ==========
+    function showResults(data) {
+        if (!data || data.length === 0) {
+            autocompleteList.innerHTML = `
+                <div class="search-result text-muted text-center py-3">
+                    <i class="bi bi-info-circle"></i> Клиенты не найдены
+                </div>
+            `;
+        } else {
+            autocompleteList.innerHTML = data.map(client => `
+                <div class="search-result" data-phone="${client.phoneNumber}">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>${client.fullName}</strong>
+                            <div class="text-muted small">
+                                <i class="bi bi-phone"></i> ${client.phoneNumber}
+                            </div>
+                        </div>
+                        <span class="badge bg-primary">${client.bonusAmount} бонусов</span>
+                    </div>
+                </div>
+            `).join('');
+
+            document.querySelectorAll('.search-result').forEach(el => {
+                el.addEventListener('click', function() {
+                    searchInput.value = this.dataset.phone;
+                    autocompleteList.style.display = 'none';
+                    findClient();
+                });
+            });
+        }
+        autocompleteList.style.display = 'block';
+    }
+
+    // ========== EVENT LISTENERS ==========
+
+    searchButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        findClient();
     });
+
+    searchInput.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            findClient();
+        }
+        if (e.key === 'Escape') {
+            autocompleteList.style.display = 'none';
+            searchInput.blur();
+        }
+    });
+
+    searchInput.addEventListener('input', function() {
+        clearTimeout(timeoutId);
+        const query = this.value.trim();
+        currentQuery = query;
+
+        if (query.length < 2) {
+            autocompleteList.style.display = 'none';
+            return;
+        }
+
+        autocompleteList.innerHTML = `
+            <div class="text-center p-3 text-muted">
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                Поиск...
+            </div>
+        `;
+        autocompleteList.style.display = 'block';
+
+        timeoutId = setTimeout(() => {
+            fetch(`/loyalty/search?query=${encodeURIComponent(query)}&limit=10`)
+                .then(response => response.json())
+                .then(data => {
+                    if (currentQuery === query) {
+                        showResults(data);
+                    }
+                })
+                .catch(() => {
+                    autocompleteList.innerHTML = `
+                        <div class="search-result text-danger text-center py-3">
+                            <i class="bi bi-exclamation-triangle"></i> Ошибка загрузки
+                        </div>
+                    `;
+                });
+        }, 300);
+    });
+
+    executeButton.addEventListener('click', executeOperation);
+
+    purchaseAmount.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            executeOperation();
+        }
+    });
+
+    resetButton.addEventListener('click', resetForm);
+
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.position-relative')) {
+            autocompleteList.style.display = 'none';
+        }
+    });
+
+    purchaseAmount.addEventListener('input', function() {
+        if (this.value && parseFloat(this.value) < 0) {
+            this.classList.add('is-invalid');
+        } else {
+            this.classList.remove('is-invalid');
+        }
+        calculateBonus();
+    });
+
+    writeOffAmount.addEventListener('input', calculateBonus);
+
+    calculateBonus();
 </script>
 
 </body>

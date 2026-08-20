@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @Slf4j
 public class LoyaltyService {
-    private final ClientService clientService;
     private final BonusService bonusService;
     private final OperationService operationService;
     private final UserService userService;
@@ -22,20 +21,18 @@ public class LoyaltyService {
     public void processBonusOperation(BonusOperationDto dto) {
 
         if (dto.operationType() == OperationType.ACCRUAL) {
-            bonusService.enrollmentBonuses(dto.clientId(), dto.amount());
-
-            log.info("💰 Начислено {} бонусов клиенту {}", dto.amount(), dto.clientId());
+            bonusService.enrollmentBonuses(dto.clientId(), dto.bonusAmount());
+            log.info("💰 Начислено {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
 
         } else if (dto.operationType() == OperationType.WRITE_OFF) {
-            bonusService.writeOffBonuses(dto.clientId(), dto.amount());
-            log.info("💰 Списано {} бонусов клиенту {}", dto.amount(), dto.clientId());
+            bonusService.writeOffBonuses(dto.clientId(), dto.bonusAmount());
+            log.info("💰 Списано {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
         }
 
         User user = userService.getCurrentUser();
 
-        //todo пока не передаю сумму операции а просто бонусы 100 по умолчанию
-        operationService.create(new BigDecimal("100"),
-                dto.operationType(), dto.amount(),
+        operationService.create(dto.operationAmount(),
+                dto.operationType(), dto.bonusAmount(),
                 dto.comment(), dto.clientId(), user.getId());
 
         String message = createNotificationMessage(dto,
@@ -51,7 +48,7 @@ public class LoyaltyService {
                         "Новый баланс: %s балов\n" +
                         "Комментарий: %s",
                 operationName,
-                dto.amount(),
+                dto.bonusAmount(),
                 newBalance,
                 dto.comment() != null ? dto.comment() : "Без комментария"
         );

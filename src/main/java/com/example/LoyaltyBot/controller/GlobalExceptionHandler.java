@@ -3,49 +3,64 @@ package com.example.LoyaltyBot.controller;
 import com.example.LoyaltyBot.exception.InsufficientBonusException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(InsufficientBonusException.class)
-    public String handleInsufficientBonus(InsufficientBonusException e,
-                                          Model model,
-                                          RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public ResponseEntity<?> handleInsufficientBonus(InsufficientBonusException e) {
         log.error("Недостаточно бонусов: {}", e.getMessage());
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/loyalty";
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("error", e.getMessage());
+
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
-    public String handleEntityNotFound(EntityNotFoundException e,
-                                       Model model,
-                                       RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public ResponseEntity<?> handleEntityNotFound(EntityNotFoundException e) {
         log.error("Сущность не найдена: {}", e.getMessage());
-        redirectAttributes.addFlashAttribute("error", "Запись не найдена: " + e.getMessage());
-        return "redirect:/loyalty";
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("error", e.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public String handleIllegalArgument(IllegalArgumentException e,
-                                        Model model,
-                                        RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public ResponseEntity<?> handleIllegalArgument(IllegalArgumentException e) {
         log.error("Неверный аргумент: {}", e.getMessage());
-        redirectAttributes.addFlashAttribute("error", e.getMessage());
-        return "redirect:/loyalty";
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("error", e.getMessage());
+
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(Exception.class)
-    public String handleException(Exception e,
-                                  Model model,
-                                  RedirectAttributes redirectAttributes) {
+    @ResponseBody
+    public ResponseEntity<?> handleException(Exception e) {
         log.error("Непредвиденная ошибка: {}", e.getMessage(), e);
-        redirectAttributes.addFlashAttribute("error",
-                "Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.");
-        return "redirect:/loyalty";
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", false);
+        response.put("error", "Произошла непредвиденная ошибка. Пожалуйста, попробуйте позже.");
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
     }
 }

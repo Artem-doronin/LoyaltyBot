@@ -2,6 +2,7 @@ package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.bonus.BonusResponseDto;
 import com.example.LoyaltyBot.entity.Bonus;
+import com.example.LoyaltyBot.exception.InsufficientBonusException;
 import com.example.LoyaltyBot.repository.BonusRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class BonusService {
                 .orElseThrow(() -> new EntityNotFoundException("Бонус не найден"));
 
         if (bonus.getAmount().compareTo(amount) < 0) {
-            throw new IllegalArgumentException(
+            throw new InsufficientBonusException(
                     "Недостаточно бонусов. Доступно: " + bonus.getAmount()
             );
         }
