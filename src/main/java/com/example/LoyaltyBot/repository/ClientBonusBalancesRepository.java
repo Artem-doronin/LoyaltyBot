@@ -1,6 +1,6 @@
 package com.example.LoyaltyBot.repository;
 
-import com.example.LoyaltyBot.entity.Bonus;
+import com.example.LoyaltyBot.entity.ClientBonusBalances;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -12,13 +12,13 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
-public interface BonusRepository extends JpaRepository<Bonus, Long> {
+public interface ClientBonusBalancesRepository extends JpaRepository<ClientBonusBalances, Long> {
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("SELECT b FROM Bonus b WHERE b.clientId = :clientId")
-    Optional<Bonus> findByClientIdWithLock(@Param("clientId") Long clientId);
+    @Query("SELECT c FROM ClientBonusBalances c WHERE c.clientId = :clientId")
+    Optional<ClientBonusBalances> findByClientIdWithLock(@Param("clientId") Long clientId);
 
-    @Query("SELECT b.amount FROM Bonus b WHERE b.clientId = :clientId")
+    @Query("SELECT c.amount FROM ClientBonusBalances c WHERE c.clientId = :clientId")
     Optional<BigDecimal> findAmountByClientId(@Param("clientId") Long clientId);
-    Optional<Bonus> findByClientId(Long clientId);
+    Optional<ClientBonusBalances> findByClientId(Long clientId);
 }

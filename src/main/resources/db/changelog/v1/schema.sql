@@ -52,7 +52,7 @@ VALUES ('admin',
         false);
 
 
-CREATE TABLE IF NOT EXISTS operations
+CREATE TABLE IF NOT EXISTS client_bonus_transactions
 (
     id               BIGSERIAL PRIMARY KEY,
     client_id        BIGINT      NOT NULL,
@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS operations
     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
 );
 
-CREATE TABLE IF NOT EXISTS bonuses
+CREATE TABLE IF NOT EXISTS client_bonus_balances
 (
     id         BIGSERIAL PRIMARY KEY,
     client_id  BIGINT  NOT NULL,
@@ -77,5 +77,5 @@ CREATE TABLE IF NOT EXISTS bonuses
     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE
 );
 
-CREATE INDEX IF NOT EXISTS idx_client_id ON bonuses (client_id);
+CREATE INDEX IF NOT EXISTS idx_client_id ON client_bonus_balances (client_id);
 

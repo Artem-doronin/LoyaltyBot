@@ -20,8 +20,8 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @Entity
-@Table(name = "bonuses")
-public class Bonus {
+@Table(name = "client_bonus_balances")
+public class ClientBonusBalances {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

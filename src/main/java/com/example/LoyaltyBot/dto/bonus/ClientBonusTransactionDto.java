@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.math.BigDecimal;
 
 @Builder
-public record BonusOperationDto(
+public record ClientBonusTransactionDto(
         Long clientId,
         String phoneNumber,
         BigDecimal bonusAmount,

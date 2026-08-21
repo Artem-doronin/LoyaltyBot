@@ -1,9 +1,9 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.bonus.BonusResponseDto;
-import com.example.LoyaltyBot.entity.Bonus;
+import com.example.LoyaltyBot.entity.ClientBonusBalances;
 import com.example.LoyaltyBot.exception.InsufficientBonusException;
-import com.example.LoyaltyBot.repository.BonusRepository;
+import com.example.LoyaltyBot.repository.ClientBonusBalancesRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -13,35 +13,36 @@ import java.math.BigDecimal;
 
 @Service
 @Slf4j
-public class BonusService {
-    private final BonusRepository bonusRepository;
+public class ClientBonusBalancesService {
+    private final ClientBonusBalancesRepository bonusRepository;
 
-    public BonusService(BonusRepository bonusRepository) {
+    public ClientBonusBalancesService(ClientBonusBalancesRepository bonusRepository) {
         this.bonusRepository = bonusRepository;
     }
 
-    public Bonus create(Long clientId) {
-        Bonus newBonus = Bonus.builder()
+    public ClientBonusBalances create(Long clientId) {
+        ClientBonusBalances newBonus = ClientBonusBalances.builder()
                 .clientId(clientId)
                 .build();
         return bonusRepository.save(newBonus);
     }
 
     @Transactional
-    public void enrollmentBonuses(Long clientId, BigDecimal amount) {
-        Bonus bonus = bonusRepository.findByClientIdWithLock(clientId)
+    public BigDecimal enrollmentBonuses(Long clientId, BigDecimal amount) {
+        ClientBonusBalances bonus = bonusRepository.findByClientIdWithLock(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Бонус не найден"));
 
         BigDecimal newAmount = bonus.getAmount().add(amount);
         bonus.setAmount(newAmount);
 
         log.info("Начислено {} бонусов клиенту {}", amount, clientId);
+        return newAmount;
     }
 
 
     @Transactional
-    public void writeOffBonuses(Long clientId, BigDecimal amount) {
-        Bonus bonus = bonusRepository.findByClientIdWithLock(clientId)
+    public BigDecimal writeOffBonuses(Long clientId, BigDecimal amount) {
+        ClientBonusBalances bonus = bonusRepository.findByClientIdWithLock(clientId)
                 .orElseThrow(() -> new EntityNotFoundException("Бонус не найден"));
 
         if (bonus.getAmount().compareTo(amount) < 0) {
@@ -54,6 +55,7 @@ public class BonusService {
         bonus.setAmount(newAmount);
 
         log.info("Списано {} бонусов у клиента {}", amount, clientId);
+        return newAmount;
     }
 
     public BigDecimal getAmount(Long clientId) {
@@ -61,7 +63,7 @@ public class BonusService {
     }
 
     public BonusResponseDto getBonusDto(Long clientId) {
-        Bonus bonus = bonusRepository.findByClientId(clientId).orElseThrow(
+        ClientBonusBalances bonus = bonusRepository.findByClientId(clientId).orElseThrow(
                 () -> new EntityNotFoundException("Bonus not found"));
         return BonusResponseDto.fromDto(bonus);
     }

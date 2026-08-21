@@ -1,6 +1,6 @@
 package com.example.LoyaltyBot.controller;
 
-import com.example.LoyaltyBot.service.BonusService;
+import com.example.LoyaltyBot.service.ClientBonusBalancesService;
 import com.example.LoyaltyBot.service.ClientService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class ClientController {
     private final ClientService clientService;
-    private final BonusService bonusService;
+    private final ClientBonusBalancesService bonusService;
 
-    public ClientController(ClientService clientService,BonusService bonusService) {
+    public ClientController(ClientService clientService, ClientBonusBalancesService bonusService) {
         this.clientService = clientService;
         this.bonusService = bonusService;
     }

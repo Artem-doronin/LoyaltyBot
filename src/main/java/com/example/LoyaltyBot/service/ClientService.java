@@ -6,6 +6,7 @@ import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,11 +21,11 @@ import java.util.stream.Collectors;
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
-    private final BonusService bonusService;
+    private final ClientBonusBalancesService bonusService;
 
     public ClientService(ClientRepository clientRepository,
                          ClientMapper clientMapper,
-                         BonusService bonusService) {
+                         ClientBonusBalancesService bonusService) {
         this.clientRepository = clientRepository;
         this.clientMapper = clientMapper;
         this.bonusService = bonusService;
@@ -79,6 +80,9 @@ public class ClientService {
     }
 
     public ClientResponseDto findByPhoneNumber(String phoneNumber) {
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Введите номер телефона");
+        }
         return clientMapper.toClientResponseDto(clientRepository.findByPhone(phoneNumber)
                 .orElseThrow(() -> new EntityNotFoundException("Клиент с номером " + phoneNumber + " не найден")));
     }
