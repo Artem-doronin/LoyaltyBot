@@ -103,7 +103,7 @@ public class UserService implements UserDetailsService {
         return TemporaryPasswordResponse.toDto(user.getUsername(), password);
     }
 
-    private User getCurrentUser() {
+    public User getCurrentUser() {
         log.info("getCurrentUser() - получение текущего пользователя");
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 

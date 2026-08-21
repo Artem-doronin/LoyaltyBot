@@ -23,8 +23,6 @@ public class InitRegistrationHandler implements RegistrationHandler {
         client.setTelegramUsername(message.getFrom().getUserName());
         client.setRegistrationState(RegistrationState.ASK_NAME);
         client.setIsActive(true);
-        client.setBonusBalance(0);
-        client.setTotalSpent(0);
         clientService.createClient(client);
 
         String messageResponse = " Введите ваше имя";

@@ -43,8 +43,8 @@
         <p><strong>Telegram Username:</strong> <span th:text="${client.telegramUsername}"></span></p>
         <p><strong>Телефон:</strong> <span th:text="${client.phone} ?: '—'"></span></p>
         <p><strong>День рождения:</strong> <span th:text="${client.birthday} ?: '—'"></span></p>
-        <p><strong>Бонусы:</strong> <span th:text="${client.bonusBalance}"></span></p>
-        <p><strong>Потрачено:</strong> <span th:text="${client.totalSpent}"></span></p>
+        <p><strong>Бонусы:</strong> <span th:text="${bonus.amount}"></span></p>
+        <p><strong>Уровень лояльности:</strong> <span th:text="${bonus.rate}"></span></p>
         <p><strong>Статус регистрации:</strong> <span th:text="${client.registrationState}"></span></p>
 
         <p><strong>Дата создания:</strong> <span th:text="${client.createdAt} ?: '—'"></span></p>

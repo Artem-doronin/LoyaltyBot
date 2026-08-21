@@ -16,7 +16,7 @@ import java.util.Set;
 public class ForcePasswordChangeFilter extends OncePerRequestFilter {
 
     private static final Set<String> ALLOWED_PATHS = Set.of(
-            "/users/change_password",  // ← ДОБАВЛЕНО!
+            "/users/change_password",
             "/auth/login",
             "/perform-login",
             "/logout",

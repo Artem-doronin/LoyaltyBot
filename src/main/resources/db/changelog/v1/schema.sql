@@ -8,8 +8,6 @@ CREATE TABLE IF NOT EXISTS clients
     last_name          VARCHAR(50),
     phone              VARCHAR(20),
     birthday           DATE,
-    bonus_balance      NUMERIC   NOT NULL DEFAULT '0',
-    bonus_rate         NUMERIC   NOT NULL DEFAULT '10',
     created_at         TIMESTAMP NOT NULL,
     updated_at         TIMESTAMP,
     is_active          BOOLEAN   NOT NULL DEFAULT TRUE,
@@ -46,7 +44,7 @@ VALUES ('ROLE_USER', 'Кассир'),
        ('ROLE_ADMIN', 'Администратор');
 
 
-INSERT INTO users (username, password, email, role_id, should_change_password)
+INSERT INTO  users (username, password, email, role_id, should_change_password)
 VALUES ('admin',
         '$2a$12$QpTzxRtGq2kGh6w/btex2eKnTg8Yx4T9k0qNY/I9CppvRN6V3jAcm',
         'admin@mail.ru',
@@ -54,10 +52,11 @@ VALUES ('admin',
         false);
 
 
-CREATE TABLE IF NOT EXISTS operations
+CREATE TABLE IF NOT EXISTS client_bonus_transactions
 (
     id               BIGSERIAL PRIMARY KEY,
     client_id        BIGINT      NOT NULL,
+    user_id          BIGINT      NOT NULL,
     operation_amount NUMERIC     NOT NULL,
     bonus_amount     NUMERIC     NOT NULL,
     operation_type   VARCHAR(30) NOT NULL,
@@ -66,6 +65,17 @@ CREATE TABLE IF NOT EXISTS operations
     updated_at       TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
-
 );
+
+CREATE TABLE IF NOT EXISTS client_bonus_balances
+(
+    id         BIGSERIAL PRIMARY KEY,
+    client_id  BIGINT  NOT NULL,
+    amount     NUMERIC NOT NULL DEFAULT 0,
+    bonus_rate NUMERIC NOT NULL DEFAULT '10',
+
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE CASCADE
+);
+
+CREATE INDEX IF NOT EXISTS idx_client_id ON client_bonus_balances (client_id);
 

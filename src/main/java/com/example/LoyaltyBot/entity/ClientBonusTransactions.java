@@ -25,13 +25,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "operations")
-public class Operation {
+@Table(name = "client_bonus_transactions")
+public class ClientBonusTransactions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false, name = "client_id")
     private Long clientId;
+    @Column(nullable = false,name = "user_id")
+    private Long userId;
     @Column(nullable = false, name = "operation_amount")
     private BigDecimal operationAmount;
 
