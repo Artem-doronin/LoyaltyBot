@@ -33,8 +33,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             log.info("Администратор {} → редирект на /users", user.getUsername());
             response.sendRedirect("/users");
         } else {
-            log.info("Пользователь {} → редирект на /api/loyalty", user.getUsername());
-            response.sendRedirect("/api/loyalty");
+            log.info("Пользователь {} → редирект на /loyalty", user.getUsername());
+            response.sendRedirect("/loyalty");
         }
         log.debug("AuthenticationSuccessHandler завершил работу");
     }

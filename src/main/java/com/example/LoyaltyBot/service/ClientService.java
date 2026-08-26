@@ -1,12 +1,14 @@
 package com.example.LoyaltyBot.service;
 
+import com.example.LoyaltyBot.dto.SuccessClientResponse;
+import com.example.LoyaltyBot.dto.bonus.BonusResponseDto;
 import com.example.LoyaltyBot.dto.client.ClientResponseDto;
 import com.example.LoyaltyBot.dto.client.ClientResponseSearchDto;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.mapper.ClientMapper;
 import com.example.LoyaltyBot.repository.ClientRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.http.ResponseEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +19,16 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ClientService {
     private final ClientRepository clientRepository;
     private final ClientMapper clientMapper;
     private final ClientBonusBalancesService bonusService;
+
+
+    private static final int DEFAULT_LIMIT = 10;
+    private static final int MAX_LIMIT = 20;
 
     public ClientService(ClientRepository clientRepository,
                          ClientMapper clientMapper,
@@ -63,13 +70,35 @@ public class ClientService {
         clientRepository.deleteById(id);
     }
 
-    public List<ClientResponseSearchDto> searchClients(String query) {
-        if (query == null || query.trim().isEmpty()) {
+    public SuccessClientResponse findByPhoneNumber(String phoneNumber) {
+
+        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
+            throw new IllegalArgumentException("Номер телефона не может быть пустым");
+        }
+
+        String normalizedPhone = phoneNumber.trim();
+
+        Client client = clientRepository.findByPhone(normalizedPhone)
+                .orElseThrow(() -> new EntityNotFoundException("Клиент с номером " + phoneNumber + " не найден"));
+
+        BonusResponseDto bonus = bonusService.getBonusDto(client.getId());
+
+        return SuccessClientResponse.fromSuccess(client, bonus, "Клиент найден!");
+    }
+
+
+    public List<ClientResponseSearchDto> searchByPhone(String phone, int limit) {
+        if (phone == null || phone.trim().isEmpty()) {
             return Collections.emptyList();
         }
 
-        String normalizedQuery = query.trim();
-        List<Client> clients = clientRepository.searchByPhoneNumber(normalizedQuery);
+        String normalizedPhone = phone.trim();
+        int normalizedLimit = normalizeLimit(limit);
+
+        List<Client> clients = clientRepository.searchByPhoneWithLimit(
+                normalizedPhone,
+                normalizedLimit
+        );
 
         return clients.stream()
                 .map(client -> {
@@ -79,11 +108,10 @@ public class ClientService {
                 .collect(Collectors.toList());
     }
 
-    public ClientResponseDto findByPhoneNumber(String phoneNumber) {
-        if (phoneNumber == null || phoneNumber.trim().isEmpty()) {
-            throw new IllegalArgumentException("Введите номер телефона");
+    private int normalizeLimit(int limit) {
+        if (limit < 1) {
+            return DEFAULT_LIMIT;
         }
-        return clientMapper.toClientResponseDto(clientRepository.findByPhone(phoneNumber)
-                .orElseThrow(() -> new EntityNotFoundException("Клиент с номером " + phoneNumber + " не найден")));
+        return Math.min(limit, MAX_LIMIT);
     }
 }

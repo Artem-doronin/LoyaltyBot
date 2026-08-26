@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @Slf4j
-@RequestMapping("/api/loyalty")
+@RequestMapping("/loyalty")
 @AllArgsConstructor
 public class LoyaltyController {
 
@@ -37,5 +37,4 @@ public class LoyaltyController {
         log.info("Сброс формы");
         return "redirect:/loyalty";
     }
-
 }

@@ -14,8 +14,17 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByTelegramUserId(Long telegramId);
 
-    @Query("SELECT c FROM Client c WHERE c.phone LIKE %:query%")
-    List<Client> searchByPhoneNumber(@Param("query") String query);
+    List<Client> findByPhoneContaining(String query);
 
     Optional<Client> findByPhone(String phoneNumber);
+
+    @Query(value = """
+                SELECT * FROM clients c
+                WHERE c.phone LIKE CONCAT('%', :query, '%')
+                ORDER BY c.first_name ASC
+                LIMIT :limit
+            """, nativeQuery = true)
+    List<Client> searchByPhoneWithLimit(
+            @Param("query") String query,
+            @Param("limit") int limit);
 }

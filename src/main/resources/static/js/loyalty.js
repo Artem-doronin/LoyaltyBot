@@ -1,7 +1,3 @@
-// loyalty.js - рабочая версия
-
-console.log('✅ loyalty.js загружен!');
-
 // ========== ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ==========
 let currentClientId = null;
 let currentBonusAmount = 0;
@@ -214,7 +210,7 @@ function findClient() {
         searchButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status"></span> Поиск...';
     }
 
-    fetch(`/api/find?phoneNumber=${encodeURIComponent(phone)}`)
+    fetch(`/api/loyalty/find?phoneNumber=${encodeURIComponent(phone)}`)
         .then(response => {
             console.log('📡 Статус ответа:', response.status);
             if (!response.ok) {
@@ -325,7 +321,7 @@ function executeOperation() {
     }
 
     let operationPromises = operations.map(operation => {
-        const endpoint = operation.operationType === 'ACCRUAL' ? '/api/enroll' : '/api/writeOff';
+        const endpoint = operation.operationType === 'ACCRUAL' ? '/api/loyalty/enroll' : '/api/loyalty/writeOff';
         return fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -358,7 +354,7 @@ function executeOperation() {
 
                 // Обновляем данные клиента
                 if (clientPhone) {
-                    fetch(`/api/find?phoneNumber=${encodeURIComponent(clientPhone.textContent)}`)
+                    fetch(`/api/loyalty/find?phoneNumber=${encodeURIComponent(clientPhone.textContent)}`)
                         .then(res => res.json())
                         .then(data => {
                             if (data && data.id) {
@@ -503,7 +499,7 @@ if (searchInput) {
         }
 
         timeoutId = setTimeout(() => {
-            fetch(`/api/search?query=${encodeURIComponent(query)}&limit=10`)
+            fetch(`/api/loyalty/search?query=${encodeURIComponent(query)}&limit=10`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);

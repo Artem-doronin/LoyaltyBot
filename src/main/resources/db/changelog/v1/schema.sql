@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS client_bonus_transactions
 CREATE TABLE IF NOT EXISTS client_bonus_balances
 (
     id         BIGSERIAL PRIMARY KEY,
-    client_id  BIGINT  NOT NULL,
+    client_id  BIGINT  NOT NULL UNIQUE ,
     amount     NUMERIC NOT NULL DEFAULT 0,
     bonus_rate NUMERIC NOT NULL DEFAULT '10',
 

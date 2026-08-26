@@ -18,7 +18,11 @@ public interface ClientBonusBalancesRepository extends JpaRepository<ClientBonus
     @Query("SELECT c FROM ClientBonusBalances c WHERE c.clientId = :clientId")
     Optional<ClientBonusBalances> findByClientIdWithLock(@Param("clientId") Long clientId);
 
+
+
     @Query("SELECT c.amount FROM ClientBonusBalances c WHERE c.clientId = :clientId")
     Optional<BigDecimal> findAmountByClientId(@Param("clientId") Long clientId);
+
+
     Optional<ClientBonusBalances> findByClientId(Long clientId);
 }

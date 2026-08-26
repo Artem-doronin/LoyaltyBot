@@ -1,7 +1,7 @@
 package com.example.LoyaltyBot.service;
 
+import com.example.LoyaltyBot.dto.SuccessTransactionResponseDto;
 import com.example.LoyaltyBot.dto.bonus.ClientBonusTransactionDto;
-import com.example.LoyaltyBot.entity.ClientBonusTransactions;
 import com.example.LoyaltyBot.entity.OperationType;
 import com.example.LoyaltyBot.entity.User;
 import com.example.LoyaltyBot.exception.InsufficientBonusException;
@@ -26,30 +26,27 @@ public class ClientBonusTransactionsService {
     private static final String DEFAULT_COMMENT = "Без комментария";
 
     @Transactional
-    public BigDecimal enroll(ClientBonusTransactionDto dto) {
-        return processTransaction(dto);
+    public SuccessTransactionResponseDto enroll(ClientBonusTransactionDto dto) {
+        validationTransaction(dto);
+        BigDecimal newAmount = clientBonusBalancesService.enrollmentBonuses(dto.clientId(), dto.bonusAmount());
+        log.info("Начислено {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
+        User user = userService.getCurrentUser();
+        saveTransaction(dto, user.getId());
+        String message = String.format("Начислено %s бонусов!", dto.bonusAmount());
+        notificationService.send(dto.clientId(), createNotificationMessage(dto, newAmount));
+        return SuccessTransactionResponseDto.fromSuccessTransactionResponseDto(dto, newAmount, message);
     }
 
     @Transactional
-    public BigDecimal writeOff(ClientBonusTransactionDto dto) {
-        return processTransaction(dto);
-    }
-
-    private BigDecimal processTransaction(ClientBonusTransactionDto dto) {
+    public SuccessTransactionResponseDto writeOff(ClientBonusTransactionDto dto) {
         validationTransaction(dto);
-        BigDecimal newAmount;
-        if (OperationType.ACCRUAL.equals(dto.operationType())) {
-            newAmount = clientBonusBalancesService.enrollmentBonuses(dto.clientId(), dto.bonusAmount());
-            log.info("Начислено {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
-        } else {
-            newAmount = clientBonusBalancesService.writeOffBonuses(dto.clientId(), dto.bonusAmount());
-            log.info("Списано {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
-        }
+        BigDecimal newAmount = clientBonusBalancesService.writeOffBonuses(dto.clientId(), dto.bonusAmount());
+        log.info("Списано {} бонусов клиенту {}", dto.bonusAmount(), dto.clientId());
         User user = userService.getCurrentUser();
         saveTransaction(dto, user.getId());
-        notificationService.send(dto.clientId(), createNotificationMessage(dto,
-                clientBonusBalancesService.getAmount(dto.clientId())));
-        return newAmount;
+        String message = String.format(String.format("Списано %s бонусов!", dto.bonusAmount()));
+        notificationService.send(dto.clientId(), createNotificationMessage(dto, newAmount));
+        return SuccessTransactionResponseDto.fromSuccessTransactionResponseDto(dto, newAmount, message);
     }
 
     private void validationTransaction(ClientBonusTransactionDto dto) {
@@ -62,16 +59,7 @@ public class ClientBonusTransactionsService {
     }
 
     private void saveTransaction(ClientBonusTransactionDto dto, Long userId) {
-        ClientBonusTransactions transaction = ClientBonusTransactions.builder()
-                .operationAmount(dto.operationAmount())
-                .operationType(dto.operationType())
-                .bonusAmount(dto.bonusAmount())
-                .description(dto.comment())
-                .clientId(dto.clientId())
-                .userId(userId)
-                .build();
-
-        clientBonusTransactionsRepository.save(transaction);
+        clientBonusTransactionsRepository.save(dto.fromClientBonusTransactions(userId));
     }
 
     private String createNotificationMessage(ClientBonusTransactionDto dto, BigDecimal newBalance) {
