@@ -12,12 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -86,7 +84,6 @@ public class ClientService {
         return SuccessClientResponse.fromSuccess(client, bonus, "Клиент найден!");
     }
 
-
     public List<ClientResponseSearchDto> searchByPhone(String phone, int limit) {
         if (phone == null || phone.trim().isEmpty()) {
             return Collections.emptyList();
@@ -95,17 +92,11 @@ public class ClientService {
         String normalizedPhone = phone.trim();
         int normalizedLimit = normalizeLimit(limit);
 
-        List<Client> clients = clientRepository.searchByPhoneWithLimit(
-                normalizedPhone,
-                normalizedLimit
-        );
+        List<Client> clients = clientRepository.searchByPhoneWithLimit(normalizedPhone, normalizedLimit);
 
         return clients.stream()
-                .map(client -> {
-                    BigDecimal bonusAmount = bonusService.getAmount(client.getId());
-                    return ClientResponseSearchDto.fromDto(client, bonusAmount);
-                })
-                .collect(Collectors.toList());
+                .map(ClientResponseSearchDto::fromDto)
+                .toList();
     }
 
     private int normalizeLimit(int limit) {

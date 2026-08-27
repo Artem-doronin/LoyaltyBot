@@ -437,12 +437,11 @@ function showResults(data) {
             <div class="search-result" data-phone="${client.phoneNumber}">
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>${client.fullName}</strong>
+                        <strong>${client.firstName}</strong>
                         <div class="text-muted small">
                             <i class="bi bi-phone"></i> ${client.phoneNumber}
                         </div>
                     </div>
-                    <span class="badge bg-primary">${client.bonusAmount || 0} бонусов</span>
                 </div>
             </div>
         `).join('');

@@ -27,10 +27,16 @@ public class ClientBonusBalances {
     private Long id;
     @Column(nullable = false, name = "client_id")
     private Long clientId;
-    @Builder.Default
+
     @Column(precision = 19, scale = 2)
     private BigDecimal amount = BigDecimal.ZERO;
-    @Builder.Default
+
     private BigDecimal bonusRate = new BigDecimal("10");
+
+    public ClientBonusBalances(Long clientId) {
+        this.clientId = clientId;
+        this.amount = BigDecimal.ZERO;
+        this.bonusRate = new BigDecimal("10");
+    }
 }
 

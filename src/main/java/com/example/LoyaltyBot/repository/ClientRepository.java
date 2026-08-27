@@ -14,8 +14,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByTelegramUserId(Long telegramId);
 
-    List<Client> findByPhoneContaining(String query);
-
     Optional<Client> findByPhone(String phoneNumber);
 
     @Query(value = """
@@ -28,3 +26,5 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
             @Param("query") String query,
             @Param("limit") int limit);
 }
+
+

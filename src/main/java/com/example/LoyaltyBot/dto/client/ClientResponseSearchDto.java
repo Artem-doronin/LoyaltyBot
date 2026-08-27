@@ -3,20 +3,18 @@ package com.example.LoyaltyBot.dto.client;
 import com.example.LoyaltyBot.entity.Client;
 import lombok.Builder;
 
-import java.math.BigDecimal;
 @Builder
 public record ClientResponseSearchDto(
-        Long id,
-        String fullName,
-        String phoneNumber,
-        BigDecimal bonusAmount) {
+        Long clientId,
+        String firstName,
+        String phoneNumber
+) {
 
-    public static ClientResponseSearchDto fromDto(Client client,BigDecimal bonusAmount) {
+    public static ClientResponseSearchDto fromDto(Client client) {
         return ClientResponseSearchDto.builder()
-                .id(client.getId())
-                .fullName(client.getFirstName())
+                .clientId(client.getId())
+                .firstName(client.getFirstName())
                 .phoneNumber(client.getPhone())
-                .bonusAmount(bonusAmount != null ? bonusAmount : BigDecimal.ZERO)
                 .build();
     }
 }

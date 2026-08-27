@@ -21,9 +21,7 @@ public class ClientBonusBalancesService {
     }
 
     public ClientBonusBalances create(Long clientId) {
-        ClientBonusBalances newBonus = ClientBonusBalances.builder()
-                .clientId(clientId)
-                .build();
+        ClientBonusBalances newBonus = new ClientBonusBalances(clientId);
         return bonusRepository.save(newBonus);
     }
 
