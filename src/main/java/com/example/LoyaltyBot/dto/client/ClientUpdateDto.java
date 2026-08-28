@@ -12,7 +12,6 @@ public record ClientUpdateDto(
         String comment,
         Boolean isActive
 ) {
-
 }
 
 

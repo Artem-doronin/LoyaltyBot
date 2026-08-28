@@ -14,8 +14,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     Optional<Client> findByTelegramUserId(Long telegramId);
 
-    Optional<Client> findByPhone(String phoneNumber);
-
     @Query(value = """
                 SELECT * FROM clients c
                 WHERE c.phone LIKE CONCAT('%', :query, '%')
