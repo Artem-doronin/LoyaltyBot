@@ -8,7 +8,6 @@ public class PasswordGenerator {
     @Value("${spring.password_generator}")
     private int length;
 
-
     public String generate() {
         String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
         StringBuilder sb = new StringBuilder();
