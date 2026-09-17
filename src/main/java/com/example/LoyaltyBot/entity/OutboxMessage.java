@@ -13,6 +13,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -23,14 +24,20 @@ public class OutboxMessage {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long clientId;
+    @Column(nullable = false, unique = true)
+    private UUID messageId;
     @Column(nullable = false, columnDefinition = "TEXT")
     private String payload;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private OutboxMessageStatus status;
+    private String lockedBy;
+    private Instant lockedUntil;
+    @Column(nullable = false)
     private Integer attempts = 0;
     @CreationTimestamp
     private Instant createdAt;
     private Instant nextAttemptAt;
+    @Column(columnDefinition = "TEXT")
     private String errorMessage;
 }
