@@ -56,7 +56,8 @@ outbox:
     base: 1m
     multiplier: 2.0
     max: 1h
-
+  sender:
+    type: log
 
 
 

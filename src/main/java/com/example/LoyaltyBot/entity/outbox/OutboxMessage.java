@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.entity;
+package com.example.LoyaltyBot.entity.outbox;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,7 +8,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -19,6 +22,7 @@ import java.util.UUID;
 @Setter
 @Table(name = "outbox_message")
 @Entity
+@NoArgsConstructor
 public class OutboxMessage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,4 +44,16 @@ public class OutboxMessage {
     private Instant nextAttemptAt;
     @Column(columnDefinition = "TEXT")
     private String errorMessage;
+
+
+    public static OutboxMessage create(Long clientId, String payload) {
+        OutboxMessage m = new OutboxMessage();
+        m.clientId = clientId;
+        m.payload = payload;
+        m.messageId = UUID.randomUUID();
+        m.status = OutboxMessageStatus.NEW;
+        m.attempts = 0;
+        m.nextAttemptAt = Instant.now();
+        return m;
+    }
 }

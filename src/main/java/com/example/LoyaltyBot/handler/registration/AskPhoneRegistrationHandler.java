@@ -3,7 +3,6 @@ package com.example.LoyaltyBot.handler.registration;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
 import com.example.LoyaltyBot.service.ClientService;
-import com.example.LoyaltyBot.service.NotificationService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.message.Message;

@@ -6,6 +6,7 @@ import com.example.LoyaltyBot.entity.OperationType;
 import com.example.LoyaltyBot.entity.User;
 import com.example.LoyaltyBot.exception.InsufficientBonusException;
 import com.example.LoyaltyBot.repository.ClientBonusTransactionsRepository;
+import com.example.LoyaltyBot.service.outbox.OutboxService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
 public class ClientBonusTransactionsService {
     private final ClientBonusTransactionsRepository clientBonusTransactionsRepository;
     private final ClientBonusBalancesService clientBonusBalancesService;
-    private final NotificationService notificationService;
+    private final OutboxService outboxService;
     private final UserService userService;
 
     private static final String DEFAULT_COMMENT = "Без комментария";
@@ -33,7 +34,7 @@ public class ClientBonusTransactionsService {
         User user = userService.getCurrentUser();
         saveTransaction(dto, user.getId());
         String message = String.format("Начислено %s бонусов!", dto.bonusAmount());
-        notificationService.send(dto.clientId(), createNotificationMessage(dto, newAmount));
+        outboxService.enqueue(dto.clientId(), createNotificationMessage(dto, newAmount));
         return SuccessTransactionResponseDto.fromSuccessTransactionResponseDto(dto, newAmount, message);
     }
 
@@ -45,7 +46,7 @@ public class ClientBonusTransactionsService {
         User user = userService.getCurrentUser();
         saveTransaction(dto, user.getId());
         String message = String.format(String.format("Списано %s бонусов!", dto.bonusAmount()));
-        notificationService.send(dto.clientId(), createNotificationMessage(dto, newAmount));
+        outboxService.enqueue(dto.clientId(), createNotificationMessage(dto, newAmount));
         return SuccessTransactionResponseDto.fromSuccessTransactionResponseDto(dto, newAmount, message);
     }
 
