@@ -14,28 +14,27 @@ import java.util.List;
 public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Long> {
 
     @Query(value = """
-            SELECT *
+        WITH locked AS (
+            SELECT id
             FROM outbox_message
             WHERE status IN ('NEW', 'FAILED')
               AND next_attempt_at <= now()
             ORDER BY next_attempt_at, id
             LIMIT :batchSize
             FOR UPDATE SKIP LOCKED
-            """, nativeQuery = true)
-    List<OutboxMessage> lockBatchForProcessing(@Param("batchSize") int batchSize);
-
-    @Modifying(clearAutomatically = true, flushAutomatically = true)
-    @Query(value = """
-            UPDATE outbox_message
-            SET status = 'PROCESSING',
-                locked_by = :workerId,
-                locked_until = :lockedUntil,
-                last_attempt_at = now()
-            WHERE id IN (:ids)
-            """, nativeQuery = true)
-    void markProcessing(@Param("ids") List<Long> ids,
-                        @Param("workerId") String workerId,
-                        @Param("lockedUntil") Instant lockedUntil);
+        )
+        UPDATE outbox_message m
+        SET status = 'PROCESSING',
+            locked_by = :workerId,
+            locked_until = :lockedUntil,
+            last_attempt_at = now()
+        FROM locked
+        WHERE m.id = locked.id
+        RETURNING m.*
+        """, nativeQuery = true)
+    List<OutboxMessage> claimBatch(@Param("batchSize") int batchSize,
+                                   @Param("workerId") String workerId,
+                                   @Param("lockedUntil") Instant lockedUntil);
 
     @Modifying(clearAutomatically = true)
     @Query(value = """

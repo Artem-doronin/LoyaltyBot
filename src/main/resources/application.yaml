@@ -45,6 +45,19 @@ logging:
     org.springframework.security.authentication: DEBUG
 
 
+outbox:
+  enabled: true
+  batch-size: 50
+  lease-duration: 2m
+  poll-interval: 5s
+  reaper-interval: 1m
+  max-attempts: 5
+  retry:
+    base: 1m
+    multiplier: 2.0
+    max: 1h
+
+
 
 
 
