@@ -1,10 +1,9 @@
-package com.example.LoyaltyBot.service.outbox;
+package com.example.LoyaltyBot.outbox;
 
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.outbox.OutboxMessage;
 import com.example.LoyaltyBot.exception.TelegramOutboxException;
 import com.example.LoyaltyBot.repository.ClientRepository;
-import com.example.LoyaltyBot.repository.outbox.OutboxSender;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +20,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 public class TelegramOutboxSender implements OutboxSender {
     private final ClientRepository clientRepository;
     private final TelegramClient telegramClient;
+
     @Override
     public void send(OutboxMessage outboxMessage) {
         Client client = clientRepository.findById(outboxMessage.getClientId()).orElseThrow(
@@ -30,7 +30,6 @@ public class TelegramOutboxSender implements OutboxSender {
             SendMessage message = SendMessage.builder()
                     .chatId(client.getChatId().toString())
                     .text(outboxMessage.getPayload())
-                    .parseMode("HTML")
                     .build();
 
             telegramClient.execute(message);

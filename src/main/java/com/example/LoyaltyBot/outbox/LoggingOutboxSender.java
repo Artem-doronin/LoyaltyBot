@@ -1,7 +1,6 @@
-package com.example.LoyaltyBot.service.outbox;
+package com.example.LoyaltyBot.outbox;
 
 import com.example.LoyaltyBot.entity.outbox.OutboxMessage;
-import com.example.LoyaltyBot.repository.outbox.OutboxSender;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -12,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class LoggingOutboxSender implements OutboxSender {
     @Override
     public void send(OutboxMessage outboxMessage) {
-        log.debug("Sent outbox message: messageId={}, clientId={}", outboxMessage.getMessageId(), outboxMessage.getClientId());
+        log.debug("Sent outbox message: messageId={}, clientId={}",
+                outboxMessage.getMessageId(), outboxMessage.getClientId());
     }
 }

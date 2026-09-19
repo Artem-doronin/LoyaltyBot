@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.repository.outbox;
+package com.example.LoyaltyBot.outbox;
 
 import com.example.LoyaltyBot.entity.outbox.OutboxMessage;
 

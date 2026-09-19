@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.repository.outbox;
+package com.example.LoyaltyBot.repository;
 
 import com.example.LoyaltyBot.entity.outbox.OutboxMessage;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,24 +14,23 @@ import java.util.List;
 public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Long> {
 
     @Query(value = """
-        WITH locked AS (
-            SELECT id
-            FROM outbox_message
-            WHERE status IN ('NEW', 'FAILED')
-              AND next_attempt_at <= now()
-            ORDER BY next_attempt_at, id
-            LIMIT :batchSize
-            FOR UPDATE SKIP LOCKED
-        )
-        UPDATE outbox_message m
-        SET status = 'PROCESSING',
-            locked_by = :workerId,
-            locked_until = :lockedUntil,
-            last_attempt_at = now()
-        FROM locked
-        WHERE m.id = locked.id
-        RETURNING m.*
-        """, nativeQuery = true)
+            WITH locked AS (
+                SELECT id
+                FROM outbox_message
+                WHERE status IN ('NEW', 'FAILED')
+                  AND next_attempt_at <= now()
+                ORDER BY next_attempt_at, id
+                LIMIT :batchSize
+                FOR UPDATE SKIP LOCKED
+            )
+            UPDATE outbox_message m
+            SET status = 'PROCESSING',
+                locked_by = :workerId,
+                locked_until = :lockedUntil
+            FROM locked
+            WHERE m.id = locked.id
+            RETURNING m.*
+            """, nativeQuery = true)
     List<OutboxMessage> claimBatch(@Param("batchSize") int batchSize,
                                    @Param("workerId") String workerId,
                                    @Param("lockedUntil") Instant lockedUntil);
@@ -40,7 +39,6 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
     @Query(value = """
             UPDATE outbox_message
             SET status = 'SENT',
-                sent_at = now(),
                 locked_by = NULL,
                 locked_until = NULL,
                 error_message = NULL
@@ -55,7 +53,6 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
                 attempts = attempts + 1,
                 error_message = :error,
                 next_attempt_at = :nextAttemptAt,
-                sent_at = NULL,
                 locked_by = NULL,
                 locked_until = NULL
             WHERE id = :id
