@@ -44,7 +44,7 @@ VALUES ('ROLE_USER', 'Кассир'),
        ('ROLE_ADMIN', 'Администратор');
 
 
-INSERT INTO  users (username, password, email, role_id, should_change_password)
+INSERT INTO users (username, password, email, role_id, should_change_password)
 VALUES ('admin',
         '$2a$12$QpTzxRtGq2kGh6w/btex2eKnTg8Yx4T9k0qNY/I9CppvRN6V3jAcm',
         'admin@mail.ru',
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS client_bonus_transactions
 CREATE TABLE IF NOT EXISTS client_bonus_balances
 (
     id         BIGSERIAL PRIMARY KEY,
-    client_id  BIGINT  NOT NULL UNIQUE ,
+    client_id  BIGINT  NOT NULL UNIQUE,
     amount     NUMERIC NOT NULL DEFAULT 0,
     bonus_rate NUMERIC NOT NULL DEFAULT '10',
 
@@ -79,3 +79,25 @@ CREATE TABLE IF NOT EXISTS client_bonus_balances
 
 CREATE INDEX IF NOT EXISTS idx_client_id ON client_bonus_balances (client_id);
 
+CREATE TABLE IF NOT EXISTS outbox_message
+(
+    id         BIGSERIAL PRIMARY KEY ,
+    client_id  BIGINT NOT NULL,
+    message_id UUID NOT NULL UNIQUE,
+    payload    TEXT NOT NULL ,
+    status     VARCHAR(20) NOT NULL,
+    attempts   INT NOT NULL DEFAULT 0,
+    locked_by VARCHAR,
+    locked_until TIMESTAMPTZ,
+    next_attempt_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    created_at TIMESTAMPTZ   NOT NULL DEFAULT now(),
+    error_message TEXT
+);
+
+CREATE INDEX idx_outbox_status_next_attempt
+    ON outbox_message (status, next_attempt_at)
+    WHERE status IN ('NEW', 'FAILED');
+
+CREATE INDEX idx_outbox_status_locked_until
+    ON outbox_message (status, locked_until)
+    WHERE status = 'PROCESSING';

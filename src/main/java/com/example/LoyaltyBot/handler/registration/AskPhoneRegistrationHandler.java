@@ -3,7 +3,6 @@ package com.example.LoyaltyBot.handler.registration;
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
 import com.example.LoyaltyBot.service.ClientService;
-import com.example.LoyaltyBot.service.NotificationService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.message.Message;
@@ -44,9 +43,9 @@ public class AskPhoneRegistrationHandler implements RegistrationHandler {
                         
                         %s, мы рады приветствовать вас!
                         
-                        
+                       
                         Как это работает:
-                         1% от каждой покупки возвращается бонусами
+                         1%% от каждой покупки возвращается бонусами
                          Накопительные баллы можно использовать для оплаты
                          Повышайте уровень и получайте больше!
                         
