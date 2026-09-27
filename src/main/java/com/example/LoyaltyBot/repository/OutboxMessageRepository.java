@@ -72,4 +72,18 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
               AND locked_until < now()
             """, nativeQuery = true)
     int releaseStale();
+
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = """
+            UPDATE outbox_message
+            SET status = 'DEAD',
+                locked_by = NULL,
+                attempts = attempts + 1,
+                locked_until = NULL,
+                error_message = :error
+            WHERE id = :id
+            """,nativeQuery = true)
+    void markDead(@Param("id") Long id,
+                  @Param("error") String error);
 }
