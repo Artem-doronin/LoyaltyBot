@@ -56,6 +56,10 @@ outbox:
     base: 1m
     multiplier: 2.0
     max: 1h
+  cleanup:
+    enabled: true
+    cron: "0 0 3 * * *"
+    retentionDays: 30
   sender:
     type: telegram
 

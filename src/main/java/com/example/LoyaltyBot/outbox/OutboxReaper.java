@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class OutboxReaper {
     private final OutboxMessageRepository repository;
 
-    @Transactional
     @Scheduled(fixedDelayString = "${outbox.reaper-interval}")
     public void reap() {
         int released = repository.releaseStale();

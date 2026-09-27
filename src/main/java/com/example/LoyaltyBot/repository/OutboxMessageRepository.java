@@ -90,4 +90,14 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
             """, nativeQuery = true)
     void markDead(@Param("id") Long id,
                   @Param("error") String error);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = """
+            DELETE FROM outbox_message
+            WHERE status
+            IN ('SENT', 'DEAD')
+            AND created_at < now() - make_interval(days => :days)
+            """, nativeQuery = true)
+    int deleteOld(@Param("days") int days);
 }
