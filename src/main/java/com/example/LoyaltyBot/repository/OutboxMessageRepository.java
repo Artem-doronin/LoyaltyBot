@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
 import java.util.List;
@@ -35,6 +36,7 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
                                    @Param("workerId") String workerId,
                                    @Param("lockedUntil") Instant lockedUntil);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = """
             UPDATE outbox_message
@@ -46,6 +48,7 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
             """, nativeQuery = true)
     void markSent(@Param("id") Long id);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = """
             UPDATE outbox_message
@@ -62,6 +65,7 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
                     @Param("error") String error,
                     @Param("nextAttemptAt") Instant nextAttemptAt);
 
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = """
             UPDATE outbox_message
@@ -73,7 +77,7 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
             """, nativeQuery = true)
     int releaseStale();
 
-
+    @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = """
             UPDATE outbox_message
@@ -83,7 +87,7 @@ public interface OutboxMessageRepository extends JpaRepository<OutboxMessage, Lo
                 locked_until = NULL,
                 error_message = :error
             WHERE id = :id
-            """,nativeQuery = true)
+            """, nativeQuery = true)
     void markDead(@Param("id") Long id,
                   @Param("error") String error);
 }
