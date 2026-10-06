@@ -1,6 +1,6 @@
 package com.example.LoyaltyBot.dto.bonus;
 
-import com.example.LoyaltyBot.entity.ClientBonusBalances;
+import com.example.LoyaltyBot.entity.client.ClientBonusBalances;
 import lombok.Builder;
 
 import java.math.BigDecimal;

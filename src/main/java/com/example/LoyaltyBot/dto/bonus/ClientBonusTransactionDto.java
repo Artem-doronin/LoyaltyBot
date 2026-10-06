@@ -1,6 +1,6 @@
 package com.example.LoyaltyBot.dto.bonus;
 
-import com.example.LoyaltyBot.entity.ClientBonusTransactions;
+import com.example.LoyaltyBot.entity.client.ClientBonusTransactions;
 import com.example.LoyaltyBot.entity.OperationType;
 import lombok.Builder;
 

@@ -1,5 +1,6 @@
-package com.example.LoyaltyBot.entity;
+package com.example.LoyaltyBot.entity.client;
 
+import com.example.LoyaltyBot.entity.OperationType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
