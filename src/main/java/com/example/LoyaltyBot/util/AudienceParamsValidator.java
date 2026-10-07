@@ -6,8 +6,8 @@ import com.example.LoyaltyBot.exception.ValidationException;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ValidateAudience {
-    public void validateAudience(AudienceType  type, AudienceParams params){
+public class AudienceParamsValidator {
+    public void validate(AudienceType  type, AudienceParams params){
         switch (type) {
             case ALL_CLIENTS, BIRTHDAY -> {
                 if (params != null && !params.isEmpty()) {
