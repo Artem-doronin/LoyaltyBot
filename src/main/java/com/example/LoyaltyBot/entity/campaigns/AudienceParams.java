@@ -1,5 +1,7 @@
 package com.example.LoyaltyBot.entity.campaigns;
 
+import com.example.LoyaltyBot.entity.client.Gender;
+
 import java.math.BigDecimal;
 
 public record AudienceParams(

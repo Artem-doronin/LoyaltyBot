@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS clients
     first_name         VARCHAR(50),
     last_name          VARCHAR(50),
     phone              VARCHAR(20),
+    gender             VARCHAR(6),
     birthday           DATE,
     created_at         TIMESTAMP NOT NULL,
     updated_at         TIMESTAMP,
@@ -66,6 +67,9 @@ CREATE TABLE IF NOT EXISTS client_bonus_transactions
 
     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
 );
+
+CREATE INDEX idx_bonus_tx_client_type_created
+    ON client_bonus_transactions (client_id, operation_type, created_at);
 
 CREATE TABLE IF NOT EXISTS client_bonus_balances
 (
