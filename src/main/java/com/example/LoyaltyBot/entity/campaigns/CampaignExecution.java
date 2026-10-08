@@ -1,5 +1,6 @@
 package com.example.LoyaltyBot.entity.campaigns;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -15,7 +16,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @Entity
-@Table(name = "campaign_executions")
+@Table(name = "campaign_execution")
 public class CampaignExecution {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,6 +31,7 @@ public class CampaignExecution {
     private Integer recipientsCount;
     private Integer enqueuedCount;
     private Integer failedCount;
+    @Column(columnDefinition = "TEXT")
     private String errorMessage;
 
 }
