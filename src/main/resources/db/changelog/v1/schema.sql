@@ -7,6 +7,7 @@ CREATE TABLE IF NOT EXISTS clients
     first_name         VARCHAR(50),
     last_name          VARCHAR(50),
     phone              VARCHAR(20),
+    gender             VARCHAR(6),
     birthday           DATE,
     created_at         TIMESTAMP NOT NULL,
     updated_at         TIMESTAMP,
@@ -67,6 +68,9 @@ CREATE TABLE IF NOT EXISTS client_bonus_transactions
     FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT
 );
 
+CREATE INDEX idx_bonus_tx_client_type_created
+    ON client_bonus_transactions (client_id, operation_type, created_at);
+
 CREATE TABLE IF NOT EXISTS client_bonus_balances
 (
     id         BIGSERIAL PRIMARY KEY,
@@ -81,18 +85,28 @@ CREATE INDEX IF NOT EXISTS idx_client_id ON client_bonus_balances (client_id);
 
 CREATE TABLE IF NOT EXISTS outbox_message
 (
-    id         BIGSERIAL PRIMARY KEY ,
-    client_id  BIGINT NOT NULL,
-    message_id UUID NOT NULL UNIQUE,
-    payload    TEXT NOT NULL ,
-    status     VARCHAR(20) NOT NULL,
-    attempts   INT NOT NULL DEFAULT 0,
-    locked_by VARCHAR,
-    locked_until TIMESTAMPTZ,
-    next_attempt_at TIMESTAMPTZ  NOT NULL DEFAULT now(),
-    created_at TIMESTAMPTZ   NOT NULL DEFAULT now(),
-    error_message TEXT
+    id                    BIGSERIAL PRIMARY KEY,
+    client_id             BIGINT      NOT NULL,
+    message_id            UUID        NOT NULL UNIQUE,
+    payload               TEXT        NOT NULL,
+    status                VARCHAR(20) NOT NULL,
+    attempts              INT         NOT NULL DEFAULT 0,
+    locked_by             VARCHAR,
+    locked_until          TIMESTAMPTZ,
+    next_attempt_at       TIMESTAMPTZ NOT NULL DEFAULT now(),
+    created_at            TIMESTAMPTZ NOT NULL DEFAULT now(),
+    error_message         TEXT,
+    campaign_execution_id BIGINT,
+    attachments           JSONB,
+
+    FOREIGN KEY (client_id) REFERENCES clients (id) ON DELETE RESTRICT,
+    FOREIGN KEY (campaign_execution_id) REFERENCES campaign_execution (id) ON DELETE RESTRICT
+
 );
+
+CREATE UNIQUE INDEX uq_outbox_campaign_client
+    ON outbox_message (campaign_execution_id, client_id)
+    WHERE campaign_execution_id IS NOT NULL;
 
 CREATE INDEX idx_outbox_status_next_attempt
     ON outbox_message (status, next_attempt_at)
@@ -101,3 +115,68 @@ CREATE INDEX idx_outbox_status_next_attempt
 CREATE INDEX idx_outbox_status_locked_until
     ON outbox_message (status, locked_until)
     WHERE status = 'PROCESSING';
+
+CREATE TABLE campaigns
+(
+    id              BIGSERIAL PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL,
+    status          VARCHAR(20)  NOT NULL,
+    schedule_type   VARCHAR(20)  NOT NULL,
+    send_at         TIMESTAMPTZ,
+    cron_expression VARCHAR(50),
+    audience_type   VARCHAR(30)  NOT NULL,
+    audience_params JSONB,
+    created_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
+
+    CONSTRAINT chk_campaign_schedule CHECK (
+        (schedule_type = 'ONE_TIME' AND send_at IS NOT NULL AND cron_expression IS NULL)
+            OR (schedule_type = 'RECURRING' AND cron_expression IS NOT NULL)
+        )
+);
+
+CREATE TABLE campaign_messages
+(
+    id          BIGSERIAL PRIMARY KEY,
+    campaign_id BIGINT UNIQUE NOT NULL,
+    text        TEXT          NOT NULL CHECK ( length(trim(text)) > 0 ),
+    channel     VARCHAR(20)   NOT NULL,
+
+    FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE CASCADE
+);
+
+CREATE TABLE campaign_attachments
+(
+    id                  BIGSERIAL PRIMARY KEY,
+    campaign_message_id BIGINT      NOT NULL,
+    file_url            TEXT,
+    file_id             TEXT,
+    type                VARCHAR(20) NOT NULL,
+    sort_order          INT         NOT NULL,
+
+    FOREIGN KEY (campaign_message_id) REFERENCES campaign_messages (id) ON DELETE CASCADE
+
+);
+
+CREATE INDEX idx_campaign_attachments_message_sort
+    ON campaign_attachments (campaign_message_id, sort_order);
+
+CREATE TABLE campaign_execution
+(
+    id               BIGSERIAL PRIMARY KEY,
+    campaign_id      BIGINT      NOT NULL,
+    scheduled_at     TIMESTAMPTZ NOT NULL,
+    started_at       TIMESTAMPTZ NOT NULL,
+    finished_at      TIMESTAMPTZ,
+    status           VARCHAR(20) NOT NULL,
+    recipients_count INT,
+    enqueued_count   INT,
+    failed_count     INT,
+    error_message    TEXT,
+
+    FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE RESTRICT,
+    CONSTRAINT uq_campaign_execution_schedule UNIQUE (campaign_id, scheduled_at)
+);
+
+
+

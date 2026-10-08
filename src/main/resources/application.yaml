@@ -63,6 +63,11 @@ outbox:
   sender:
     type: telegram
 
+campaign:
+  bath-size: 500
+  timezone: Europe/Moscow
+
+
 
 
 
