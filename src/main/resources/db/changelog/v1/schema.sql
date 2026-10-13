@@ -83,6 +83,43 @@ CREATE TABLE IF NOT EXISTS client_bonus_balances
 
 CREATE INDEX IF NOT EXISTS idx_client_id ON client_bonus_balances (client_id);
 
+CREATE TABLE campaigns
+(
+    id              BIGSERIAL PRIMARY KEY,
+    name            VARCHAR(255) NOT NULL,
+    status          VARCHAR(20)  NOT NULL,
+    schedule_type   VARCHAR(20)  NOT NULL,
+    send_at         TIMESTAMPTZ,
+    cron_expression VARCHAR(50),
+    audience_type   VARCHAR(30)  NOT NULL,
+    audience_params JSONB,
+    created_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    version BIGINT NOT NULL DEFAULT 0,
+
+    CONSTRAINT chk_campaign_schedule CHECK (
+        (schedule_type = 'ONE_TIME' AND send_at IS NOT NULL AND cron_expression IS NULL)
+            OR (schedule_type = 'RECURRING' AND cron_expression IS NOT NULL)
+        )
+);
+
+CREATE TABLE campaign_execution
+(
+    id               BIGSERIAL PRIMARY KEY,
+    campaign_id      BIGINT      NOT NULL,
+    scheduled_at     TIMESTAMPTZ NOT NULL,
+    started_at       TIMESTAMPTZ NOT NULL,
+    finished_at      TIMESTAMPTZ,
+    status           VARCHAR(20) NOT NULL,
+    recipients_count INT,
+    enqueued_count   INT,
+    failed_count     INT,
+    error_message    TEXT,
+
+    FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE RESTRICT,
+    CONSTRAINT uq_campaign_execution_schedule UNIQUE (campaign_id, scheduled_at)
+);
+
 CREATE TABLE IF NOT EXISTS outbox_message
 (
     id                    BIGSERIAL PRIMARY KEY,
@@ -116,25 +153,7 @@ CREATE INDEX idx_outbox_status_locked_until
     ON outbox_message (status, locked_until)
     WHERE status = 'PROCESSING';
 
-CREATE TABLE campaigns
-(
-    id              BIGSERIAL PRIMARY KEY,
-    name            VARCHAR(255) NOT NULL,
-    status          VARCHAR(20)  NOT NULL,
-    schedule_type   VARCHAR(20)  NOT NULL,
-    send_at         TIMESTAMPTZ,
-    cron_expression VARCHAR(50),
-    audience_type   VARCHAR(30)  NOT NULL,
-    audience_params JSONB,
-    created_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
-    updated_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
-    version BIGINT NOT NULL DEFAULT 0,
 
-    CONSTRAINT chk_campaign_schedule CHECK (
-        (schedule_type = 'ONE_TIME' AND send_at IS NOT NULL AND cron_expression IS NULL)
-            OR (schedule_type = 'RECURRING' AND cron_expression IS NOT NULL)
-        )
-);
 
 CREATE TABLE campaign_messages
 (
@@ -162,22 +181,6 @@ CREATE TABLE campaign_attachments
 CREATE INDEX idx_campaign_attachments_message_sort
     ON campaign_attachments (campaign_message_id, sort_order);
 
-CREATE TABLE campaign_execution
-(
-    id               BIGSERIAL PRIMARY KEY,
-    campaign_id      BIGINT      NOT NULL,
-    scheduled_at     TIMESTAMPTZ NOT NULL,
-    started_at       TIMESTAMPTZ NOT NULL,
-    finished_at      TIMESTAMPTZ,
-    status           VARCHAR(20) NOT NULL,
-    recipients_count INT,
-    enqueued_count   INT,
-    failed_count     INT,
-    error_message    TEXT,
-
-    FOREIGN KEY (campaign_id) REFERENCES campaigns (id) ON DELETE RESTRICT,
-    CONSTRAINT uq_campaign_execution_schedule UNIQUE (campaign_id, scheduled_at)
-);
 
 
 
