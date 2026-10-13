@@ -34,6 +34,9 @@ public class CampaignService {
     private final CampaignMessageRepository campaignMessageRepository;
     private final CampaignAttachmentRepository campaignAttachmentRepository;
     private final List<AudienceResolver> audienceResolvers;
+    private final CampaignBatchProcessor campaignBatchProcessor;
+    private final CampaignExecutionUpdater campaignExecutionUpdater;
+    private final CampaignExecutionFinisher executionFinisher;
 
     @Value("${campaign.bath-size}")
     private int batchSize;
@@ -54,18 +57,19 @@ public class CampaignService {
         Optional<CampaignMessage> campaignMessageOpt = campaignMessageRepository.findByCampaignId(campaignId);
 
         if (campaignMessageOpt.isEmpty()) {
-            finisher.finishFailure(executionId, "No CampaignMessage for campaign " + campaignId);
+            executionFinisher.finishFailure(executionId,campaignId, campaign.getScheduleType(),
+                    "No CampaignMessage for campaign " + campaignId);
             return;
         }
         CampaignMessage campaignMessage = campaignMessageOpt.get();
         String text = campaignMessage.getText();
 
-        List<AttachmentPayload> attachmentPayloadList = loadAttachments(campaignMessage.getId());
+        List<AttachmentPayload> attachments = loadAttachments(campaignMessage.getId());
 
         AudienceResolver audienceResolver = buildResolverMap().get(campaign.getAudienceType());
 
         if (audienceResolver == null) {
-            finisher.finishFailure(executionId,
+            executionFinisher.finishFailure(executionId,campaignId, campaign.getScheduleType(),
                     "No resolver for audienceType " + campaign.getAudienceType());
             return;
         }
@@ -80,10 +84,10 @@ public class CampaignService {
                     break;
                 }
 
-                int enqueued = batchProcessor.process(batch, text, executionId, attachments);
+                int enqueued = campaignBatchProcessor.process(batch, text, executionId, attachments);
                 int failed = batch.size() - enqueued;
 
-                executionUpdater.addCounts(executionId, batch.size(), enqueued, failed);
+                campaignExecutionUpdater.addCounts(executionId, batch.size(), enqueued, failed);
 
                 if (batch.size() < batchSize) {
                     break;
@@ -92,12 +96,12 @@ public class CampaignService {
                 afterId = batch.get(batch.size() - 1).getId();
             }
 
-            finisher.finishSuccess(executionId, campaignId, campaign.getScheduleType());
+            executionFinisher.finishSuccess(executionId, campaignId, campaign.getScheduleType());
 
 
         } catch (Exception e) {
             log.error("Campaign {} execution {} failed", campaignId, executionId, e);
-            finisher.finishFailure(executionId, e.getMessage());
+            executionFinisher.finishFailure(executionId,campaignId, campaign.getScheduleType(), e.getMessage());
         }
 
 
