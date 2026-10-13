@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -49,4 +50,7 @@ public class Campaign {
     @LastModifiedDate
     @Column(nullable = false)
     private Instant updatedAt;
+
+    @Version
+    private Long version;
 }

@@ -128,6 +128,7 @@ CREATE TABLE campaigns
     audience_params JSONB,
     created_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
     updated_at      TIMESTAMPTZ  NOT NULL DEFAULT now(),
+    version BIGINT NOT NULL DEFAULT 0,
 
     CONSTRAINT chk_campaign_schedule CHECK (
         (schedule_type = 'ONE_TIME' AND send_at IS NOT NULL AND cron_expression IS NULL)

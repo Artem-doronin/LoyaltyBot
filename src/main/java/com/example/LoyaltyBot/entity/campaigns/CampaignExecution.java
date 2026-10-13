@@ -34,4 +34,12 @@ public class CampaignExecution {
     @Column(columnDefinition = "TEXT")
     private String errorMessage;
 
+    public static CampaignExecution create(Long campaignId, Instant scheduledAt) {
+        CampaignExecution e = new CampaignExecution();
+        e.campaignId = campaignId;
+        e.scheduledAt = scheduledAt;
+        e.startedAt = Instant.now();
+        e.status = CampaignExecutionStatus.RUNNING;
+        return e;
+    }
 }

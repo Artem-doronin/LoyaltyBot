@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.repository;
+package com.example.LoyaltyBot.repository.campaign;
 
 import com.example.LoyaltyBot.entity.campaigns.CampaignAttachment;
 import org.springframework.data.jpa.repository.JpaRepository;

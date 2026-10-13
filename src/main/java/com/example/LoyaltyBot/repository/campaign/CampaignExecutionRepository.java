@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.repository;
+package com.example.LoyaltyBot.repository.campaign;
 
 import com.example.LoyaltyBot.entity.campaigns.CampaignExecution;
 import com.example.LoyaltyBot.entity.campaigns.CampaignExecutionStatus;
