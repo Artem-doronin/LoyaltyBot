@@ -46,7 +46,7 @@ logging:
 
 
 outbox:
-  enabled: true
+  enabled: false
   batch-size: 50
   lease-duration: 2m
   poll-interval: 5s

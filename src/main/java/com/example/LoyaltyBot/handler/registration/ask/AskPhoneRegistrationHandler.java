@@ -1,7 +1,8 @@
-package com.example.LoyaltyBot.handler.registration;
+package com.example.LoyaltyBot.handler.registration.ask;
 
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
+import com.example.LoyaltyBot.handler.registration.RegistrationHandler;
 import com.example.LoyaltyBot.service.ClientService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
@@ -39,13 +40,12 @@ public class AskPhoneRegistrationHandler implements RegistrationHandler {
 
     public String sendWelcomeMessage( String firstName) {
         return String.format("""
-                         <b>Добро пожаловать в программу лояльности!</b>
+                         Добро пожаловать в программу лояльности!
                         
                         %s, мы рады приветствовать вас!
                         
-                       
                         Как это работает:
-                         1%% от каждой покупки возвращается бонусами
+                         %% от каждой покупки возвращается бонусами
                          Накопительные баллы можно использовать для оплаты
                          Повышайте уровень и получайте больше!
                         
