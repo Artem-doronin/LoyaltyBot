@@ -45,7 +45,6 @@ LoyaltyBot — учебный/командный проект, реализую�
 
 ## Архитектура
 
-<!-- TODO: добавь схему docs/architecture.png и структуру пакетов -->
 Приложение — монолит на Spring Boot, совмещающий Telegram-бота и веб-админку в одном процессе. База данных PostgreSQL запускается отдельно через Docker Compose.
 
 - **Telegram-слой** — long-polling бот (`telegrambots-longpolling`), обрабатывает команды и сообщения клиентов, ведёт регистрацию.
@@ -54,7 +53,6 @@ LoyaltyBot — учебный/командный проект, реализую�
 - **Outbox-слой** — надёжная доставка исходящих сообщений (см. раздел «Outbox»).
 - **Слой доступа к данным** — Spring Data JPA + Liquibase-миграции, PostgreSQL.
 
-![Схема архитектуры](docs/architecture.png)
 
 ## Схема базы данных
 
@@ -125,6 +123,16 @@ LoyaltyBot — учебный/командный проект, реализую�
 - Docker и Docker Compose
 - Maven Wrapper уже в репозитории (`./mvnw` / `mvnw.cmd`)
 
+### Планы развития
+- Покрытие тестами (unit + integration)
+- CI/CD (GitHub Actions)
+- Контейнеризация приложения (Dockerfile + сервис в docker-compose)
+- Включение Outbox в боевом режиме
+- Хранение файлов кампаний в MinIO
+
+### Лицензия
+Этот проект распространяется под лицензией MIT. Подробности смотрите в файле LICENSE.
+
 ### Шаги
 
 ```bash
@@ -136,3 +144,4 @@ docker compose -f docker/docker-compose.yml up -d
 
 # 2. Запустить приложение
 ./mvnw spring-boot:run
+
