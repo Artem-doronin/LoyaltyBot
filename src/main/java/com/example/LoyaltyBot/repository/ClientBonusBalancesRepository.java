@@ -1,6 +1,6 @@
 package com.example.LoyaltyBot.repository;
 
-import com.example.LoyaltyBot.entity.ClientBonusBalances;
+import com.example.LoyaltyBot.entity.client.ClientBonusBalances;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;

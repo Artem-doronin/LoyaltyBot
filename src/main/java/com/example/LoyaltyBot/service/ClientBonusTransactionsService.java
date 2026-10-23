@@ -64,7 +64,7 @@ public class ClientBonusTransactionsService {
     }
 
     private String createNotificationMessage(ClientBonusTransactionDto dto, BigDecimal newBalance) {
-        String operationName = dto.operationType() == OperationType.ACCRUAL ? "начислено" : "списано";
+        String operationName = dto.operationType() == OperationType.PURCHASE_ACCRUAL ? "начислено" : "списано";
         return String.format(
                 " Операция выполнена!\n" +
                         " %s %s балов\n" +

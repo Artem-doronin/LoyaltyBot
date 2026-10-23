@@ -1,7 +1,8 @@
-package com.example.LoyaltyBot.handler.registration;
+package com.example.LoyaltyBot.handler.registration.ask;
 
 import com.example.LoyaltyBot.entity.Client;
 import com.example.LoyaltyBot.entity.RegistrationState;
+import com.example.LoyaltyBot.handler.registration.RegistrationHandler;
 import com.example.LoyaltyBot.service.ClientService;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;

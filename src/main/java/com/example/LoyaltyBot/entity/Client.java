@@ -1,5 +1,6 @@
 package com.example.LoyaltyBot.entity;
 
+import com.example.LoyaltyBot.entity.client.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,6 +42,8 @@ public class Client {
     private String phone;
 
     private LocalDate birthday;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -57,7 +60,7 @@ public class Client {
     }
 
     public Client(Long id, Long chatId, Long telegramUserId, String telegramUsername, String firstName,
-                  String lastName, String phone, LocalDate birthday,
+                  String lastName, String phone,Gender gender, LocalDate birthday,
                   LocalDateTime createdAt, LocalDateTime updatedAt,
                   Boolean isActive, RegistrationState registrationState) {
         this.id = id;
@@ -67,6 +70,7 @@ public class Client {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phone = phone;
+        this.gender = gender;
         this.birthday = birthday;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -116,6 +120,14 @@ public class Client {
 
     public String getLastName() {
         return lastName;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
     }
 
     public void setLastName(String lastName) {
