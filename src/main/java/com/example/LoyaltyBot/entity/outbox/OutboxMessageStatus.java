@@ -1,5 +1,5 @@
 package com.example.LoyaltyBot.entity.outbox;
 
 public enum OutboxMessageStatus {
-    NEW, PROCESSING, SENT, FAILED
+    NEW, PROCESSING, SENT, FAILED,DEAD
 }

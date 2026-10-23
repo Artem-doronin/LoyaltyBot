@@ -15,8 +15,9 @@ public class OutboxProperties {
     private boolean enabled = false;
     private int batchSize = 50;
     private Duration leaseDuration = Duration.ofMinutes(2);
-    private Duration pollInterval =  Duration.ofSeconds(5);
-    private Duration reaperInterval= Duration.ofMinutes(1);
+    private Duration pollInterval = Duration.ofSeconds(5);
+    private Duration reaperInterval = Duration.ofMinutes(1);
     private int maxAttempts = 5;
     private RetryProperties retry = new RetryProperties();
+    private CleanupProperties cleanup = new CleanupProperties();
 }
