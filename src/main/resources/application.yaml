@@ -26,11 +26,11 @@ spring:
       filter:
         enabled: true
 
-      spring:
-        telegram:
-          bot:
-            name: ${TELEGRAM_BOT_NAME:new_loyalty_bot}
-            token: ${TELEGRAM_BOT_TOKEN}
+
+  telegram:
+    bot:
+      name: ${TELEGRAM_BOT_NAME:new_loyalty_bot}
+      token: ${TELEGRAM_BOT_TOKEN}
 
   password_generator:
     3
