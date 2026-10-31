@@ -11,7 +11,7 @@ RUN mvn clean package -DskipTests -B
 FROM eclipse-temurin:21-jre
 
 # ↓↓↓ ДОБАВИТЬ ЭТИ 2 СТРОКИ ↓↓↓
-RUN groupadd -r appuser && useradd -r -g appuser -u 1000 appuser
+RUN groupadd -r appuser && useradd -r -g appuser -u 1001 appuser
 RUN mkdir -p /app/logs && chown -R appuser:appuser /app
 # ↑↑↑ ДОБАВИТЬ ЭТИ 2 СТРОКИ ↑↑↑
 
