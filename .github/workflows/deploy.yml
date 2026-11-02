@@ -38,4 +38,4 @@ jobs:
           script: |
             cd /opt/loyaltybot-infra
             git pull origin main
-            ./deploy.sh
+            bash deploy.sh
