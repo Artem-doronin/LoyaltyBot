@@ -1,9 +1,9 @@
+server:
+  forward-headers-strategy: native
+
 spring:
   application:
     name: LoyaltyBot
-
-server:
-  forward-headers-strategy: native
 
   datasource:
     driver-class-name: org.postgresql.Driver
