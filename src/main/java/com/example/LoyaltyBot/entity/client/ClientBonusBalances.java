@@ -1,4 +1,4 @@
-package com.example.LoyaltyBot.entity;
+package com.example.LoyaltyBot.entity.client;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
