@@ -11,5 +11,5 @@ import java.util.Optional;
 @Repository
 public interface CampaignRepository extends JpaRepository<Campaign,Long> {
 
-    List<Campaign> findByIdAndStatus(Long campaignId, CampaignStatus status);
+    List<Campaign> findByStatus(CampaignStatus status);
 }
