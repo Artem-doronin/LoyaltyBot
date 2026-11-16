@@ -292,7 +292,7 @@ function executeOperation() {
             clientId: currentClientId,
             operationAmount: roundedPurchase,
             bonusAmount: roundedWriteOff,
-            operationType: 'WRITE_OFF',
+            operationType: 'PURCHASE_WRITE_OFF',
             comment: `Списание бонусов за покупку на ${roundedPurchase.toFixed(2)} ₽`
         });
     }
@@ -305,7 +305,7 @@ function executeOperation() {
                 clientId: currentClientId,
                 operationAmount: roundedPurchase,
                 bonusAmount: bonusEarned,
-                operationType: 'ACCRUAL',
+                operationType: 'PURCHASE_ACCRUAL',
                 comment: `Начисление бонусов за покупку (оплачено деньгами: ${paidByCash.toFixed(2)} ₽, ставка: ${currentBonusRate}%)`
             });
         }
@@ -321,7 +321,7 @@ function executeOperation() {
     }
 
     let operationPromises = operations.map(operation => {
-        const endpoint = operation.operationType === 'ACCRUAL' ? '/api/loyalty/enroll' : '/api/loyalty/writeOff';
+        const endpoint = operation.operationType === 'PURCHASE_ACCRUAL' ? '/api/loyalty/enroll' : '/api/loyalty/writeOff';
         return fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

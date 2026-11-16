@@ -29,7 +29,7 @@ public class CampaignScheduler {
     private final CampaignExecutionRepository executionRepository;
     private final CampaignService campaignService;
 
-    @Scheduled()
+    @Scheduled(fixedDelay = 60_000, initialDelay = 30_000)
     public void tick() {
         List<Campaign> scheduled = campaignRepository.findByStatus(CampaignStatus.SCHEDULED);
         if (scheduled.isEmpty()) {
