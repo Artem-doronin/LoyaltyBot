@@ -100,15 +100,16 @@ public class CampaignService {
                 if (batch.isEmpty()) {
                     break;
                 }
+
                 int enqueued = campaignBatchProcessor.process(batch, text, executionId, attachments);
                 int failed = batch.size() - enqueued;
                 campaignExecutionUpdater.addCounts(executionId, batch.size(), enqueued, failed);
 
+                afterId = batch.get(batch.size() - 1).getId();
+
                 if (batch.size() < batchSize) {
                     break;
                 }
-
-                afterId = batch.get(batch.size() - 1).getId();
             }
             executionFinisher.finishSuccess(executionId, campaignId, campaign.getScheduleType());
 
