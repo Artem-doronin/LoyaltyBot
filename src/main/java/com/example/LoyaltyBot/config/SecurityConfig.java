@@ -53,6 +53,8 @@ public class SecurityConfig {
                 .cors(AbstractHttpConfigurer::disable)
                 .addFilterAfter(new ForcePasswordChangeFilter(), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/test/s3/**").permitAll()
+                        //todo
                         .requestMatchers("/users/change_password").authenticated()
                         .requestMatchers("/auth/login")
                         .permitAll()
