@@ -12,8 +12,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -42,12 +45,28 @@ public class OutboxMessage {
     private Instant nextAttemptAt;
     @Column(columnDefinition = "TEXT")
     private String errorMessage;
+    private Long campaignExecutionId;
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(columnDefinition = "jsonb")
+    private List<AttachmentPayload> attachments;
 
 
     public static OutboxMessage create(Long clientId, String payload) {
+        return create(clientId, payload, null, null);
+    }
+
+    public static OutboxMessage create(Long clientId, String payload, Long campaignExecutionId) {
+        return create(clientId, payload, campaignExecutionId, null);
+    }
+
+    public static OutboxMessage create(Long clientId, String payload,
+                                       Long campaignExecutionId,
+                                       List<AttachmentPayload> attachments) {
         OutboxMessage m = new OutboxMessage();
         m.clientId = clientId;
         m.payload = payload;
+        m.campaignExecutionId = campaignExecutionId;
+        m.attachments = attachments;
         m.messageId = UUID.randomUUID();
         m.status = OutboxMessageStatus.NEW;
         m.attempts = 0;

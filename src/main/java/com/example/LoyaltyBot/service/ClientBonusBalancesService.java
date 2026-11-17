@@ -1,7 +1,7 @@
 package com.example.LoyaltyBot.service;
 
 import com.example.LoyaltyBot.dto.bonus.BonusResponseDto;
-import com.example.LoyaltyBot.entity.ClientBonusBalances;
+import com.example.LoyaltyBot.entity.client.ClientBonusBalances;
 import com.example.LoyaltyBot.exception.InsufficientBonusException;
 import com.example.LoyaltyBot.repository.ClientBonusBalancesRepository;
 import jakarta.persistence.EntityNotFoundException;
